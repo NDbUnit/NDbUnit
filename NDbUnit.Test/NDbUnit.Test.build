@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+
+<project name="NDbUnit.Test" default="build">
+	<!-- Required properties:
+			build.debug - (true|false) debug build?
+			build.dir - (path) root level to build to
+			build.config - (debug|release) assemblies will go in$ {build.dir}\bin\${build.config}\
+	-->
+		
+	<property name="project.localpath" value="${nant.project.basedir}" />
+	<property name="NUnit.dir" value="C:\Program Files\NUnit 2.2.7\bin" />
+	<property name="nunit.fw.dll" value="${NUnit.dir}\nunit.framework.dll" />
+
+	<ifnot test='${file::exists(nunit.fw.dll)}'>
+	  <fail message="NUnit has not been installed in the location identified in the NUnit.dir property." />
+	</ifnot>
+
+	<target name="build">
+		<echo message="Using '${nant.settings.currentframework}' Framework"/>
+
+		<!-- Build NDbUnit.Test -->
+		<csc target="library" debug="${build.debug}" output="${build.dir}\bin\${build.config}\${nant.project.name}.dll">
+			<sources failonempty="true">
+				<include name="${project.localpath}/**/*.cs" />
+			</sources>
+			<references>
+				<include name="${build.dir}\bin\${build.config}\NDbUnit.Core.dll" />
+				<include name="${NUnit.dir}\nunit.framework.dll" />				
+			</references>
+		</csc>
+		
+		<copy todir="${build.dir}\Xml">
+			<fileset basedir="${project.localpath}\Xml">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="clean">
+		<delete dir="bin" failonerror="false"/>
+		<delete dir="obj" failonerror="false"/>
+	</target>
+</project>
+

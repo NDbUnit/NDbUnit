@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<UserDS xmlns="http://tempuri.org/UserDS.xsd">
+	<Role>
+		<ID>1</ID>
+		<Name>AdminRefresh</Name>
+		<Description>Serves as an administrator</Description>
+	</Role>
+	<Role>
+		<ID>2</ID>
+		<Name>UserRefresh</Name>
+		<Description>User with limited security</Description>
+	</Role>
+	<User>
+		<FirstName>HammadRefresh</FirstName>
+		<LastName>Awan</LastName>
+		<ID>1</ID>
+		<Age>32</Age>
+	</User>
+	<User>
+		<FirstName>JohnRefresh</FirstName>
+		<LastName>Williams</LastName>
+		<ID>2</ID>
+		<Age>40</Age>
+	</User>
+	<User>
+		<FirstName>NewRefresh</FirstName>
+		<LastName>Bland</LastName>
+		<ID>3</ID>
+		<Age>12</Age>
+	</User>
+	<UserRole>
+		<UserID>1</UserID>
+		<RoleID>1</RoleID>
+	</UserRole>
+	<UserRole>
+		<UserID>2</UserID>
+		<RoleID>1</RoleID>
+	</UserRole>
+	<UserRole>
+		<UserID>1</UserID>
+		<RoleID>2</RoleID>
+	</UserRole>	
+	<UserRole>
+		<UserID>3</UserID>
+		<RoleID>2</RoleID>
+	</UserRole>
+</UserDS>

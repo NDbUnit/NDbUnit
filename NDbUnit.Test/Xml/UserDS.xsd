@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema id="UserDS" targetNamespace="http://tempuri.org/UserDS.xsd" elementFormDefault="qualified"
+	attributeFormDefault="qualified" xmlns="http://tempuri.org/UserDS.xsd" xmlns:mstns="http://tempuri.org/UserDS.xsd"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+	<xs:element name="UserDS" msdata:IsDataSet="true">
+		<xs:complexType>
+			<xs:choice maxOccurs="unbounded">
+				<xs:element name="Role">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="ID" msdata:ReadOnly="true" msdata:AutoIncrement="true" type="xs:int" />
+							<xs:element name="Name" type="xs:string" />
+							<xs:element name="Description" type="xs:string" minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="User">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="ID" msdata:ReadOnly="true" msdata:AutoIncrement="true" type="xs:int" />
+							<xs:element name="FirstName" type="xs:string" />
+							<xs:element name="LastName" type="xs:string" />
+							<xs:element name="Age" type="xs:short" minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="UserRole">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="UserID" type="xs:int" />
+							<xs:element name="RoleID" type="xs:int" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
+		</xs:complexType>
+		<xs:unique name="UserDSKey1" msdata:PrimaryKey="true">
+			<xs:selector xpath=".//mstns:Role" />
+			<xs:field xpath="mstns:ID" />
+		</xs:unique>
+		<xs:unique name="UserDSKey2" msdata:PrimaryKey="true">
+			<xs:selector xpath=".//mstns:User" />
+			<xs:field xpath="mstns:ID" />
+		</xs:unique>
+		<xs:unique name="UserDSKey3" msdata:PrimaryKey="true">
+			<xs:selector xpath=".//mstns:UserRole" />
+			<xs:field xpath="mstns:UserID" />
+			<xs:field xpath="mstns:RoleID" />
+		</xs:unique>
+		<xs:keyref name="RoleUserRole" refer="UserDSKey1">
+			<xs:selector xpath=".//mstns:UserRole" />
+			<xs:field xpath="mstns:RoleID" />
+		</xs:keyref>
+		<xs:keyref name="UserUserRole" refer="UserDSKey2">
+			<xs:selector xpath=".//mstns:UserRole" />
+			<xs:field xpath="mstns:UserID" />
+		</xs:keyref>
+	</xs:element>
+</xs:schema>
