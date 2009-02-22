@@ -23,7 +23,7 @@
 using System;
 using System.Data;
 
-using NUnit.Framework;
+using MbUnit.Framework;
 
 using NDbUnit.Test;
 using NDbUnit.Core;

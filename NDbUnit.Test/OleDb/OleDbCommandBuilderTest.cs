@@ -24,7 +24,7 @@ using System;
 using System.Data;
 using System.Data.OleDb;
 
-using NUnit.Framework;
+using MbUnit.Framework;
 
 using NDbUnit.Test;
 using NDbUnit.Core.OleDb;

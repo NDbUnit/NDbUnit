@@ -8,11 +8,11 @@
 	-->
 		
 	<property name="project.localpath" value="${nant.project.basedir}" />
-	<property name="NUnit.dir" value="C:\Program Files\NUnit 2.2.7\bin" />
-	<property name="nunit.fw.dll" value="${NUnit.dir}\nunit.framework.dll" />
+	<property name="MbUnit.dir" value="C:\Program Files\MbUnit 2.2\bin" />
+	<property name="MbUnit.fw.dll" value="${MbUnit.dir}\MbUnit.framework.dll" />
 
-	<ifnot test='${file::exists(nunit.fw.dll)}'>
-	  <fail message="NUnit has not been installed in the location identified in the NUnit.dir property." />
+	<ifnot test='${file::exists(MbUnit.fw.dll)}'>
+	  <fail message="MbUnit has not been installed in the location identified in the MbUnit.dir property." />
 	</ifnot>
 
 	<target name="build">
@@ -25,7 +25,7 @@
 			</sources>
 			<references>
 				<include name="${build.dir}\bin\${build.config}\NDbUnit.Core.dll" />
-				<include name="${NUnit.dir}\nunit.framework.dll" />				
+				<include name="${MbUnit.dir}\MbUnit.framework.dll" />				
 			</references>
 		</csc>
 		

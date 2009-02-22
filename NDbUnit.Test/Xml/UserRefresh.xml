@@ -11,21 +11,21 @@
 		<Description>User with limited security</Description>
 	</Role>
 	<User>
-		<FirstName>HammadRefresh</FirstName>
+    <ID>1</ID>
+    <FirstName>HammadRefresh</FirstName>
 		<LastName>Awan</LastName>
-		<ID>1</ID>
 		<Age>32</Age>
 	</User>
 	<User>
-		<FirstName>JohnRefresh</FirstName>
+    <ID>2</ID>
+    <FirstName>JohnRefresh</FirstName>
 		<LastName>Williams</LastName>
-		<ID>2</ID>
 		<Age>40</Age>
 	</User>
 	<User>
-		<FirstName>NewRefresh</FirstName>
+    <ID>3</ID>
+    <FirstName>NewRefresh</FirstName>
 		<LastName>Bland</LastName>
-		<ID>3</ID>
 		<Age>12</Age>
 	</User>
 	<UserRole>

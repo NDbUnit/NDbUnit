@@ -70,41 +70,32 @@ namespace NDbUnit.Core
 
 		void IDbOperation.Update(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction)
 		{
-	        DataSet dsCopy = ds.Copy();
-	        dsCopy.AcceptChanges();
+			DataSet dsCopy = ds.Copy();
+			dsCopy.AcceptChanges();
 
-	        foreach(DataTable dataTable in dsCopy.Tables)
-	        {
-	    	    try
-    	        {
-	                foreach(DataRow dataRow in dataTable.Rows)
-	                {
-	                    // Modify every table row.
-		                dataRow.BeginEdit();
-    	                dataRow.EndEdit();
-	                }
+            DataSetTableIterator iterator = new DataSetTableIterator(dsCopy, true);
 
-    	            OnUpdate(dsCopy, dbCommandBuilder, dbTransaction, dataTable.TableName);
-                }
-                catch (Exception e)
-                {
-                    throw new NDbUnitException(string.Format("NDbUnit: Could not update records in table '{0}'", dataTable.TableName), e);
-                }
-	        }
+            foreach (DataTable dataTable in iterator)
+			{
+				foreach(DataRow dataRow in dataTable.Rows)
+				{
+					// Modify every table row.
+					dataRow.BeginEdit();
+					dataRow.EndEdit();
+				}
+
+				OnUpdate(dsCopy, dbCommandBuilder, dbTransaction, dataTable.TableName);
+			}
 		}
 
 		void IDbOperation.Refresh(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction)
 		{
-			foreach(DataTable dataTable in ds.Tables)
+
+            DataSetTableIterator iterator = new DataSetTableIterator(ds, false);
+
+            foreach (DataTable dataTable in iterator)
 			{
-                try
-                {
-                    OnRefresh(ds, dbCommandBuilder, dbTransaction, dataTable.TableName);
-                }
-                catch (Exception e)
-                {
-                    throw new NDbUnitException(string.Format("NDbUnit: Could not refresh records in table '{0}'", dataTable.TableName), e);
-                }
+				OnRefresh(ds, dbCommandBuilder, dbTransaction, dataTable.TableName);
 			}
 		}
 
@@ -164,7 +155,10 @@ namespace NDbUnit.Core
 			Hashtable insertedTableColl = new Hashtable();
 
 			DataSet dsSchema = dbCommandBuilder.GetSchema();
-			foreach(DataTable dataTable in dsSchema.Tables)
+
+            DataSetTableIterator iterator = new DataSetTableIterator(dsSchema,true);
+
+            foreach (DataTable dataTable in iterator)
 			{
 				insertRecursive(ds, dataTable, dbCommandBuilder, dbTransaction, insertedTableColl, insertIdentity);
 			}
@@ -180,72 +174,64 @@ namespace NDbUnit.Core
 		    // [20060724 - sdh] Move here (from end of method) to avoid infinite-loop when package has relation to itself
 		    // Table was inserted into in the database.
             insertedTableColl[dataTableSchema.TableName] = null;
+		    
+			ConstraintCollection constraints = dataTableSchema.Constraints;
+			if (null != constraints)
+			{
+				foreach(Constraint constraint in constraints)
+				{
+					// The table has a foreign key constraint.
+					if (constraint.GetType() == typeof(ForeignKeyConstraint))
+					{
+						ForeignKeyConstraint fkConstraint = (ForeignKeyConstraint)constraint;
+						// Must insert parent table first.
+						insertRecursive(ds, fkConstraint.RelatedTable, dbCommandBuilder, dbTransaction, insertedTableColl, insertIdentity);
+					}
+				}
+			}
+            // process parent tables first!
+	        DataRelationCollection parentRelations = dataTableSchema.ParentRelations;
+          	if (null != parentRelations)
+	        {
+	            foreach (DataRelation parentRelation in parentRelations)
+        	    {
+	                // Must insert parent table first.
+	                insertRecursive(ds, parentRelation.ParentTable, dbCommandBuilder, dbTransaction, insertedTableColl, insertIdentity);
+	            }
+	        }
 
-		    try
-		    {
-		        ConstraintCollection constraints = dataTableSchema.Constraints;
-		        if (null != constraints)
-		        {
-		            foreach(Constraint constraint in constraints)
-		            {
-		                // The table has a foreign key constraint.
-		                if (constraint.GetType() == typeof(ForeignKeyConstraint))
-		                {
-		                    ForeignKeyConstraint fkConstraint = (ForeignKeyConstraint)constraint;
-		                    // Must insert parent table first.
-		                    insertRecursive(ds, fkConstraint.RelatedTable, dbCommandBuilder, dbTransaction, insertedTableColl, insertIdentity);
-		                }
-		            }
-		        }
-		        // process parent tables first!
-		        DataRelationCollection parentRelations = dataTableSchema.ParentRelations;
-		        if (null != parentRelations)
-		        {
-		            foreach (DataRelation parentRelation in parentRelations)
-		            {
-		                // Must insert parent table first.
-		                insertRecursive(ds, parentRelation.ParentTable, dbCommandBuilder, dbTransaction, insertedTableColl, insertIdentity);
-		            }
-		        }
+			DataRow dataRowClone = null;
+			DataTable dataTable = ds.Tables[dataTableSchema.TableName];
+			DataTable dataTableClone = dataTableSchema.Clone();
+			foreach(DataRow dataRow in dataTable.Rows)
+			{
+				// Insert as a new row.
+				dataRowClone = CloneDataRow(dataTableClone, dataRow);
+				dataTableClone.Rows.Add(dataRowClone);
+			}
 
-		        DataRow dataRowClone = null;
-		        DataTable dataTable = ds.Tables[dataTableSchema.TableName];
-		        DataTable dataTableClone = dataTableSchema.Clone();
-		        foreach(DataRow dataRow in dataTable.Rows)
-		        {
-		            // Insert as a new row.
-		            dataRowClone = CloneDataRow(dataTableClone, dataRow);
-		            dataTableClone.Rows.Add(dataRowClone);
-		        }
-
-		        if (insertIdentity)
-		        {
-		            IDbCommand dbCommand = dbCommandBuilder.GetInsertIdentityCommand(dataTableSchema.TableName);
-		            OnInsertIdentity(dataTableClone, dbCommand, dbTransaction);
-		        }
-		        else
-		        {
-		            IDbCommand dbCommand = dbCommandBuilder.GetInsertCommand(dataTableSchema.TableName);
-		            OnInsert(dataTableClone, dbCommand, dbTransaction);
-		        }
-		    }
-            catch (NDbUnitException e)
-            {
-                // no use in catching exceptions thrown inside recursive calls, as they are alread wrapped have a clear message
-                throw e;
-            }
-            catch (Exception e)
-		    {
-                throw new NDbUnitException(string.Format("NDbUnit: Could not insert records into table '{0}'", dataTableSchema.TableName), e);
-		    }
+			if (insertIdentity)
+			{
+				IDbCommand dbCommand = dbCommandBuilder.GetInsertIdentityCommand(dataTableSchema.TableName);
+				OnInsertIdentity(dataTableClone, dbCommand, dbTransaction);
+			}
+			else
+			{
+				IDbCommand dbCommand = dbCommandBuilder.GetInsertCommand(dataTableSchema.TableName);
+				OnInsert(dataTableClone, dbCommand, dbTransaction);
+			}
 		}
-
+        //TODO: add datatable iterator here
 		private void deleteCommon(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction, bool deleteAll)
 		{
 			Hashtable deletedTableColl = new Hashtable();
 
 			DataSet dsSchema = dbCommandBuilder.GetSchema();
-			foreach(DataTable dataTable in dsSchema.Tables)
+
+
+            DataSetTableIterator iterator = new DataSetTableIterator(dsSchema,true);
+
+            foreach (DataTable dataTable in iterator)
 			{
 				deleteRecursive(ds, dataTable, dbCommandBuilder, dbTransaction, deletedTableColl, deleteAll);
 			}
@@ -263,66 +249,54 @@ namespace NDbUnit.Core
             // Table was deleted from in the database.
             deletedTableColl[dataTableSchema.TableName] = null;
 
-		    try
-		    {
-		        DataRelationCollection childRelations = dataTableSchema.ChildRelations;
-		        // The table has children.
-		        if (null != childRelations)
-		        {
-		            foreach(DataRelation childRelation in childRelations)
-		            {
-		                // Must delete the child table first.
-		                deleteRecursive(ds, childRelation.ChildTable, dbCommandBuilder, dbTransaction, deletedTableColl, deleteAll);
-		            }
-		        }
+			DataRelationCollection childRelations = dataTableSchema.ChildRelations;
+			// The table has children.
+			if (null != childRelations)
+			{
+				foreach(DataRelation childRelation in childRelations)
+				{
+					// Must delete the child table first.
+					deleteRecursive(ds, childRelation.ChildTable, dbCommandBuilder, dbTransaction, deletedTableColl, deleteAll);
+				}
+			}
 
 
-		        if (deleteAll)
-		        {
-		            IDbCommand dbCommand = dbCommandBuilder.GetDeleteAllCommand(dataTableSchema.TableName);
+			if (deleteAll)
+			{
+				IDbCommand dbCommand = dbCommandBuilder.GetDeleteAllCommand(dataTableSchema.TableName);
 
-		            try
-		            {
-		                OnDeleteAll(dbCommand, dbTransaction);
-		            }
-		            catch(DBConcurrencyException e)
-		            {
-		                // Swallow deletion of zero records.
-		            }
-		        }
-		        else
-		        {
-		            DataTable dataTable = ds.Tables[dataTableSchema.TableName];
-		            DataTable dataTableCopy = dataTable.Copy();
-		            dataTableCopy.AcceptChanges();
+				try
+				{
+					OnDeleteAll(dbCommand, dbTransaction);
+				}
+				catch(DBConcurrencyException)
+				{
+					// Swallow deletion of zero records.
+				}
+			}
+			else
+			{
+				DataTable dataTable = ds.Tables[dataTableSchema.TableName];
+				DataTable dataTableCopy = dataTable.Copy();
+				dataTableCopy.AcceptChanges();
 
-		            foreach(DataRow dataRow in dataTableCopy.Rows)
-		            {
-		                // Delete the row.
-		                dataRow.Delete();
-		            }
+				foreach(DataRow dataRow in dataTableCopy.Rows)
+				{
+					// Delete the row.
+					dataRow.Delete();
+				}
 
-		            IDbCommand dbCommand = dbCommandBuilder.GetDeleteCommand(dataTableSchema.TableName);
+				IDbCommand dbCommand = dbCommandBuilder.GetDeleteCommand(dataTableSchema.TableName);
 
-		            try
-		            {
-		                OnDelete(dataTableCopy, dbCommand, dbTransaction);
-		            }
-		            catch(DBConcurrencyException e)
-		            {
-		                // Swallow deletion of zero records.
-		            }
-		        }
-		    }
-		    catch (NDbUnitException e)
-		    {
-		        // no use in catching exceptions thrown inside recursive calls, as they are alread wrapped have a clear message
-                throw e;
-		    }
-		    catch (Exception e)
-		    {
-                throw new NDbUnitException(string.Format("NDbUnit: Could not delete records from table '{0}'", dataTableSchema.TableName), e);
-            }
+				try
+				{
+					OnDelete(dataTableCopy, dbCommand, dbTransaction);
+				}
+				catch(DBConcurrencyException)
+				{
+					// Swallow deletion of zero records.
+				}
+			}
 		}
 
 		#endregion

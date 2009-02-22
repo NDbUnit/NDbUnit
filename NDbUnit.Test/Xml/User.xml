@@ -11,16 +11,17 @@
 		<Description>User with limited security</Description>
 	</Role>
 	<User>
-		<FirstName>Hammad</FirstName>
+    <ID>1</ID>
+    <FirstName>Hammad</FirstName>
 		<LastName>Awan</LastName>
-		<ID>1</ID>
 		<Age>29</Age>
 	</User>
 	<User>
+    <ID>2</ID>
 		<FirstName>John</FirstName>
 		<LastName>Williams</LastName>
-		<ID>2</ID>
 		<Age>30</Age>
+    <SupervisorID>1</SupervisorID>
 	</User>
 	<UserRole>
 		<UserID>1</UserID>

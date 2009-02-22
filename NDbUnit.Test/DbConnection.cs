@@ -33,7 +33,7 @@ namespace NDbUnit.Test
 		{
 			get
 			{
-				return @"Data Source=127.0.0.1;Network Library=DBMSSOCN;Initial Catalog=testdb;Trusted_Connection=True";
+				return @"Data Source=127.0.0.1\sqlserver2005;Network Library=DBMSSOCN;Initial Catalog=testdb;Trusted_Connection=True";
 			}
 		}
 
@@ -41,7 +41,7 @@ namespace NDbUnit.Test
 		{
 			get
 			{
-				return @"Provider=SQLOLEDB;Data Source=127.0.0.1;Network Library=DBMSSOCN;Initial Catalog=testdb;Integrated Security=SSPI";
+				return @"Provider=SQLOLEDB;Data Source=127.0.0.1\sqlserver2005;Network Library=DBMSSOCN;Initial Catalog=testdb;Integrated Security=SSPI";
 			}
 		}
 	}
