@@ -54,6 +54,8 @@ namespace NDbUnit.Core.OleDb
 
 		public OleDbOperation()
 		{
+            QuotePrefix = "[";
+            QuoteSuffix = "]";
 		}
 
 		#endregion
@@ -134,7 +136,7 @@ namespace NDbUnit.Core.OleDb
 					if(column.AutoIncrement)
 					{
 						// Set identity insert on.
-						OleDbCommand oleDbCommand = new OleDbCommand("SET IDENTITY_INSERT [" + dataTable.TableName + "] ON");
+						OleDbCommand oleDbCommand = new OleDbCommand("SET IDENTITY_INSERT " + TableNameHelper.FormatTableName(dataTable.TableName, QuotePrefix, QuoteSuffix) + " ON");
 						oleDbCommand.Connection = oleDbTransaction.Connection;
 						oleDbCommand.Transaction = oleDbTransaction;
 						oleDbCommand.ExecuteNonQuery();
@@ -166,7 +168,7 @@ namespace NDbUnit.Core.OleDb
 						if(column.AutoIncrement)
 						{
 							// Set identity insert off.
-							OleDbCommand oleDbCommand = new OleDbCommand("SET IDENTITY_INSERT [" + dataTable.TableName + "] OFF");
+							OleDbCommand oleDbCommand = new OleDbCommand("SET IDENTITY_INSERT " + TableNameHelper.FormatTableName(dataTable.TableName, QuotePrefix, QuoteSuffix) + " OFF");
 							oleDbCommand.Connection = oleDbTransaction.Connection;
 							oleDbCommand.Transaction = oleDbTransaction;
 							oleDbCommand.ExecuteNonQuery();

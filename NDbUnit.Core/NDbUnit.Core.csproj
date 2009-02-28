@@ -121,9 +121,10 @@
     <Compile Include="SqlClient\SqlDbUnitTest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="SqlLite\SqlLiteDbCommandBuilder.cs" />
-    <Compile Include="SqlLite\SqlLiteDbOperation.cs" />
-    <Compile Include="SqlLite\SqlLiteUnitTest.cs" />
+    <Compile Include="SQLLite\SqlLiteDbCommandBuilder.cs" />
+    <Compile Include="SQLLite\SqlLiteDbOperation.cs" />
+    <Compile Include="SQLLite\SqlLiteUnitTest.cs" />
+    <Compile Include="TableNameHelper.cs" />
     <None Include="NDbUnit.Core.build" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

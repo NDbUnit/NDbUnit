@@ -14,7 +14,7 @@
   <xs:element name="UserDS" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_UserDSName="UserDS" msprop:Generator_DataSetName="UserDS">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="Role" msprop:Generator_UserTableName="Role" msprop:Generator_RowDeletedName="RoleRowDeleted" msprop:Generator_TableClassName="RoleDataTable" msprop:Generator_RowChangedName="RoleRowChanged" msprop:Generator_RowClassName="RoleRow" msprop:Generator_RowChangingName="RoleRowChanging" msprop:Generator_RowEvArgName="RoleRowChangeEvent" msprop:Generator_RowEvHandlerName="RoleRowChangeEventHandler" msprop:Generator_TablePropName="Role" msprop:Generator_TableVarName="tableRole" msprop:Generator_RowDeletingName="RoleRowDeleting">
+        <xs:element name="Role" msprop:Generator_UserTableName="Role" msprop:Generator_RowDeletedName="RoleRowDeleted" msprop:Generator_RowChangedName="RoleRowChanged" msprop:Generator_RowClassName="RoleRow" msprop:Generator_RowChangingName="RoleRowChanging" msprop:Generator_RowEvArgName="RoleRowChangeEvent" msprop:Generator_RowEvHandlerName="RoleRowChangeEventHandler" msprop:Generator_TableClassName="RoleDataTable" msprop:Generator_TableVarName="tableRole" msprop:Generator_RowDeletingName="RoleRowDeleting" msprop:Generator_TablePropName="Role">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="ID" msdata:ReadOnly="true" msdata:AutoIncrement="true" msprop:Generator_UserColumnName="ID" msprop:Generator_ColumnPropNameInRow="ID" msprop:Generator_ColumnVarNameInTable="columnID" msprop:Generator_ColumnPropNameInTable="IDColumn" type="xs:int" />
@@ -35,7 +35,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="User" msprop:Generator_UserTableName="User" msprop:Generator_RowDeletedName="UserRowDeleted" msprop:Generator_TableClassName="UserDataTable" msprop:Generator_RowChangedName="UserRowChanged" msprop:Generator_RowClassName="UserRow" msprop:Generator_RowChangingName="UserRowChanging" msprop:Generator_RowEvArgName="UserRowChangeEvent" msprop:Generator_RowEvHandlerName="UserRowChangeEventHandler" msprop:Generator_TablePropName="User" msprop:Generator_TableVarName="tableUser" msprop:Generator_RowDeletingName="UserRowDeleting">
+        <xs:element name="dbo.User" msprop:Generator_UserTableName="dbo.User" msprop:Generator_RowDeletedName="_dbo_UserRowDeleted" msprop:Generator_RowChangedName="_dbo_UserRowChanged" msprop:Generator_RowClassName="_dbo_UserRow" msprop:Generator_RowChangingName="_dbo_UserRowChanging" msprop:Generator_RowEvArgName="_dbo_UserRowChangeEvent" msprop:Generator_RowEvHandlerName="_dbo_UserRowChangeEventHandler" msprop:Generator_TableClassName="_dbo_UserDataTable" msprop:Generator_TableVarName="_tabledbo_User" msprop:Generator_RowDeletingName="_dbo_UserRowDeleting" msprop:Generator_TablePropName="_dbo_User">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="ID" msdata:ReadOnly="true" msdata:AutoIncrement="true" msprop:Generator_UserColumnName="ID" msprop:Generator_ColumnPropNameInRow="ID" msprop:Generator_ColumnVarNameInTable="columnID" msprop:Generator_ColumnPropNameInTable="IDColumn" type="xs:int" />
@@ -58,7 +58,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="UserRole" msprop:Generator_UserTableName="UserRole" msprop:Generator_RowDeletedName="UserRoleRowDeleted" msprop:Generator_TableClassName="UserRoleDataTable" msprop:Generator_RowChangedName="UserRoleRowChanged" msprop:Generator_RowClassName="UserRoleRow" msprop:Generator_RowChangingName="UserRoleRowChanging" msprop:Generator_RowEvArgName="UserRoleRowChangeEvent" msprop:Generator_RowEvHandlerName="UserRoleRowChangeEventHandler" msprop:Generator_TablePropName="UserRole" msprop:Generator_TableVarName="tableUserRole" msprop:Generator_RowDeletingName="UserRoleRowDeleting">
+        <xs:element name="UserRole" msprop:Generator_UserTableName="UserRole" msprop:Generator_RowDeletedName="UserRoleRowDeleted" msprop:Generator_RowChangedName="UserRoleRowChanged" msprop:Generator_RowClassName="UserRoleRow" msprop:Generator_RowChangingName="UserRoleRowChanging" msprop:Generator_RowEvArgName="UserRoleRowChangeEvent" msprop:Generator_RowEvHandlerName="UserRoleRowChangeEventHandler" msprop:Generator_TableClassName="UserRoleDataTable" msprop:Generator_TableVarName="tableUserRole" msprop:Generator_RowDeletingName="UserRoleRowDeleting" msprop:Generator_TablePropName="UserRole">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="UserID" msprop:Generator_UserColumnName="UserID" msprop:Generator_ColumnPropNameInRow="UserID" msprop:Generator_ColumnVarNameInTable="columnUserID" msprop:Generator_ColumnPropNameInTable="UserIDColumn" type="xs:int" />
@@ -72,8 +72,8 @@
       <xs:selector xpath=".//mstns:Role" />
       <xs:field xpath="mstns:ID" />
     </xs:unique>
-    <xs:unique name="User_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
-      <xs:selector xpath=".//mstns:User" />
+    <xs:unique name="dbo.User_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:dbo.User" />
       <xs:field xpath="mstns:ID" />
     </xs:unique>
     <xs:unique name="UserRole_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
@@ -84,9 +84,9 @@
   </xs:element>
   <xs:annotation>
     <xs:appinfo>
-      <msdata:Relationship name="FK_User_Supervisor" msdata:parent="User" msdata:child="User" msdata:parentkey="ID" msdata:childkey="SupervisorID" msprop:Generator_UserRelationName="FK_User_Supervisor" msprop:Generator_RelationVarName="relationFK_User_Supervisor" msprop:Generator_UserChildTable="User" msprop:Generator_UserParentTable="User" msprop:Generator_ParentPropName="UserRowParent" msprop:Generator_ChildPropName="GetUserRows" />
+      <msdata:Relationship name="FK_User_Supervisor" msdata:parent="dbo.User" msdata:child="dbo.User" msdata:parentkey="ID" msdata:childkey="SupervisorID" msprop:Generator_UserRelationName="FK_User_Supervisor" msprop:Generator_RelationVarName="relationFK_User_Supervisor" msprop:Generator_UserChildTable="dbo.User" msprop:Generator_UserParentTable="dbo.User" msprop:Generator_ParentPropName="_dbo_UserRowParent" msprop:Generator_ChildPropName="_Getdbo_UserRows" />
       <msdata:Relationship name="FK_UserRole_Role" msdata:parent="Role" msdata:child="UserRole" msdata:parentkey="ID" msdata:childkey="RoleID" msprop:Generator_UserRelationName="FK_UserRole_Role" msprop:Generator_RelationVarName="relationFK_UserRole_Role" msprop:Generator_UserChildTable="UserRole" msprop:Generator_UserParentTable="Role" msprop:Generator_ParentPropName="RoleRow" msprop:Generator_ChildPropName="GetUserRoleRows" />
-      <msdata:Relationship name="FK_UserRole_User" msdata:parent="User" msdata:child="UserRole" msdata:parentkey="ID" msdata:childkey="UserID" msprop:Generator_UserRelationName="FK_UserRole_User" msprop:Generator_RelationVarName="relationFK_UserRole_User" msprop:Generator_UserChildTable="UserRole" msprop:Generator_UserParentTable="User" msprop:Generator_ParentPropName="UserRow" msprop:Generator_ChildPropName="GetUserRoleRows" />
+      <msdata:Relationship name="FK_UserRole_User" msdata:parent="dbo.User" msdata:child="UserRole" msdata:parentkey="ID" msdata:childkey="UserID" msprop:Generator_UserRelationName="FK_UserRole_User" msprop:Generator_RelationVarName="relationFK_UserRole_User" msprop:Generator_UserChildTable="UserRole" msprop:Generator_UserParentTable="dbo.User" msprop:Generator_ParentPropName="UserRow" msprop:Generator_ChildPropName="GetUserRoleRows" />
     </xs:appinfo>
   </xs:annotation>
 </xs:schema>

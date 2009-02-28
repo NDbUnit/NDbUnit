@@ -27,210 +27,202 @@ using System.Collections;
 
 namespace NDbUnit.Core.SqlClient
 {
-	/// <summary>
-	/// Summary description for SqlDbOperation.
-	/// </summary>
-	public class SqlDbOperation : DbOperation
-	{
-		#region Public Methods
+    /// <summary>
+    /// Summary description for SqlDbOperation.
+    /// </summary>
+    public class SqlDbOperation : DbOperation
+    {
 
-		public SqlDbOperation()
-		{
-		}
+        public SqlDbOperation()
+        {
+            base.QuotePrefix = "[";
+            base.QuoteSuffix = "]";
+        }
 
-		#endregion
+        public void DeleteAll(SqlDbCommandBuilder sqlDbCommandBuilder, SqlTransaction sqlTransaction)
+        {
+            ((IDbOperation)this).DeleteAll(sqlDbCommandBuilder, sqlTransaction);
+        }
 
-		# region Type Safe Interface Implementation
-	
-		public void Insert(DataSet ds, SqlDbCommandBuilder sqlDbCommandBuilder, SqlTransaction sqlTransaction)
-		{
-			((IDbOperation)this).Insert(ds, sqlDbCommandBuilder, sqlTransaction);
-		}
+        public void Delete(DataSet ds, SqlDbCommandBuilder sqlDbCommandBuilder, SqlTransaction sqlTransaction)
+        {
+            ((IDbOperation)this).Delete(ds, sqlDbCommandBuilder, sqlTransaction);
+        }
 
-		public void InsertIdentity(DataSet ds, SqlDbCommandBuilder sqlDbCommandBuilder, SqlTransaction sqlTransaction)
-		{
-			((IDbOperation)this).InsertIdentity(ds, sqlDbCommandBuilder, sqlTransaction);
-		}
+        public void Insert(DataSet ds, SqlDbCommandBuilder sqlDbCommandBuilder, SqlTransaction sqlTransaction)
+        {
+            ((IDbOperation)this).Insert(ds, sqlDbCommandBuilder, sqlTransaction);
+        }
 
-		public void Update(DataSet ds, SqlDbCommandBuilder sqlDbCommandBuilder, SqlTransaction sqlTransaction)
-		{
-			((IDbOperation)this).Update(ds, sqlDbCommandBuilder, sqlTransaction);
-		}
+        public void InsertIdentity(DataSet ds, SqlDbCommandBuilder sqlDbCommandBuilder, SqlTransaction sqlTransaction)
+        {
+            ((IDbOperation)this).InsertIdentity(ds, sqlDbCommandBuilder, sqlTransaction);
+        }
 
-		public void Delete(DataSet ds, SqlDbCommandBuilder sqlDbCommandBuilder, SqlTransaction sqlTransaction)
-		{
-			((IDbOperation)this).Delete(ds, sqlDbCommandBuilder, sqlTransaction);
-		}
+        public void Refresh(DataSet ds, SqlDbCommandBuilder sqlDbCommandBuilder, SqlTransaction sqlTransaction)
+        {
+            ((IDbOperation)this).Refresh(ds, sqlDbCommandBuilder, sqlTransaction);
+        }
 
-		public void DeleteAll(SqlDbCommandBuilder sqlDbCommandBuilder, SqlTransaction sqlTransaction)
-		{
-			((IDbOperation)this).DeleteAll(sqlDbCommandBuilder, sqlTransaction);
-		}
+        public void Update(DataSet ds, SqlDbCommandBuilder sqlDbCommandBuilder, SqlTransaction sqlTransaction)
+        {
+            ((IDbOperation)this).Update(ds, sqlDbCommandBuilder, sqlTransaction);
+        }
 
-		public void Refresh(DataSet ds, SqlDbCommandBuilder sqlDbCommandBuilder, SqlTransaction sqlTransaction)
-		{
-			((IDbOperation)this).Refresh(ds, sqlDbCommandBuilder, sqlTransaction);
-		}
+        protected override void OnDelete(DataTable dataTable, IDbCommand dbCommand, IDbTransaction dbTransaction)
+        {
+            SqlTransaction sqlTransaction = (SqlTransaction)dbTransaction;
 
-		#endregion
+            SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
+            sqlDataAdapter.DeleteCommand = (SqlCommand)dbCommand;
+            sqlDataAdapter.DeleteCommand.Connection = sqlTransaction.Connection;
+            sqlDataAdapter.DeleteCommand.Transaction = sqlTransaction;
 
-		#region Protected Overrides
+            sqlDataAdapter.Update(dataTable);
+        }
 
-		protected override void OnInsert(DataTable dataTable, IDbCommand dbCommand, IDbTransaction dbTransaction)
-		{
-			SqlTransaction sqlTransaction = (SqlTransaction)dbTransaction;
+        protected override void OnDeleteAll(IDbCommand dbCommand, IDbTransaction dbTransaction)
+        {
+            SqlTransaction sqlTransaction = (SqlTransaction)dbTransaction;
 
-			SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
-			sqlDataAdapter.InsertCommand = (SqlCommand)dbCommand;
-			sqlDataAdapter.InsertCommand.Connection = sqlTransaction.Connection;
-			sqlDataAdapter.InsertCommand.Transaction = sqlTransaction;
+            SqlCommand sqlCommand = (SqlCommand)dbCommand;
+            sqlCommand.Connection = sqlTransaction.Connection;
+            sqlCommand.Transaction = sqlTransaction;
 
-			sqlDataAdapter.Update(dataTable);
-		}
+            sqlCommand.ExecuteNonQuery();
+        }
 
-		protected override void OnInsertIdentity(DataTable dataTable, IDbCommand dbCommand, IDbTransaction dbTransaction)
-		{
-			SqlTransaction sqlTransaction = (SqlTransaction)dbTransaction;
+        protected override void OnInsert(DataTable dataTable, IDbCommand dbCommand, IDbTransaction dbTransaction)
+        {
+            SqlTransaction sqlTransaction = (SqlTransaction)dbTransaction;
 
-			foreach(DataColumn column in dataTable.Columns)
-			{
-				if(column.AutoIncrement)
-				{
-					// Set identity insert on.
-					SqlCommand sqlCommand = new SqlCommand("SET IDENTITY_INSERT [" + dataTable.TableName + "] ON");
-					sqlCommand.Connection = sqlTransaction.Connection;
-					sqlCommand.Transaction = sqlTransaction;
-					sqlCommand.ExecuteNonQuery();
+            SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
+            sqlDataAdapter.InsertCommand = (SqlCommand)dbCommand;
+            sqlDataAdapter.InsertCommand.Connection = sqlTransaction.Connection;
+            sqlDataAdapter.InsertCommand.Transaction = sqlTransaction;
 
-					break;
-				}
-			}
+            sqlDataAdapter.Update(dataTable);
+        }
 
-			try
-			{
-				SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
-				sqlDataAdapter.InsertCommand = (SqlCommand)dbCommand;
-				sqlDataAdapter.InsertCommand.Connection = sqlTransaction.Connection;
-				sqlDataAdapter.InsertCommand.Transaction = sqlTransaction;
+        protected override void OnInsertIdentity(DataTable dataTable, IDbCommand dbCommand, IDbTransaction dbTransaction)
+        {
+            SqlTransaction sqlTransaction = (SqlTransaction)dbTransaction;
 
-				sqlDataAdapter.Update(dataTable);
-			}
-			catch(Exception e)
-			{
-				throw(e);
-			}
-			finally
-			{
-				foreach(DataColumn column in dataTable.Columns)
-				{
-					if(column.AutoIncrement)
-					{
-						// Set identity insert off.
-						SqlCommand sqlCommand = new SqlCommand("SET IDENTITY_INSERT [" + dataTable.TableName + "] OFF");
-						sqlCommand.Connection = sqlTransaction.Connection;
-						sqlCommand.Transaction = sqlTransaction;
-						sqlCommand.ExecuteNonQuery();
-						
-						break;
-					}
-				}
-			}
-		}
-		
-		protected override void OnDelete(DataTable dataTable, IDbCommand dbCommand, IDbTransaction dbTransaction)
-		{
-			SqlTransaction sqlTransaction = (SqlTransaction)dbTransaction;
+            foreach (DataColumn column in dataTable.Columns)
+            {
+                if (column.AutoIncrement)
+                {
+                    // Set identity insert on.
+                    SqlCommand sqlCommand = new SqlCommand("SET IDENTITY_INSERT " + TableNameHelper.FormatTableName(dataTable.TableName, QuotePrefix, QuoteSuffix) + " ON");
+                    sqlCommand.Connection = sqlTransaction.Connection;
+                    sqlCommand.Transaction = sqlTransaction;
+                    sqlCommand.ExecuteNonQuery();
 
-			SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
-			sqlDataAdapter.DeleteCommand = (SqlCommand)dbCommand;
-			sqlDataAdapter.DeleteCommand.Connection = sqlTransaction.Connection;
-			sqlDataAdapter.DeleteCommand.Transaction = sqlTransaction;
+                    break;
+                }
+            }
 
-			sqlDataAdapter.Update(dataTable);
-		}
+            try
+            {
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
+                sqlDataAdapter.InsertCommand = (SqlCommand)dbCommand;
+                sqlDataAdapter.InsertCommand.Connection = sqlTransaction.Connection;
+                sqlDataAdapter.InsertCommand.Transaction = sqlTransaction;
 
-		protected override void OnDeleteAll(IDbCommand dbCommand, IDbTransaction dbTransaction)
-		{
-			SqlTransaction sqlTransaction = (SqlTransaction)dbTransaction;
+                sqlDataAdapter.Update(dataTable);
+            }
+            catch (Exception e)
+            {
+                throw (e);
+            }
+            finally
+            {
+                foreach (DataColumn column in dataTable.Columns)
+                {
+                    if (column.AutoIncrement)
+                    {
+                        // Set identity insert off.
+                        SqlCommand sqlCommand = new SqlCommand("SET IDENTITY_INSERT " + TableNameHelper.FormatTableName(dataTable.TableName, QuotePrefix, QuoteSuffix) + " OFF");
+                        sqlCommand.Connection = sqlTransaction.Connection;
+                        sqlCommand.Transaction = sqlTransaction;
+                        sqlCommand.ExecuteNonQuery();
 
-			SqlCommand sqlCommand = (SqlCommand)dbCommand;
-			sqlCommand.Connection = sqlTransaction.Connection;
-			sqlCommand.Transaction = sqlTransaction;
+                        break;
+                    }
+                }
+            }
+        }
 
-			sqlCommand.ExecuteNonQuery();
-		}
+        protected override void OnRefresh(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction, string tableName)
+        {
+            SqlTransaction sqlTransaction = (SqlTransaction)dbTransaction;
 
-		protected override void OnUpdate(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction, string tableName)
-		{
-			SqlTransaction sqlTransaction = (SqlTransaction)dbTransaction;
+            SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
+            sqlDataAdapter.SelectCommand = (SqlCommand)dbCommandBuilder.GetSelectCommand(tableName);
+            sqlDataAdapter.SelectCommand.Connection = sqlTransaction.Connection;
+            sqlDataAdapter.SelectCommand.Transaction = sqlTransaction;
 
-			SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
-			sqlDataAdapter.UpdateCommand = (SqlCommand)dbCommandBuilder.GetUpdateCommand(tableName);
-			sqlDataAdapter.UpdateCommand.Connection = sqlTransaction.Connection;
-			sqlDataAdapter.UpdateCommand.Transaction = sqlTransaction;
+            DataSet dsDb = new DataSet();
+            // Query all records in the database table.
+            sqlDataAdapter.Fill(dsDb, tableName);
 
-			sqlDataAdapter.Update(ds, tableName);
-		}
+            DataSet dsUpdate = dbCommandBuilder.GetSchema().Clone();
 
-		protected override void OnRefresh(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction, string tableName)
-		{
-			SqlTransaction sqlTransaction = (SqlTransaction)dbTransaction;
+            DataTable dataTable = ds.Tables[tableName];
+            DataTable dataTableDb = dsDb.Tables[tableName];
+            // Iterate all rows in the table.
+            foreach (DataRow dataRow in dataTable.Rows)
+            {
+                string row = dataRow.ToString();
+                bool rowDoesNotExist = true;
+                // Iterate all rows in the database table.
+                foreach (DataRow dataRowDb in dataTableDb.Rows)
+                {
+                    // The row exists in the database.
+                    if (IsPrimaryKeyValueEqual(dataRow, dataRowDb, dsUpdate.Tables[tableName].PrimaryKey))
+                    {
+                        rowDoesNotExist = false;
+                        DataRow dataRowNew = base.CloneDataRow(dsUpdate.Tables[tableName], dataRow);
+                        dsUpdate.Tables[tableName].Rows.Add(dataRowNew);
+                        dataRowNew.AcceptChanges();
+                        // Mark as modified.
+                        dataRowNew.BeginEdit();
+                        dataRowNew.EndEdit();
+                        break;
+                    }
+                }
 
-			SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
-			sqlDataAdapter.SelectCommand = (SqlCommand)dbCommandBuilder.GetSelectCommand(tableName); 
-			sqlDataAdapter.SelectCommand.Connection = sqlTransaction.Connection;
-			sqlDataAdapter.SelectCommand.Transaction = sqlTransaction;
+                // The row does not exist in the database.
+                if (rowDoesNotExist)
+                {
+                    DataRow dataRowNew = base.CloneDataRow(dsUpdate.Tables[tableName], dataRow);
+                    dsUpdate.Tables[tableName].Rows.Add(dataRowNew);
+                }
+            }
 
-			DataSet dsDb = new DataSet();
-			// Query all records in the database table.
-			sqlDataAdapter.Fill(dsDb, tableName);			
+            // Does not insert identity.
+            sqlDataAdapter.InsertCommand = (SqlCommand)dbCommandBuilder.GetInsertCommand(tableName);
+            sqlDataAdapter.InsertCommand.Connection = sqlTransaction.Connection;
+            sqlDataAdapter.InsertCommand.Transaction = sqlTransaction;
 
-			DataSet dsUpdate = dbCommandBuilder.GetSchema().Clone();
+            sqlDataAdapter.UpdateCommand = (SqlCommand)dbCommandBuilder.GetUpdateCommand(tableName);
+            sqlDataAdapter.UpdateCommand.Connection = sqlTransaction.Connection;
+            sqlDataAdapter.UpdateCommand.Transaction = sqlTransaction;
 
-			DataTable dataTable = ds.Tables[tableName];
-			DataTable dataTableDb = dsDb.Tables[tableName];
-			// Iterate all rows in the table.
-			foreach(DataRow dataRow in dataTable.Rows)
-			{
-				string row = dataRow.ToString();
-				bool rowDoesNotExist = true;
-				// Iterate all rows in the database table.
-				foreach(DataRow dataRowDb in dataTableDb.Rows)
-				{
-					// The row exists in the database.
-					if (IsPrimaryKeyValueEqual(dataRow, dataRowDb, dsUpdate.Tables[tableName].PrimaryKey))
-					{
-						rowDoesNotExist = false;
-						DataRow dataRowNew = base.CloneDataRow(dsUpdate.Tables[tableName], dataRow);
-						dsUpdate.Tables[tableName].Rows.Add(dataRowNew);
-						dataRowNew.AcceptChanges();
-						// Mark as modified.
-						dataRowNew.BeginEdit();
-						dataRowNew.EndEdit();
-						break;
-					}
-				}
+            sqlDataAdapter.Update(dsUpdate, tableName);
+        }
 
-				// The row does not exist in the database.
-				if (rowDoesNotExist)
-				{
-					DataRow dataRowNew = base.CloneDataRow(dsUpdate.Tables[tableName], dataRow);
-					dsUpdate.Tables[tableName].Rows.Add(dataRowNew);
-				}
-			}
+        protected override void OnUpdate(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction, string tableName)
+        {
+            SqlTransaction sqlTransaction = (SqlTransaction)dbTransaction;
 
-			// Does not insert identity.
-			sqlDataAdapter.InsertCommand = (SqlCommand)dbCommandBuilder.GetInsertCommand(tableName);
-			sqlDataAdapter.InsertCommand.Connection = sqlTransaction.Connection;
-			sqlDataAdapter.InsertCommand.Transaction = sqlTransaction;
+            SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
+            sqlDataAdapter.UpdateCommand = (SqlCommand)dbCommandBuilder.GetUpdateCommand(tableName);
+            sqlDataAdapter.UpdateCommand.Connection = sqlTransaction.Connection;
+            sqlDataAdapter.UpdateCommand.Transaction = sqlTransaction;
 
-			sqlDataAdapter.UpdateCommand = (SqlCommand)dbCommandBuilder.GetUpdateCommand(tableName);
-			sqlDataAdapter.UpdateCommand.Connection = sqlTransaction.Connection;
-			sqlDataAdapter.UpdateCommand.Transaction = sqlTransaction;
+            sqlDataAdapter.Update(ds, tableName);
+        }
 
-			sqlDataAdapter.Update(dsUpdate, tableName);
-		}
-
-		#endregion
-	}
+    }
 }

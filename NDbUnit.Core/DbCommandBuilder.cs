@@ -25,243 +25,226 @@ using System.IO;
 using System.Xml;
 using System.Data;
 using System.Collections;
+using System.Text;
 
 namespace NDbUnit.Core
 {
-	public interface IDbCommandBuilder
-	{
-		string QuotePrefix
-		{
-			get;
-			set;
-		}
+    public interface IDbCommandBuilder
+    {
+        string QuotePrefix
+        {
+            get;
+            set;
+        }
 
-		string QuoteSuffix
-		{
-			get;
-			set;
-		}
+        string QuoteSuffix
+        {
+            get;
+            set;
+        }
 
-		IDbConnection Connection
-		{
-			get;
-		}
+        IDbConnection Connection
+        {
+            get;
+        }
 
-		DataSet GetSchema();
-		void BuildCommands(string xmlSchemaFile);
-		void BuildCommands(Stream xmlSchema);
-		IDbCommand GetSelectCommand(string tableName);
-		IDbCommand GetInsertCommand(string tableName);
-		IDbCommand GetInsertIdentityCommand(string tableName);
-		IDbCommand GetDeleteCommand(string tableName);
-		IDbCommand GetDeleteAllCommand(string tableName);
-		IDbCommand GetUpdateCommand(string tableName);
-	}
+        DataSet GetSchema();
+        void BuildCommands(string xmlSchemaFile);
+        void BuildCommands(Stream xmlSchema);
+        IDbCommand GetSelectCommand(string tableName);
+        IDbCommand GetInsertCommand(string tableName);
+        IDbCommand GetInsertIdentityCommand(string tableName);
+        IDbCommand GetDeleteCommand(string tableName);
+        IDbCommand GetDeleteAllCommand(string tableName);
+        IDbCommand GetUpdateCommand(string tableName);
+    }
 
-	public abstract class DbCommandBuilder : IDbCommandBuilder
-	{
-		#region Private Fields
+    public abstract class DbCommandBuilder : IDbCommandBuilder
+    {
+        private Hashtable _dbCommandColl = new Hashtable();
 
-		private string _xmlSchemaFile = "";
-		private XmlDataDocument _xdd = new XmlDataDocument();
-		private Hashtable _dbCommandColl = new Hashtable();
-		private string _quotePrefix = "";
-		private string _quoteSuffix = "";
-		private bool _initialized = false;
+        private bool _initialized = false;
 
-		#endregion
+        private string _quotePrefix = "";
 
-		#region Nested Classes
+        private string _quoteSuffix = "";
 
-		private class Commands
-		{
-			public IDbCommand SelectCommand = null;
-			public IDbCommand InsertCommand = null;
-			public IDbCommand InsertIdentityCommand = null;
-			public IDbCommand DeleteCommand = null;
-			public IDbCommand DeleteAllCommand = null;
-			public IDbCommand UpdateCommand = null;
-		}
+        private XmlDataDocument _xdd = new XmlDataDocument();
 
-		#endregion
+        private string _xmlSchemaFile = "";
 
-		#region Public Properties
+        public DbCommandBuilder()
+        {
+        }
 
-		public string XmlSchemaFile
-		{
-			get
-			{
-				return _xmlSchemaFile;
-			}
-		}
+        IDbConnection IDbCommandBuilder.Connection
+        {
+            get
+            {
+                return GetConnection();
+            }
+        }
 
-		public string QuotePrefix
-		{
-			get
-			{
-				return _quotePrefix;
-			}
+        public string QuotePrefix
+        {
+            get
+            {
+                return _quotePrefix;
+            }
 
-			set
-			{
-				_quotePrefix = value;
-			}
-		}
+            set
+            {
+                _quotePrefix = value;
+            }
+        }
 
-		public string QuoteSuffix
-		{
-			get
-			{
-				return _quoteSuffix;
-			}
+        public string QuoteSuffix
+        {
+            get
+            {
+                return _quoteSuffix;
+            }
 
-			set
-			{
-				_quoteSuffix = value;
-			}
-		}
+            set
+            {
+                _quoteSuffix = value;
+            }
+        }
 
-		#endregion
+        public string XmlSchemaFile
+        {
+            get
+            {
+                return _xmlSchemaFile;
+            }
+        }
 
-		#region Public Methods
+        public void BuildCommands(Stream xmlSchema)
+        {
+            XmlDataDocument xdd = new XmlDataDocument();
 
-		public DbCommandBuilder()
-		{
-		}
+            xdd.DataSet.ReadXmlSchema(xmlSchema);
+            // DataSet table rows RowState property is set to Added
+            // when read in from an xml file.
+            xdd.DataSet.AcceptChanges();
 
-		#endregion
+            Hashtable ht = new Hashtable();
 
-		#region Public Interface Implementation
+            Commands commands = null;
+            foreach (DataTable dataTable in xdd.DataSet.Tables)
+            {
+                // Virtual overrides.
+                commands = new Commands();
+                commands.SelectCommand = CreateSelectCommand(xdd.DataSet, dataTable.TableName);
+                commands.InsertCommand = CreateInsertCommand(commands.SelectCommand, dataTable.TableName);
+                commands.InsertIdentityCommand = CreateInsertIdentityCommand(commands.SelectCommand, dataTable.TableName);
+                commands.DeleteCommand = CreateDeleteCommand(commands.SelectCommand, dataTable.TableName);
+                commands.DeleteAllCommand = CreateDeleteAllCommand(dataTable.TableName);
+                commands.UpdateCommand = CreateUpdateCommand(commands.SelectCommand, dataTable.TableName);
 
-		public DataSet GetSchema()
-		{
-			isInitialized();
-			return _xdd.DataSet;
-		}
+                ht[dataTable.TableName] = commands;
+            }
 
-		public void BuildCommands(string xmlSchemaFile)
-		{
-			Stream stream = null;
-			try
-			{
-				stream = new FileStream(xmlSchemaFile, System.IO.FileMode.Open);
-				BuildCommands(stream);
-			}
-			finally
-			{
-				if(stream != null)
-				{
-					stream.Close();
-				}
-			}
-			_xmlSchemaFile = xmlSchemaFile;
-			_initialized = true;
-		}
+            _xdd = xdd;
+            _dbCommandColl = ht;
+            _initialized = true;
+        }
 
-		public void BuildCommands(Stream xmlSchema)
-		{
-			XmlDataDocument xdd = new XmlDataDocument();
+        public void BuildCommands(string xmlSchemaFile)
+        {
+            Stream stream = null;
+            try
+            {
+                stream = new FileStream(xmlSchemaFile, System.IO.FileMode.Open);
+                BuildCommands(stream);
+            }
+            finally
+            {
+                if (stream != null)
+                {
+                    stream.Close();
+                }
+            }
+            _xmlSchemaFile = xmlSchemaFile;
+            _initialized = true;
+        }
 
-			xdd.DataSet.ReadXmlSchema(xmlSchema);
-			// DataSet table rows RowState property is set to Added
-			// when read in from an xml file.
-			xdd.DataSet.AcceptChanges();
+        public DataSet GetSchema()
+        {
+            isInitialized();
+            return _xdd.DataSet;
+        }
 
-			Hashtable ht = new Hashtable();
+        protected abstract IDbCommand CreateDeleteAllCommand(string tableName);
 
-			Commands commands = null;
-			foreach(DataTable dataTable in xdd.DataSet.Tables)
-			{
-				// Virtual overrides.
-				commands = new Commands();
-				commands.SelectCommand = CreateSelectCommand(xdd.DataSet, dataTable.TableName);
-				commands.InsertCommand = CreateInsertCommand(commands.SelectCommand, dataTable.TableName);
-				commands.InsertIdentityCommand = CreateInsertIdentityCommand(commands.SelectCommand, dataTable.TableName);
-				commands.DeleteCommand = CreateDeleteCommand(commands.SelectCommand, dataTable.TableName);
-				commands.DeleteAllCommand = CreateDeleteAllCommand(dataTable.TableName);
-				commands.UpdateCommand = CreateUpdateCommand(commands.SelectCommand, dataTable.TableName);
+        protected abstract IDbCommand CreateDeleteCommand(IDbCommand selectCommand, string tableName);
 
-				ht[dataTable.TableName] = commands;
-			}
+        protected abstract IDbCommand CreateInsertCommand(IDbCommand selectCommand, string tableName);
 
-			_xdd = xdd;
-			_dbCommandColl = ht;
-			_initialized = true;
-		}
+        protected abstract IDbCommand CreateInsertIdentityCommand(IDbCommand selectCommand, string tableName);
 
-		#endregion
+        protected abstract IDbCommand CreateSelectCommand(DataSet ds, string tableName);
 
-		#region Explicit Interface Implementation
+        protected abstract IDbCommand CreateUpdateCommand(IDbCommand selectCommand, string tableName);
 
-		IDbConnection IDbCommandBuilder.Connection
-		{
-			get
-			{
-				return GetConnection();
-			}
-		}
+        protected abstract IDbConnection GetConnection();
 
-		IDbCommand IDbCommandBuilder.GetSelectCommand(string tableName)
-		{
-			isInitialized();
-			return ((Commands)_dbCommandColl[tableName]).SelectCommand;
-		}
+     
 
-		IDbCommand IDbCommandBuilder.GetInsertCommand(string tableName)
-		{
-			isInitialized();
-			return ((Commands)_dbCommandColl[tableName]).InsertCommand;
-		}
+        IDbCommand IDbCommandBuilder.GetDeleteAllCommand(string tableName)
+        {
+            isInitialized();
+            return ((Commands)_dbCommandColl[tableName]).DeleteAllCommand;
+        }
 
-		IDbCommand IDbCommandBuilder.GetInsertIdentityCommand(string tableName)
-		{
-			isInitialized();
-			return ((Commands)_dbCommandColl[tableName]).InsertIdentityCommand;
-		}
+        IDbCommand IDbCommandBuilder.GetDeleteCommand(string tableName)
+        {
+            isInitialized();
+            return ((Commands)_dbCommandColl[tableName]).DeleteCommand;
+        }
 
-		IDbCommand IDbCommandBuilder.GetUpdateCommand(string tableName)
-		{
-			isInitialized();
-			return ((Commands)_dbCommandColl[tableName]).UpdateCommand;
-		}
+        IDbCommand IDbCommandBuilder.GetInsertCommand(string tableName)
+        {
+            isInitialized();
+            return ((Commands)_dbCommandColl[tableName]).InsertCommand;
+        }
 
-		IDbCommand IDbCommandBuilder.GetDeleteCommand(string tableName)
-		{
-			isInitialized();
-			return ((Commands)_dbCommandColl[tableName]).DeleteCommand;
-		}
+        IDbCommand IDbCommandBuilder.GetInsertIdentityCommand(string tableName)
+        {
+            isInitialized();
+            return ((Commands)_dbCommandColl[tableName]).InsertIdentityCommand;
+        }
 
-		IDbCommand IDbCommandBuilder.GetDeleteAllCommand(string tableName)
-		{
-			isInitialized();
-			return ((Commands)_dbCommandColl[tableName]).DeleteAllCommand;
-		}
+        IDbCommand IDbCommandBuilder.GetSelectCommand(string tableName)
+        {
+            isInitialized();
+            return ((Commands)_dbCommandColl[tableName]).SelectCommand;
+        }
 
-		#endregion
+        IDbCommand IDbCommandBuilder.GetUpdateCommand(string tableName)
+        {
+            isInitialized();
+            return ((Commands)_dbCommandColl[tableName]).UpdateCommand;
+        }
 
-		#region Protected Abstract Methods
+        private void isInitialized()
+        {
+            if (!_initialized)
+            {
+                string message = "IDbCommandBuilder.BuildCommands(string) or IDbCommandBuilder.BuildCommands(Stream) must be called successfully";
+                throw new NDbUnitException(message);
+            }
+        }
 
-		protected abstract IDbConnection GetConnection();
-		protected abstract IDbCommand CreateSelectCommand(DataSet ds, string tableName);
-		protected abstract IDbCommand CreateInsertCommand(IDbCommand selectCommand, string tableName);
-		protected abstract IDbCommand CreateInsertIdentityCommand(IDbCommand selectCommand, string tableName);
-		protected abstract IDbCommand CreateDeleteCommand(IDbCommand selectCommand, string tableName);
-		protected abstract IDbCommand CreateDeleteAllCommand(string tableName);
-		protected abstract IDbCommand CreateUpdateCommand(IDbCommand selectCommand, string tableName);
+        private class Commands
+        {
+            public IDbCommand SelectCommand = null;
+            public IDbCommand InsertCommand = null;
+            public IDbCommand InsertIdentityCommand = null;
+            public IDbCommand DeleteCommand = null;
+            public IDbCommand DeleteAllCommand = null;
+            public IDbCommand UpdateCommand = null;
+        }
 
-		#endregion
-
-		#region Private Methods
-
-		private void isInitialized()
-		{
-			if (!_initialized)
-			{
-				string message = "IDbCommandBuilder.BuildCommands(string) or IDbCommandBuilder.BuildCommands(Stream) must be called successfully";
-				throw new NDbUnitException(message);
-			}
-		}
-
-		#endregion
-	}
+    }
 }

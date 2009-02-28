@@ -4,59 +4,43 @@
         <name>NDbUnit.Core</name>
     </assembly>
     <members>
-        <member name="M:NDbUnit.Core.SqlLite.SqlLiteDbOperation.OnInsertIdentity(System.Data.DataTable,System.Data.IDbCommand,System.Data.IDbTransaction)">
-            <summary>
-            SQLite doesn't need any changes to insert PK values.
-            </summary>
-            <param name="dataTable"></param>
-            <param name="dbCommand"></param>
-            <param name="dbTransaction"></param>
-        </member>
-        <member name="M:NDbUnit.Core.SqlLite.SqlLiteDbCommandBuilder.IsAutoIncrementing(System.Data.DataRow)">
-            <summary>
-            Since SQLite keys are auto incremented by default we need to check to see if the column
-            is a key as well, since not all columns will be marked with AUTOINCREMENT
-            </summary>
-            <param name="row"></param>
-            <returns></returns>
-        </member>
-        <member name="T:DataSetTableIterator">
+        <member name="T:NDbUnit.Core.DataSetTableIterator">
             <summary>
             Class that builds an iterator for tables.  The order of the tables returned by the iterator
             is determined by the foreign keys between tables.
             </summary>
         </member>
-        <member name="M:DataSetTableIterator.#ctor(System.Data.DataSet)">
+        <member name="M:NDbUnit.Core.DataSetTableIterator.#ctor(System.Data.DataSet)">
             <summary>
             Constructor that takes in a dataset to build iterator for the tables.
             </summary>
             <param name="dataSet">DataSet containing tables.</param>
         </member>
-        <member name="M:DataSetTableIterator.BuildTableList(System.Data.DataSet)">
+        <member name="M:NDbUnit.Core.DataSetTableIterator.BuildTableList(System.Data.DataSet)">
             <summary>
             Builds the table list.
             </summary>
             <param name="dataSet">The data set.</param>
         </member>
-        <member name="M:DataSetTableIterator.ReverseListIfNeeded">
+        <member name="M:NDbUnit.Core.DataSetTableIterator.ReverseListIfNeeded">
             <summary>
             Reverses the list if needed.
             </summary>
         </member>
-        <member name="M:DataSetTableIterator.#ctor(System.Data.DataSet,System.Boolean)">
+        <member name="M:NDbUnit.Core.DataSetTableIterator.#ctor(System.Data.DataSet,System.Boolean)">
             <summary>
-            Initializes a new instance of the <see cref="T:DataSetTableIterator"/> class.
+            Initializes a new instance of the <see cref="T:NDbUnit.Core.DataSetTableIterator"/> class.
             </summary>
             <param name="dataSet">The data set.</param>
             <param name="iterateInReverse">if set to <c>true</c> [iterate in reverse].</param>
         </member>
-        <member name="M:DataSetTableIterator.AddTablesToList(System.Data.DataTableCollection)">
+        <member name="M:NDbUnit.Core.DataSetTableIterator.AddTablesToList(System.Data.DataTableCollection)">
             <summary>
             Iterate over tables in dataset and at them to the internal list.
             </summary>
             <param name="tables">Collection of tables.</param>
         </member>
-        <member name="M:DataSetTableIterator.ShouldAddToList(System.Data.DataTable)">
+        <member name="M:NDbUnit.Core.DataSetTableIterator.ShouldAddToList(System.Data.DataTable)">
             <summary>
             Adds a table to the list if
                 - It hasn't already been added
@@ -65,7 +49,7 @@
             <param name="table">DataTable to check if it meets conditions to add to list.</param>
             <returns>True if should add, otherwise false.</returns>
         </member>
-        <member name="M:DataSetTableIterator.System#Collections#Generic#IEnumerable{System#Data#DataTable}#GetEnumerator">
+        <member name="M:NDbUnit.Core.DataSetTableIterator.System#Collections#Generic#IEnumerable{System#Data#DataTable}#GetEnumerator">
             <summary>
             Returns an enumerator that iterates through the collection.
             </summary>
@@ -74,7 +58,7 @@
             </returns>
             <filterpriority>1</filterpriority>
         </member>
-        <member name="M:DataSetTableIterator.MoveNext">
+        <member name="M:NDbUnit.Core.DataSetTableIterator.MoveNext">
             <summary>
             Advances the enumerator to the next element of the collection.
             </summary>
@@ -84,14 +68,14 @@
             <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
             <filterpriority>2</filterpriority>
         </member>
-        <member name="M:DataSetTableIterator.Reset">
+        <member name="M:NDbUnit.Core.DataSetTableIterator.Reset">
             <summary>
             Sets the enumerator to its initial position, which is before the first element in the collection.
             </summary>
             <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
             <filterpriority>2</filterpriority>
         </member>
-        <member name="P:DataSetTableIterator.System#Collections#IEnumerator#Current">
+        <member name="P:NDbUnit.Core.DataSetTableIterator.System#Collections#IEnumerator#Current">
             <summary>
             Gets the current element in the collection.
             </summary>
@@ -343,14 +327,6 @@
             instance of an object is <see cref="F:NDbUnit.Core.OleDb.DbType.NoDb"/>.
             </summary>
         </member>
-        <member name="M:NDbUnit.Core.SqlLite.SqlLiteUnitTest.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:NDbUnit.Core.SqlLite.SqlLiteUnitTest"/> class.
-            </summary>
-            <param name="connectionString">The connection string 
-            used to open the database.
-            <seealso cref="P:System.Data.IDbConnection.ConnectionString"/></param>
-        </member>
         <member name="T:NDbUnit.Core.OleDb.DbType">
             <summary>
             An enumeration specifying the OLE database type.
@@ -367,6 +343,30 @@
         </member>
         <member name="F:NDbUnit.Core.OleDb.DbType.DB2">
             <summary>DB2.</summary>
+        </member>
+        <member name="M:NDbUnit.Core.SqlLite.SqlLiteDbCommandBuilder.IsAutoIncrementing(System.Data.DataRow)">
+            <summary>
+            Since SQLite keys are auto incremented by default we need to check to see if the column
+            is a key as well, since not all columns will be marked with AUTOINCREMENT
+            </summary>
+            <param name="row"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NDbUnit.Core.SqlLite.SqlLiteDbOperation.OnInsertIdentity(System.Data.DataTable,System.Data.IDbCommand,System.Data.IDbTransaction)">
+            <summary>
+            SQLite doesn't need any changes to insert PK values.
+            </summary>
+            <param name="dataTable"></param>
+            <param name="dbCommand"></param>
+            <param name="dbTransaction"></param>
+        </member>
+        <member name="M:NDbUnit.Core.SqlLite.SqlLiteUnitTest.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NDbUnit.Core.SqlLite.SqlLiteUnitTest"/> class.
+            </summary>
+            <param name="connectionString">The connection string 
+            used to open the database.
+            <seealso cref="P:System.Data.IDbConnection.ConnectionString"/></param>
         </member>
     </members>
 </doc>

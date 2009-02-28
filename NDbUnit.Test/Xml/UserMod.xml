@@ -10,18 +10,18 @@
 		<Name>UserMod</Name>
 		<Description>User with limited security</Description>
 	</Role>
-	<User>
+	<dbo.User>
     <ID>1</ID>		
     <FirstName>HammadModified</FirstName>
 		<LastName>Awan</LastName>
 		<Age>30</Age>
-	</User>
-	<User>
+	</dbo.User>
+	<dbo.User>
     <ID>2</ID>
     <FirstName>JohnModified</FirstName>
 		<LastName>Williams</LastName>
 		<Age>38</Age>
-	</User>
+	</dbo.User>
 	<UserRole>
 		<UserID>1</UserID>
 		<RoleID>1</RoleID>

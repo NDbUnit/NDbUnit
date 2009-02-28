@@ -27,341 +27,341 @@ using System.Data.SqlClient;
 
 namespace NDbUnit.Core.SqlClient
 {
-	public class SqlDbCommandBuilder : DbCommandBuilder
-	{
-		#region Private Fields
+    public class SqlDbCommandBuilder : DbCommandBuilder
+    {
+        #region Private Fields
 
-		private SqlConnection _sqlConnection = null;
-		private DataTable _dataTableSchema = null;
+        private SqlConnection _sqlConnection = null;
+        private DataTable _dataTableSchema = null;
 
-		#endregion
+        #endregion
 
-		#region Public Methods
+        #region Public Methods
 
-		public SqlDbCommandBuilder(string connectionString)
-		{
-			_sqlConnection = new SqlConnection(connectionString);
+        public SqlDbCommandBuilder(string connectionString)
+        {
+            _sqlConnection = new SqlConnection(connectionString);
 
-			base.QuotePrefix = "[";
-			base.QuoteSuffix = "]";
-		}
+            base.QuotePrefix = "[";
+            base.QuoteSuffix = "]";
+        }
 
-		#endregion
+        #endregion
 
-		#region Type Safe Interface Implementation
+        #region Type Safe Interface Implementation
 
-		public SqlConnection Connection
-		{
-			get
-			{
-				return _sqlConnection;
-			}
-		}
+        public SqlConnection Connection
+        {
+            get
+            {
+                return _sqlConnection;
+            }
+        }
 
-		public SqlCommand GetSelectCommand(string tableName)
-		{
-			return ((SqlCommand)((IDbCommandBuilder)this).GetSelectCommand(tableName));
-		}
+        public SqlCommand GetSelectCommand(string tableName)
+        {
+            return ((SqlCommand)((IDbCommandBuilder)this).GetSelectCommand(tableName));
+        }
 
-		public SqlCommand GetInsertCommand(string tableName)
-		{
-			return ((SqlCommand)((IDbCommandBuilder)this).GetInsertCommand(tableName));
-		}
+        public SqlCommand GetInsertCommand(string tableName)
+        {
+            return ((SqlCommand)((IDbCommandBuilder)this).GetInsertCommand(tableName));
+        }
 
-		public SqlCommand GetInsertIdentityCommand(string tableName)
-		{
-			return ((SqlCommand)((IDbCommandBuilder)this).GetInsertIdentityCommand(tableName));
-		}
+        public SqlCommand GetInsertIdentityCommand(string tableName)
+        {
+            return ((SqlCommand)((IDbCommandBuilder)this).GetInsertIdentityCommand(tableName));
+        }
 
-		public SqlCommand GetDeleteCommand(string tableName)
-		{
-			return ((SqlCommand)((IDbCommandBuilder)this).GetDeleteCommand(tableName));
-		}
+        public SqlCommand GetDeleteCommand(string tableName)
+        {
+            return ((SqlCommand)((IDbCommandBuilder)this).GetDeleteCommand(tableName));
+        }
 
-		public SqlCommand GetDeleteAllCommand(string tableName)
-		{
-			return ((SqlCommand)((IDbCommandBuilder)this).GetDeleteAllCommand(tableName));
-		}
+        public SqlCommand GetDeleteAllCommand(string tableName)
+        {
+            return ((SqlCommand)((IDbCommandBuilder)this).GetDeleteAllCommand(tableName));
+        }
 
-		public SqlCommand GetUpdateCommand(string tableName)
-		{
-			return ((SqlCommand)((IDbCommandBuilder)this).GetUpdateCommand(tableName));
-		}
+        public SqlCommand GetUpdateCommand(string tableName)
+        {
+            return ((SqlCommand)((IDbCommandBuilder)this).GetUpdateCommand(tableName));
+        }
 
-		#endregion
+        #endregion
 
-		#region Protected Overrides
+        #region Protected Overrides
 
-		protected override IDbConnection GetConnection()
-		{
-			return _sqlConnection;
-		}
+        protected override IDbConnection GetConnection()
+        {
+            return _sqlConnection;
+        }
 
-		protected override IDbCommand CreateSelectCommand(DataSet ds, string tableName)
-		{
-			SqlCommand sqlSelectCommand = new SqlCommand();
+        protected override IDbCommand CreateSelectCommand(DataSet ds, string tableName)
+        {
+            SqlCommand sqlSelectCommand = new SqlCommand();
 
-			bool notFirstColumn = false;
-			StringBuilder sb = new StringBuilder("SELECT ");
-			DataTable dataTable = ds.Tables[tableName];
-			foreach(DataColumn dataColumn in dataTable.Columns)
-			{
-				if (notFirstColumn)
-				{
-					sb.Append(", ");
-				}
+            bool notFirstColumn = false;
+            StringBuilder sb = new StringBuilder("SELECT ");
+            DataTable dataTable = ds.Tables[tableName];
+            foreach (DataColumn dataColumn in dataTable.Columns)
+            {
+                if (notFirstColumn)
+                {
+                    sb.Append(", ");
+                }
 
-				notFirstColumn = true;
+                notFirstColumn = true;
 
-				sb.Append(base.QuotePrefix + dataColumn.ColumnName + base.QuoteSuffix);
-			}
+                sb.Append(base.QuotePrefix + dataColumn.ColumnName + base.QuoteSuffix);
+            }
 
-			sb.Append(" FROM ");
-			sb.Append(base.QuotePrefix + tableName + base.QuoteSuffix);
+            sb.Append(" FROM ");
+            sb.Append(TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix));
 
-			sqlSelectCommand.CommandText = sb.ToString();
-			sqlSelectCommand.Connection = _sqlConnection;
+            sqlSelectCommand.CommandText = sb.ToString();
+            sqlSelectCommand.Connection = _sqlConnection;
 
             try
             {
                 _dataTableSchema = getSchemaTable(sqlSelectCommand);
             }
-		    catch (Exception e)
-			{
-				string message = String.Format("SqlDbCommandBuilder.CreateSelectCommand(DataSet, string) failed for tableName = '{0}'", tableName);
-				throw new NDbUnitException(message, e);
-			}
+            catch (Exception e)
+            {
+                string message = String.Format("SqlDbCommandBuilder.CreateSelectCommand(DataSet, string) failed for tableName = '{0}'", tableName);
+                throw new NDbUnitException(message, e);
+            }
 
-			return sqlSelectCommand;
-		}
+            return sqlSelectCommand;
+        }
 
-		protected override IDbCommand CreateInsertCommand(IDbCommand selectCommand, string tableName)
-		{	
-			SqlCommand sqlSelectCommand = (SqlCommand)selectCommand;
+        protected override IDbCommand CreateInsertCommand(IDbCommand selectCommand, string tableName)
+        {
+            SqlCommand sqlSelectCommand = (SqlCommand)selectCommand;
 
-			int count = 1;
-			bool notFirstColumn = false;
-			StringBuilder sb = new StringBuilder();
-			sb.Append("INSERT INTO " + base.QuotePrefix + tableName + base.QuoteSuffix + "(");
-			StringBuilder sbParam = new StringBuilder();
-			SqlParameter sqlParameter = null;
-			SqlCommand sqlInsertCommand = new SqlCommand();
-			foreach(DataRow dataRow in _dataTableSchema.Rows)
-			{			
-				// Not an identity column.
-				if (!((bool)dataRow["IsIdentity"]))
-				{
-					if (notFirstColumn)
-					{
-						sb.Append(", ");
-						sbParam.Append(", ");
-					}
+            int count = 1;
+            bool notFirstColumn = false;
+            StringBuilder sb = new StringBuilder();
+            sb.Append("INSERT INTO " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + "(");
+            StringBuilder sbParam = new StringBuilder();
+            SqlParameter sqlParameter = null;
+            SqlCommand sqlInsertCommand = new SqlCommand();
+            foreach (DataRow dataRow in _dataTableSchema.Rows)
+            {
+                // Not an identity column.
+                if (!((bool)dataRow["IsIdentity"]))
+                {
+                    if (notFirstColumn)
+                    {
+                        sb.Append(", ");
+                        sbParam.Append(", ");
+                    }
 
-					notFirstColumn = true;
+                    notFirstColumn = true;
 
-					sb.Append(base.QuotePrefix + dataRow["ColumnName"] + base.QuoteSuffix);
-					sbParam.Append("@p" + count.ToString());
+                    sb.Append(base.QuotePrefix + dataRow["ColumnName"] + base.QuoteSuffix);
+                    sbParam.Append("@p" + count.ToString());
 
-					sqlParameter = newSqlParameter(count, dataRow);
-					sqlInsertCommand.Parameters.Add(sqlParameter);
+                    sqlParameter = newSqlParameter(count, dataRow);
+                    sqlInsertCommand.Parameters.Add(sqlParameter);
 
-					++count;
-				}
-			}			
+                    ++count;
+                }
+            }
 
-			sb.Append(") VALUES(" + sbParam.ToString() + ")");
+            sb.Append(") VALUES(" + sbParam.ToString() + ")");
 
-			sqlInsertCommand.CommandText = sb.ToString();
+            sqlInsertCommand.CommandText = sb.ToString();
 
-			return sqlInsertCommand;
-		}
+            return sqlInsertCommand;
+        }
 
-		protected override IDbCommand CreateInsertIdentityCommand(IDbCommand selectCommand, string tableName)
-		{
-			SqlCommand sqlSelectCommand = (SqlCommand)selectCommand;
+        protected override IDbCommand CreateInsertIdentityCommand(IDbCommand selectCommand, string tableName)
+        {
+            SqlCommand sqlSelectCommand = (SqlCommand)selectCommand;
 
-			int count = 1;
-			bool notFirstColumn = false;
-			StringBuilder sb = new StringBuilder();
-			sb.Append("INSERT INTO " + base.QuotePrefix + tableName + base.QuoteSuffix + "(");
-			StringBuilder sbParam = new StringBuilder();
-			SqlParameter sqlParameter = null;
-			SqlCommand sqlInsertIdentityCommand = new SqlCommand();
-			foreach(DataRow dataRow in _dataTableSchema.Rows)
-			{			
-				if (notFirstColumn)
-				{
-					sb.Append(", ");
-					sbParam.Append(", ");
-				}
+            int count = 1;
+            bool notFirstColumn = false;
+            StringBuilder sb = new StringBuilder();
+            sb.Append("INSERT INTO " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + "(");
+            StringBuilder sbParam = new StringBuilder();
+            SqlParameter sqlParameter = null;
+            SqlCommand sqlInsertIdentityCommand = new SqlCommand();
+            foreach (DataRow dataRow in _dataTableSchema.Rows)
+            {
+                if (notFirstColumn)
+                {
+                    sb.Append(", ");
+                    sbParam.Append(", ");
+                }
 
-				notFirstColumn = true;
+                notFirstColumn = true;
 
-				sb.Append(base.QuotePrefix + dataRow["ColumnName"] + base.QuoteSuffix);
-				sbParam.Append("@p" + count.ToString());
+                sb.Append(base.QuotePrefix + dataRow["ColumnName"] + base.QuoteSuffix);
+                sbParam.Append("@p" + count.ToString());
 
-				sqlParameter = newSqlParameter(count, dataRow);
-				sqlInsertIdentityCommand.Parameters.Add(sqlParameter);
+                sqlParameter = newSqlParameter(count, dataRow);
+                sqlInsertIdentityCommand.Parameters.Add(sqlParameter);
 
-				++count;
-			}			
+                ++count;
+            }
 
-			sb.Append(") VALUES(" + sbParam.ToString() + ")");
+            sb.Append(") VALUES(" + sbParam.ToString() + ")");
 
-			sqlInsertIdentityCommand.CommandText = sb.ToString();
+            sqlInsertIdentityCommand.CommandText = sb.ToString();
 
-			return sqlInsertIdentityCommand;
-		}
+            return sqlInsertIdentityCommand;
+        }
 
-		protected override IDbCommand CreateDeleteCommand(IDbCommand selectCommand, string tableName)
-		{
-			SqlCommand sqlSelectCommand = (SqlCommand)selectCommand;
+        protected override IDbCommand CreateDeleteCommand(IDbCommand selectCommand, string tableName)
+        {
+            SqlCommand sqlSelectCommand = (SqlCommand)selectCommand;
 
-			StringBuilder sb = new StringBuilder();
-			sb.Append("DELETE FROM " + base.QuotePrefix + tableName + base.QuoteSuffix + " WHERE ");
+            StringBuilder sb = new StringBuilder();
+            sb.Append("DELETE FROM " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + " WHERE ");
 
-			SqlCommand sqlDeleteCommand = new SqlCommand();
+            SqlCommand sqlDeleteCommand = new SqlCommand();
 
-			int count = 1;
-			SqlParameter sqlParameter = null;
-			foreach(DataRow dataRow in _dataTableSchema.Rows)
-			{			
-				// A key column.
-				if ((bool)dataRow["IsKey"])
-				{
-					if (count != 1)
-					{
-						sb.Append(" AND ");
-					}
+            int count = 1;
+            SqlParameter sqlParameter = null;
+            foreach (DataRow dataRow in _dataTableSchema.Rows)
+            {
+                // A key column.
+                if ((bool)dataRow["IsKey"])
+                {
+                    if (count != 1)
+                    {
+                        sb.Append(" AND ");
+                    }
 
-					sb.Append(base.QuotePrefix + dataRow["ColumnName"] + base.QuoteSuffix);
-					sb.Append("=@p" + count.ToString());
+                    sb.Append(base.QuotePrefix + dataRow["ColumnName"] + base.QuoteSuffix);
+                    sb.Append("=@p" + count.ToString());
 
-					sqlParameter = newSqlParameter(count, dataRow);
-					sqlDeleteCommand.Parameters.Add(sqlParameter);
+                    sqlParameter = newSqlParameter(count, dataRow);
+                    sqlDeleteCommand.Parameters.Add(sqlParameter);
 
-					++count;
-				}
-			}			
+                    ++count;
+                }
+            }
 
-			sqlDeleteCommand.CommandText = sb.ToString();
+            sqlDeleteCommand.CommandText = sb.ToString();
 
-			return sqlDeleteCommand;
-		}
+            return sqlDeleteCommand;
+        }
 
-		protected override IDbCommand CreateDeleteAllCommand(string tableName)
-		{
-			return new SqlCommand("DELETE FROM " + base.QuotePrefix + tableName + base.QuoteSuffix);
-		}
+        protected override IDbCommand CreateDeleteAllCommand(string tableName)
+        {
+            return new SqlCommand("DELETE FROM " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix));
+        }
 
-		protected override IDbCommand CreateUpdateCommand(IDbCommand selectCommand, string tableName)
-		{
-			SqlCommand sqlSelectCommand = (SqlCommand)selectCommand;
+        protected override IDbCommand CreateUpdateCommand(IDbCommand selectCommand, string tableName)
+        {
+            SqlCommand sqlSelectCommand = (SqlCommand)selectCommand;
 
-			StringBuilder sb = new StringBuilder();
-			sb.Append("UPDATE " + base.QuotePrefix + tableName + base.QuoteSuffix + " SET ");
+            StringBuilder sb = new StringBuilder();
+            sb.Append("UPDATE " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + " SET ");
 
-			SqlCommand sqlUpdateCommand = new SqlCommand();
+            SqlCommand sqlUpdateCommand = new SqlCommand();
 
-			int count = 1;
-			bool notFirstKey = false;
-			bool notFirstColumn = false;
-			SqlParameter sqlParameter = null;
-			StringBuilder sbPrimaryKey = new StringBuilder();
+            int count = 1;
+            bool notFirstKey = false;
+            bool notFirstColumn = false;
+            SqlParameter sqlParameter = null;
+            StringBuilder sbPrimaryKey = new StringBuilder();
 
-			bool containsAllPrimaryKeys = true;
-			foreach(DataRow dataRow in _dataTableSchema.Rows)
-			{
-				if(!(bool)dataRow["IsKey"])
-				{
-					containsAllPrimaryKeys = false;
-					break;
-				}
-			}
+            bool containsAllPrimaryKeys = true;
+            foreach (DataRow dataRow in _dataTableSchema.Rows)
+            {
+                if (!(bool)dataRow["IsKey"])
+                {
+                    containsAllPrimaryKeys = false;
+                    break;
+                }
+            }
 
-			foreach(DataRow dataRow in _dataTableSchema.Rows)
-			{			
-				// A key column.
-				if ((bool)dataRow["IsKey"])
-				{
-					if (notFirstKey)
-					{
-						sbPrimaryKey.Append(" AND ");
-					}
+            foreach (DataRow dataRow in _dataTableSchema.Rows)
+            {
+                // A key column.
+                if ((bool)dataRow["IsKey"])
+                {
+                    if (notFirstKey)
+                    {
+                        sbPrimaryKey.Append(" AND ");
+                    }
 
-					notFirstKey = true;
+                    notFirstKey = true;
 
-					sbPrimaryKey.Append(base.QuotePrefix + dataRow["ColumnName"] + base.QuoteSuffix);
-					sbPrimaryKey.Append("=@p" + count.ToString());
+                    sbPrimaryKey.Append(base.QuotePrefix + dataRow["ColumnName"] + base.QuoteSuffix);
+                    sbPrimaryKey.Append("=@p" + count.ToString());
 
-					sqlParameter = newSqlParameter(count, dataRow);
-					sqlUpdateCommand.Parameters.Add(sqlParameter);
+                    sqlParameter = newSqlParameter(count, dataRow);
+                    sqlUpdateCommand.Parameters.Add(sqlParameter);
 
-					++count;
-				}
+                    ++count;
+                }
 
-				if (containsAllPrimaryKeys || !(bool)dataRow["IsKey"])
-				{
-					if (notFirstColumn)
-					{
-						sb.Append(", ");
-					}
+                if (containsAllPrimaryKeys || !(bool)dataRow["IsKey"])
+                {
+                    if (notFirstColumn)
+                    {
+                        sb.Append(", ");
+                    }
 
-					notFirstColumn = true;
+                    notFirstColumn = true;
 
-					sb.Append(base.QuotePrefix + dataRow["ColumnName"] + base.QuoteSuffix);
-					sb.Append("=@p" + count.ToString());
+                    sb.Append(base.QuotePrefix + dataRow["ColumnName"] + base.QuoteSuffix);
+                    sb.Append("=@p" + count.ToString());
 
-					sqlParameter = newSqlParameter(count, dataRow);
-					sqlUpdateCommand.Parameters.Add(sqlParameter);
+                    sqlParameter = newSqlParameter(count, dataRow);
+                    sqlUpdateCommand.Parameters.Add(sqlParameter);
 
-					++count;
-				}
-			}			
+                    ++count;
+                }
+            }
 
-			sb.Append(" WHERE " + sbPrimaryKey.ToString());
+            sb.Append(" WHERE " + sbPrimaryKey.ToString());
 
-			sqlUpdateCommand.CommandText = sb.ToString();
+            sqlUpdateCommand.CommandText = sb.ToString();
 
-			return sqlUpdateCommand;
-		}
+            return sqlUpdateCommand;
+        }
 
-		#endregion
+        #endregion
 
-		#region Private Methods
+        #region Private Methods
 
-		private DataTable getSchemaTable(SqlCommand sqlSelectCommand)
-		{
-			DataTable dataTableSchema = null;
-			bool isClosed = ConnectionState.Closed == _sqlConnection.State;
+        private DataTable getSchemaTable(SqlCommand sqlSelectCommand)
+        {
+            DataTable dataTableSchema = null;
+            bool isClosed = ConnectionState.Closed == _sqlConnection.State;
 
-			try
-			{
-				if (isClosed)
-				{
-					_sqlConnection.Open();
-				}
+            try
+            {
+                if (isClosed)
+                {
+                    _sqlConnection.Open();
+                }
 
-				SqlDataReader sqlDataReader = sqlSelectCommand.ExecuteReader(CommandBehavior.KeyInfo);
-				dataTableSchema = sqlDataReader.GetSchemaTable();
-				sqlDataReader.Close();
-			}
-			finally
-			{
-				if (isClosed)
-				{
-					_sqlConnection.Close();
-				}
-			}
+                SqlDataReader sqlDataReader = sqlSelectCommand.ExecuteReader(CommandBehavior.KeyInfo);
+                dataTableSchema = sqlDataReader.GetSchemaTable();
+                sqlDataReader.Close();
+            }
+            finally
+            {
+                if (isClosed)
+                {
+                    _sqlConnection.Close();
+                }
+            }
 
-			return dataTableSchema;
-		}
+            return dataTableSchema;
+        }
 
-		private SqlParameter newSqlParameter(int index, DataRow dataRow)
-		{
-			return new SqlParameter("@p" + index.ToString(), (SqlDbType)dataRow["ProviderType"], (int)dataRow["ColumnSize"], (string)dataRow["ColumnName"]);
-		}
+        private SqlParameter newSqlParameter(int index, DataRow dataRow)
+        {
+            return new SqlParameter("@p" + index.ToString(), (SqlDbType)dataRow["ProviderType"], (int)dataRow["ColumnSize"], (string)dataRow["ColumnName"]);
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 }

@@ -111,7 +111,7 @@ namespace NDbUnit.Core.SqlLite
             }
 
             sb.Append(" FROM ");
-            sb.Append(base.QuotePrefix + tableName + base.QuoteSuffix);
+            sb.Append(TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix));
 
             sqlSelectCommand.CommandText = sb.ToString();
             sqlSelectCommand.Connection = _sqlLiteConnection;
@@ -145,7 +145,7 @@ namespace NDbUnit.Core.SqlLite
             int count = 1;
             bool notFirstColumn = false;
             StringBuilder sb = new StringBuilder();
-            sb.Append("INSERT INTO " + base.QuotePrefix + tableName + base.QuoteSuffix + "(");
+            sb.Append("INSERT INTO " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + "(");
             StringBuilder sbParam = new StringBuilder();
             SQLiteParameter sqlParameter = null;
             SQLiteCommand sqlInsertCommand = new SQLiteCommand();
@@ -184,7 +184,7 @@ namespace NDbUnit.Core.SqlLite
             int count = 1;
             bool notFirstColumn = false;
             StringBuilder sb = new StringBuilder();
-            sb.Append("INSERT INTO " + base.QuotePrefix + tableName + base.QuoteSuffix + "(");
+            sb.Append("INSERT INTO " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + "(");
             StringBuilder sbParam = new StringBuilder();
             SQLiteParameter sqlParameter = null;
             SQLiteCommand sqlInsertIdentityCommand = new SQLiteCommand();
@@ -217,7 +217,7 @@ namespace NDbUnit.Core.SqlLite
         protected override IDbCommand CreateDeleteCommand(IDbCommand selectCommand, string tableName)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("DELETE FROM " + base.QuotePrefix + tableName + base.QuoteSuffix + " WHERE ");
+            sb.Append("DELETE FROM " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + " WHERE ");
 
             SQLiteCommand sqlDeleteCommand = new SQLiteCommand();
 
@@ -250,13 +250,13 @@ namespace NDbUnit.Core.SqlLite
 
         protected override IDbCommand CreateDeleteAllCommand(string tableName)
         {
-            return new SQLiteCommand("DELETE FROM " + base.QuotePrefix + tableName + base.QuoteSuffix);
+            return new SQLiteCommand("DELETE FROM " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix));
         }
 
         protected override IDbCommand CreateUpdateCommand(IDbCommand selectCommand, string tableName)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("UPDATE " + base.QuotePrefix + tableName + base.QuoteSuffix + " SET ");
+            sb.Append("UPDATE " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + " SET ");
 
             SQLiteCommand sqlUpdateCommand = new SQLiteCommand();
 

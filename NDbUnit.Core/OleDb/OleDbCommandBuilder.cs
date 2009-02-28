@@ -115,7 +115,7 @@ namespace NDbUnit.Core.OleDb
 			}
 
 			sb.Append(" FROM ");
-			sb.Append(base.QuotePrefix + tableName + base.QuoteSuffix);
+			sb.Append(TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix));
 
 			oleDbSelectCommand.CommandText = sb.ToString();
 			oleDbSelectCommand.Connection = _oleDbConnection;
@@ -140,7 +140,7 @@ namespace NDbUnit.Core.OleDb
 			int count = 1;
 			bool notFirstColumn = false;
 			StringBuilder sb = new StringBuilder();
-			sb.Append("INSERT INTO " + base.QuotePrefix + tableName + base.QuoteSuffix + "(");
+			sb.Append("INSERT INTO " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + "(");
 			StringBuilder sbParam = new StringBuilder();
 			OleDbParameter oleDbParameter = null;
 			OleDbCommand oleDbInsertCommand = new OleDbCommand();
@@ -181,7 +181,7 @@ namespace NDbUnit.Core.OleDb
 			int count = 1;
 			bool notFirstColumn = false;
 			StringBuilder sb = new StringBuilder();
-			sb.Append("INSERT INTO " + base.QuotePrefix + tableName + base.QuoteSuffix + "(");
+			sb.Append("INSERT INTO " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + "(");
 			StringBuilder sbParam = new StringBuilder();
 			OleDbParameter oleDbParameter = null;
 			OleDbCommand oleDbInsertIdentityCommand = new OleDbCommand();
@@ -216,7 +216,7 @@ namespace NDbUnit.Core.OleDb
 			OleDbCommand oleDbSelectCommand = (OleDbCommand)selectCommand;
 
 			StringBuilder sb = new StringBuilder();
-			sb.Append("DELETE FROM " + base.QuotePrefix + tableName + base.QuoteSuffix + " WHERE ");
+			sb.Append("DELETE FROM " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + " WHERE ");
 
 			OleDbCommand oleDbDeleteCommand = new OleDbCommand();
 
@@ -249,7 +249,7 @@ namespace NDbUnit.Core.OleDb
 
 		protected override IDbCommand CreateDeleteAllCommand(string tableName)
 		{
-			return new OleDbCommand("DELETE FROM " + base.QuotePrefix + tableName + base.QuoteSuffix);
+			return new OleDbCommand("DELETE FROM " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix));
 		}
 
 		protected override IDbCommand CreateUpdateCommand(IDbCommand selectCommand, string tableName)
@@ -257,7 +257,7 @@ namespace NDbUnit.Core.OleDb
 			OleDbCommand oleDbSelectCommand = (OleDbCommand)selectCommand;
 
 			StringBuilder sb = new StringBuilder();
-			sb.Append("UPDATE " + base.QuotePrefix + tableName + base.QuoteSuffix + " SET ");
+			sb.Append("UPDATE " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + " SET ");
 
 			OleDbCommand oleDbUpdateCommand = new OleDbCommand();
 
