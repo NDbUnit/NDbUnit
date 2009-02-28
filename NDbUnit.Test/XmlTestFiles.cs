@@ -45,6 +45,14 @@ namespace NDbUnit.Test
 			}
 		}
 
+		public static string XmlSchemaFile4SQLite
+		{
+			get
+			{
+				return Path.Combine(_xmlPath, "UserDS4SQLite.xsd");
+			}
+		}
+
 		public static string XmlFile
 		{
 			get

@@ -4,6 +4,22 @@
         <name>NDbUnit.Core</name>
     </assembly>
     <members>
+        <member name="M:NDbUnit.Core.SqlLite.SqlLiteDbOperation.OnInsertIdentity(System.Data.DataTable,System.Data.IDbCommand,System.Data.IDbTransaction)">
+            <summary>
+            SQLite doesn't need any changes to insert PK values.
+            </summary>
+            <param name="dataTable"></param>
+            <param name="dbCommand"></param>
+            <param name="dbTransaction"></param>
+        </member>
+        <member name="M:NDbUnit.Core.SqlLite.SqlLiteDbCommandBuilder.IsAutoIncrementing(System.Data.DataRow)">
+            <summary>
+            Since SQLite keys are auto incremented by default we need to check to see if the column
+            is a key as well, since not all columns will be marked with AUTOINCREMENT
+            </summary>
+            <param name="row"></param>
+            <returns></returns>
+        </member>
         <member name="T:DataSetTableIterator">
             <summary>
             Class that builds an iterator for tables.  The order of the tables returned by the iterator
@@ -326,6 +342,14 @@
             Gets or sets the OLE database type.  The default value for an 
             instance of an object is <see cref="F:NDbUnit.Core.OleDb.DbType.NoDb"/>.
             </summary>
+        </member>
+        <member name="M:NDbUnit.Core.SqlLite.SqlLiteUnitTest.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NDbUnit.Core.SqlLite.SqlLiteUnitTest"/> class.
+            </summary>
+            <param name="connectionString">The connection string 
+            used to open the database.
+            <seealso cref="P:System.Data.IDbConnection.ConnectionString"/></param>
         </member>
         <member name="T:NDbUnit.Core.OleDb.DbType">
             <summary>

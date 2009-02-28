@@ -20,37 +20,37 @@
  *
  */
 
-using System;
+using MbUnit.Framework;
+using NDbUnit.Core;
+using NDbUnit.Core.SqlLite;
 
-namespace NDbUnit.Test
+namespace NDbUnit.Test.SqlLite
 {
-	/// <summary>
-	/// Summary description for DbConnection.
-	/// </summary>
-	public class DbConnection
-	{
-		public static string SqlConnectionString
-		{
-			get
-			{
-				return @"Data Source=127.0.0.1\sqlserver2005;Network Library=DBMSSOCN;Initial Catalog=testdb;Trusted_Connection=True";
-			}
-		}
 
-		public static string OleDbConnectionString
-		{
-			get
-			{
-				return @"Provider=SQLOLEDB;Data Source=127.0.0.1\sqlserver2005;Network Library=DBMSSOCN;Initial Catalog=testdb;Integrated Security=SSPI";
-			}
-		}
+    [TestFixture]
+    public class SqlLiteUnitTestTest
+    {
+        private SqlLiteUnitTest _sqlLiteTest;
 
-	    public static string SqlLiteConnectionString
-	    {
-	        get
-	        {
-	            return @"Data Source=SqlLite\test.sqlite.db;Version=3;New=True";
-	        }
-	    }
-	}
+        [SetUp]
+        public void SetUp()
+        {
+            _sqlLiteTest = new SqlLiteUnitTest(DbConnection.SqlLiteConnectionString);
+            _sqlLiteTest.QuotePrefix = "[";
+            _sqlLiteTest.QuoteSuffix = "]";
+            _sqlLiteTest.ReadXmlSchema(XmlTestFiles.XmlSchemaFile4SQLite);
+            _sqlLiteTest.ReadXml(XmlTestFiles.XmlFile);
+            _sqlLiteTest.PerformDbOperation(DbOperationFlag.DeleteAll);
+        }
+
+        [Test]
+        public void Test()
+        {
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+        }
+    }
 }
