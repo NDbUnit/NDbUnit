@@ -2,7 +2,7 @@
  *
  * NDbUnit
  * Copyright (C)2005
- * http://www.ndbunit.org
+ * http://code.google.com/p/ndbunit
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
