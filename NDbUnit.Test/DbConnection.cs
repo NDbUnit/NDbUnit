@@ -20,37 +20,28 @@
  *
  */
 
-using System;
-
 namespace NDbUnit.Test
 {
-	/// <summary>
-	/// Summary description for DbConnection.
-	/// </summary>
-	public class DbConnection
-	{
-		public static string SqlConnectionString
-		{
-			get
-			{
-				return @"Data Source=127.0.0.1\sqlserver2005;Network Library=DBMSSOCN;Initial Catalog=testdb;Trusted_Connection=True";
-			}
-		}
+    public class DbConnection
+    {
+        public static string SqlConnectionString
+        {
+            get { return @"Data Source=localhost\SQLServer2005;Database=testdb;Trusted_Connection=True"; }
+        }
 
-		public static string OleDbConnectionString
-		{
-			get
-			{
-				return @"Provider=SQLOLEDB;Data Source=127.0.0.1\sqlserver2005;Network Library=DBMSSOCN;Initial Catalog=testdb;Integrated Security=SSPI";
-			}
-		}
+        public static string OleDbConnectionString
+        {
+            get { return @"Provider=SQLOLEDB;Data Source=localhost\SQLServer2005;Database=testdb;Integrated Security=SSPI"; }
+        }
 
-	    public static string SqlLiteConnectionString
-	    {
-	        get
-	        {
-	            return @"Data Source=SqlLite\test.sqlite.db;Version=3;New=True";
-	        }
-	    }
-	}
+        public static string SqlLiteConnectionString
+        {
+            get { return @"Data Source=SqlLite\test.sqlite.db;Version=3;New=True"; }
+        }
+
+        public static string SqlCeConnectionString
+        {
+            get { return @"Data Source=SqlServerCe\testdb.sdf;Persist Security Info=False;"; }
+        }
+    }
 }

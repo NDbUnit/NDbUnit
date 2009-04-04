@@ -20,9 +20,9 @@
  *
  */
 
-using MbUnit.Framework;
 using NDbUnit.Core;
 using NDbUnit.Core.SqlLite;
+using MbUnit.Framework;
 
 namespace NDbUnit.Test.SqlLite
 {
@@ -36,9 +36,7 @@ namespace NDbUnit.Test.SqlLite
         public void SetUp()
         {
             _sqlLiteTest = new SqlLiteUnitTest(DbConnection.SqlLiteConnectionString);
-            _sqlLiteTest.QuotePrefix = "[";
-            _sqlLiteTest.QuoteSuffix = "]";
-            _sqlLiteTest.ReadXmlSchema(XmlTestFiles.XmlSchemaFile4SQLite);
+            _sqlLiteTest.ReadXmlSchema(XmlTestFiles.xmlSchemaFileForSQLite);
             _sqlLiteTest.ReadXml(XmlTestFiles.XmlFile);
             _sqlLiteTest.PerformDbOperation(DbOperationFlag.DeleteAll);
         }
@@ -49,7 +47,7 @@ namespace NDbUnit.Test.SqlLite
         }
 
         [TearDown]
-        public void TearDown()
+        public void tearDown()
         {
         }
     }

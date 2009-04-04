@@ -22,31 +22,20 @@
 
 using System;
 using System.Data;
-using System.Data.SqlClient;
-
 using MbUnit.Framework;
-
-using NDbUnit.Test;
 using NDbUnit.Core.SqlClient;
 
 namespace NDbUnit.Test.SqlClient
 {
-	/// <summary>
-	/// Summary description for Class1.
-	/// </summary>
-	/// 
+
 	[TestFixture]
 	public class SqlDbCommandBuilderTest
 	{
 		private SqlDbCommandBuilder _sqlDbCommandBuilder = new SqlDbCommandBuilder(DbConnection.SqlConnectionString);
 
-		private bool emptyCommand(SqlCommand sqlCommand)
+		private bool IsEmptyCommand(IDbCommand sqlCommand)
 		{
-			return (null == sqlCommand || null == sqlCommand.CommandText || "" == sqlCommand.CommandText);
-		}
-
-		public SqlDbCommandBuilderTest()
-		{
+			return (null == sqlCommand || string.IsNullOrEmpty(sqlCommand.CommandText));
 		}
 
 		[TearDown]
@@ -78,7 +67,7 @@ namespace NDbUnit.Test.SqlClient
 			DataSet ds = _sqlDbCommandBuilder.GetSchema();
 			foreach(DataTable dataTable in ds.Tables)
 			{
-				SqlCommand sqlCommand = _sqlDbCommandBuilder.GetSelectCommand(dataTable.TableName);
+				IDbCommand sqlCommand = _sqlDbCommandBuilder.GetSelectCommand(dataTable.TableName);
 
 				Console.WriteLine("Table '" + dataTable.TableName + "' select command");
 				Console.WriteLine("\t" + sqlCommand.CommandText);
@@ -93,8 +82,8 @@ namespace NDbUnit.Test.SqlClient
 			DataSet ds = _sqlDbCommandBuilder.GetSchema();
 			foreach(DataTable dataTable in ds.Tables)
 			{
-				SqlCommand sqlCommand = _sqlDbCommandBuilder.GetInsertCommand(dataTable.TableName);
-				Assert.IsTrue(!emptyCommand(sqlCommand), "Insert command was not set");
+				IDbCommand sqlCommand = _sqlDbCommandBuilder.GetInsertCommand(dataTable.TableName);
+				Assert.IsTrue(!IsEmptyCommand(sqlCommand), "Insert command was not set");
 
 				Console.WriteLine("Table '" + dataTable.TableName + "' insert command");
 				Console.WriteLine("\t" + sqlCommand.CommandText);
@@ -109,8 +98,8 @@ namespace NDbUnit.Test.SqlClient
 			DataSet ds = _sqlDbCommandBuilder.GetSchema();
 			foreach(DataTable dataTable in ds.Tables)
 			{
-				SqlCommand sqlCommand = _sqlDbCommandBuilder.GetInsertIdentityCommand(dataTable.TableName);
-				Assert.IsTrue(!emptyCommand(sqlCommand), "Insert identity command was not set");
+				IDbCommand sqlCommand = _sqlDbCommandBuilder.GetInsertIdentityCommand(dataTable.TableName);
+				Assert.IsTrue(!IsEmptyCommand(sqlCommand), "Insert identity command was not set");
 
 				Console.WriteLine("Table '" + dataTable.TableName + "' insert identity command");
 				Console.WriteLine("\t" + sqlCommand.CommandText);
@@ -125,8 +114,8 @@ namespace NDbUnit.Test.SqlClient
 			DataSet ds = _sqlDbCommandBuilder.GetSchema();
 			foreach(DataTable dataTable in ds.Tables)
 			{
-				SqlCommand sqlCommand = _sqlDbCommandBuilder.GetDeleteCommand(dataTable.TableName);
-				Assert.IsTrue(!emptyCommand(sqlCommand), "Delete command was not set");
+				IDbCommand sqlCommand = _sqlDbCommandBuilder.GetDeleteCommand(dataTable.TableName);
+				Assert.IsTrue(!IsEmptyCommand(sqlCommand), "Delete command was not set");
 
 				Console.WriteLine("Table '" + dataTable.TableName + "' delete command");
 				Console.WriteLine("\t" + sqlCommand.CommandText);
@@ -141,8 +130,8 @@ namespace NDbUnit.Test.SqlClient
 			DataSet ds = _sqlDbCommandBuilder.GetSchema();
 			foreach(DataTable dataTable in ds.Tables)
 			{
-				SqlCommand sqlCommand = _sqlDbCommandBuilder.GetDeleteAllCommand(dataTable.TableName);
-				Assert.IsTrue(!emptyCommand(sqlCommand), "Delete all command was not set");
+				IDbCommand sqlCommand = _sqlDbCommandBuilder.GetDeleteAllCommand(dataTable.TableName);
+				Assert.IsTrue(!IsEmptyCommand(sqlCommand), "Delete all command was not set");
 
 				Console.WriteLine("Table '" + dataTable.TableName + "' delete all command");
 				Console.WriteLine("\t" + sqlCommand.CommandText);
@@ -157,8 +146,8 @@ namespace NDbUnit.Test.SqlClient
 			DataSet ds = _sqlDbCommandBuilder.GetSchema();
 			foreach(DataTable dataTable in ds.Tables)
 			{
-				SqlCommand sqlCommand = _sqlDbCommandBuilder.GetUpdateCommand(dataTable.TableName);
-				Assert.IsTrue(!emptyCommand(sqlCommand), "Update command was not set");
+				IDbCommand sqlCommand = _sqlDbCommandBuilder.GetUpdateCommand(dataTable.TableName);
+				Assert.IsTrue(!IsEmptyCommand(sqlCommand), "Update command was not set");
 
 				Console.WriteLine("Table '" + dataTable.TableName + "' update command");
 				Console.WriteLine("\t" + sqlCommand.CommandText);

@@ -23,38 +23,26 @@
 using System;
 using System.Data;
 using System.Data.OleDb;
-
-using MbUnit.Framework;
-
-using NDbUnit.Test;
 using NDbUnit.Core.OleDb;
+using MbUnit.Framework;
 
 namespace NDbUnit.Test.OleDb
 {
-	/// <summary>
-	/// Summary description for OleDbOperationTest.
-	/// </summary>
-	/// 
-	[TestFixture]
-	public class OleDbOperationTest
-	{
-		private bool _built = false;
-		private OleDbOperation _oleDbOperation = new OleDbOperation();
-		private NDbUnit.Core.OleDb.OleDbCommandBuilder _oleDbCommandBuilder = new NDbUnit.Core.OleDb.OleDbCommandBuilder(DbConnection.OleDbConnectionString);
-		private DataSet _dsData = null;
+    [TestFixture]
+    public class OleDbOperationTest
+    {
+        private OleDbOperation _oleDbOperation;
 
-		public OleDbOperationTest()
-		{
-		}
+        private Core.OleDb.OleDbCommandBuilder _oleDbCommandBuilder;
 
-		[SetUp]
-		public void SetUp()
-		{
-			if (false == _built)
-			{
-				_oleDbOperation.OleDbType = NDbUnit.Core.OleDb.DbType.SqlServer;
-				_oleDbCommandBuilder.QuotePrefix = "[";
-				_oleDbCommandBuilder.QuoteSuffix = "]";
+        private DataSet _dsData;
+
+        [FixtureSetUp]
+        public void FixtureSetUp()
+        {
+            _oleDbCommandBuilder =
+                new Core.OleDb.OleDbCommandBuilder(DbConnection.OleDbConnectionString);
+            _oleDbOperation = new OleDbOperation();
 
 				string xmlSchemaFile = XmlTestFiles.XmlSchemaFile;
 				string xmlFile = XmlTestFiles.XmlFile;
@@ -68,15 +56,17 @@ namespace NDbUnit.Test.OleDb
 					throw(e);
 				}
 
-				_built = true;
+            DataSet dsSchema = _oleDbCommandBuilder.GetSchema();
+            _dsData = dsSchema.Clone();
+            _dsData.ReadXml(xmlFile);
+        }
 
-				DataSet dsSchema = _oleDbCommandBuilder.GetSchema();
-				_dsData = dsSchema.Clone();
-				_dsData.ReadXml(xmlFile);			
-			}
-
-			_oleDbCommandBuilder.Connection.Open();
-		}
+        [SetUp]
+        public void SetUp()
+        {
+            _oleDbOperation.OleOleDbType = Core.OleDb.OleDbType.SqlServer;
+            _oleDbCommandBuilder.Connection.Open();
+        }
 
 		[TearDown]
 		public void TearDown()
@@ -109,10 +99,11 @@ namespace NDbUnit.Test.OleDb
 			}
 		}
 
-		[Test]
-		public void TestInsertIdentity()
-		{
-			TestDeleteAll();
+        [Test]
+        public void TestInsertIdentity()
+        {
+            //bad, bad
+            TestDeleteAll();
 
 			OleDbTransaction oleDbTransaction = null;
 			try
@@ -240,16 +231,16 @@ namespace NDbUnit.Test.OleDb
 				DataSet dsSchema = _oleDbCommandBuilder.GetSchema();
 				oleDbTransaction = _oleDbCommandBuilder.Connection.BeginTransaction();
 
-				foreach(DataTable table in dsSchema.Tables)
-				{
-					foreach(DataColumn column in table.Columns)
-					{
-						if(column.AutoIncrement)
-						{
-							String sql = "dbcc checkident([" + table.TableName + "], RESEED, 0)";
-							OleDbCommand oleDbCommand = new OleDbCommand(sql, _oleDbCommandBuilder.Connection);
-							oleDbCommand.Transaction = oleDbTransaction;
-							oleDbCommand.ExecuteNonQuery();
+                foreach (DataTable table in dsSchema.Tables)
+                {
+                    foreach (DataColumn column in table.Columns)
+                    {
+                        if (column.AutoIncrement)
+                        {
+                            String sql = "dbcc checkident([" + table.TableName + "], RESEED, 0)";
+                            OleDbCommand oleDbCommand = new OleDbCommand(sql, _oleDbCommandBuilder.Connection);
+                            oleDbCommand.Transaction = oleDbTransaction;
+                            oleDbCommand.ExecuteNonQuery();
 
 							break;
 						}

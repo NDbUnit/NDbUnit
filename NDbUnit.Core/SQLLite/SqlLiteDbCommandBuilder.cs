@@ -1,5 +1,28 @@
+/*
+ *
+ * NDbUnit
+ * Copyright (C)2005
+ * http://code.google.com/p/ndbunit
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ */
+
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Data.SQLite;
 using System.Text;
 
@@ -25,71 +48,29 @@ namespace NDbUnit.Core.SqlLite
             
         }
 
-
-        #region Private Fields
-
-        private readonly SQLiteConnection _sqlLiteConnection;
-        private DataTable _dataTableSchema;
-
-        #endregion
-
-		#region Public Methods
-
-		public SqlLiteDbCommandBuilder(string connectionString)
-		{
-		    _sqlLiteConnection = new SQLiteConnection(connectionString);
-
-		    base.QuotePrefix = "[";
-			base.QuoteSuffix = "]";
-		}
-
-		#endregion
-
-        #region Type Safe Interface Implementation
-
-        public SQLiteConnection Connection
+        private new DataTable _dataTableSchema;
+        
+        public SqlLiteDbCommandBuilder(string connectionString) : base(connectionString)
         {
-            get { return _sqlLiteConnection; }
         }
 
-        public SQLiteCommand GetSelectCommand(string tableName)
+
+        public override string QuotePrefix
         {
-            return ((SQLiteCommand)((IDbCommandBuilder)this).GetSelectCommand(tableName));
+            get { return "["; }
         }
 
-        public SQLiteCommand GetInsertCommand(string tableName)
+        public override string QuoteSuffix
         {
-            return ((SQLiteCommand)((IDbCommandBuilder)this).GetInsertCommand(tableName));
+            get { return "]"; }
         }
 
-        public SQLiteCommand GetInsertIdentityCommand(string tableName)
+        protected override DbConnection GetConnection(string connectionString)
         {
-            return ((SQLiteCommand)((IDbCommandBuilder)this).GetInsertIdentityCommand(tableName));
+            return new SQLiteConnection(connectionString);
         }
-
-        public SQLiteCommand GetDeleteCommand(string tableName)
-        {
-            return ((SQLiteCommand)((IDbCommandBuilder)this).GetDeleteCommand(tableName));
-        }
-
-        public SQLiteCommand GetDeleteAllCommand(string tableName)
-        {
-            return ((SQLiteCommand)((IDbCommandBuilder)this).GetDeleteAllCommand(tableName));
-        }
-
-        public SQLiteCommand GetUpdateCommand(string tableName)
-        {
-            return ((SQLiteCommand)((IDbCommandBuilder)this).GetUpdateCommand(tableName));
-        }
-
-        #endregion
 
         #region Protected Overrides
-
-        protected override IDbConnection GetConnection()
-        {
-            return _sqlLiteConnection;
-        }
 
         protected override IDbCommand CreateSelectCommand(DataSet ds, string tableName)
         {
@@ -114,7 +95,7 @@ namespace NDbUnit.Core.SqlLite
             sb.Append(TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix));
 
             sqlSelectCommand.CommandText = sb.ToString();
-            sqlSelectCommand.Connection = _sqlLiteConnection;
+            sqlSelectCommand.Connection = (SQLiteConnection) _sqlConnection;
 
             try
             {
@@ -122,11 +103,19 @@ namespace NDbUnit.Core.SqlLite
             }
             catch (Exception e)
             {
-                string message = String.Format("SqlDbCommandBuilder.CreateSelectCommand(DataSet, string) failed for tableName = '{0}'", tableName);
+                string message =
+                    String.Format(
+                        "SqlDbCommandBuilder.CreateSelectCommand(DataSet, string) failed for tableName = '{0}'",
+                        tableName);
                 throw new NDbUnitException(message, e);
             }
 
             return sqlSelectCommand;
+        }
+
+        protected override DbCommand CreateDbCommand()
+        {
+            throw new System.NotImplementedException();
         }
 
         /// <summary>
@@ -147,7 +136,7 @@ namespace NDbUnit.Core.SqlLite
             StringBuilder sb = new StringBuilder();
             sb.Append("INSERT INTO " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + "(");
             StringBuilder sbParam = new StringBuilder();
-            SQLiteParameter sqlParameter = null;
+            DbParameter sqlParameter = null;
             SQLiteCommand sqlInsertCommand = new SQLiteCommand();
             foreach (DataRow dataRow in _dataTableSchema.Rows)
             {
@@ -165,7 +154,7 @@ namespace NDbUnit.Core.SqlLite
                     sb.Append(base.QuotePrefix + dataRow[SchemaColumns.ColumnName] + base.QuoteSuffix);
                     sbParam.Append("@p" + count);
 
-                    sqlParameter = newSqlParameter(count, dataRow);
+                    sqlParameter = CreateNewSqlParameter(count, dataRow);
                     sqlInsertCommand.Parameters.Add(sqlParameter);
 
                     ++count;
@@ -186,7 +175,7 @@ namespace NDbUnit.Core.SqlLite
             StringBuilder sb = new StringBuilder();
             sb.Append("INSERT INTO " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + "(");
             StringBuilder sbParam = new StringBuilder();
-            SQLiteParameter sqlParameter = null;
+            DbParameter sqlParameter = null;
             SQLiteCommand sqlInsertIdentityCommand = new SQLiteCommand();
             foreach (DataRow dataRow in _dataTableSchema.Rows)
             {
@@ -201,7 +190,7 @@ namespace NDbUnit.Core.SqlLite
                 sb.Append(base.QuotePrefix + dataRow[SchemaColumns.ColumnName] + base.QuoteSuffix);
                 sbParam.Append("@p" + count);
 
-                sqlParameter = newSqlParameter(count, dataRow);
+                sqlParameter = CreateNewSqlParameter(count, dataRow);
                 sqlInsertIdentityCommand.Parameters.Add(sqlParameter);
 
                 ++count;
@@ -222,7 +211,7 @@ namespace NDbUnit.Core.SqlLite
             SQLiteCommand sqlDeleteCommand = new SQLiteCommand();
 
             int count = 1;
-            SQLiteParameter sqlParameter = null;
+            DbParameter sqlParameter;
             foreach (DataRow dataRow in _dataTableSchema.Rows)
             {
                 // A key column.
@@ -233,10 +222,10 @@ namespace NDbUnit.Core.SqlLite
                         sb.Append(" AND ");
                     }
 
-                    sb.Append(base.QuotePrefix + dataRow[SchemaColumns.ColumnName] + base.QuoteSuffix);
-                    sb.Append("=@p" + count.ToString());
+                    sb.Append(QuotePrefix + dataRow[SchemaColumns.ColumnName] + QuoteSuffix);
+                    sb.Append("=@p" + count);
 
-                    sqlParameter = newSqlParameter(count, dataRow);
+                    sqlParameter = CreateNewSqlParameter(count, dataRow);
                     sqlDeleteCommand.Parameters.Add(sqlParameter);
 
                     ++count;
@@ -250,7 +239,8 @@ namespace NDbUnit.Core.SqlLite
 
         protected override IDbCommand CreateDeleteAllCommand(string tableName)
         {
-            return new SQLiteCommand("DELETE FROM " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix));
+            return
+                new SQLiteCommand("DELETE FROM " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix));
         }
 
         protected override IDbCommand CreateUpdateCommand(IDbCommand selectCommand, string tableName)
@@ -263,7 +253,7 @@ namespace NDbUnit.Core.SqlLite
             int count = 1;
             bool notFirstKey = false;
             bool notFirstColumn = false;
-            SQLiteParameter sqlParameter = null;
+            DbParameter sqlParameter = null;
             StringBuilder sbPrimaryKey = new StringBuilder();
 
             bool containsAllPrimaryKeys = true;
@@ -291,7 +281,7 @@ namespace NDbUnit.Core.SqlLite
                     sbPrimaryKey.Append(base.QuotePrefix + dataRow[SchemaColumns.ColumnName] + base.QuoteSuffix);
                     sbPrimaryKey.Append("=@p" + count);
 
-                    sqlParameter = newSqlParameter(count, dataRow);
+                    sqlParameter = CreateNewSqlParameter(count, dataRow);
                     sqlUpdateCommand.Parameters.Add(sqlParameter);
 
                     ++count;
@@ -309,7 +299,7 @@ namespace NDbUnit.Core.SqlLite
                     sb.Append(base.QuotePrefix + dataRow[SchemaColumns.ColumnName] + base.QuoteSuffix);
                     sb.Append("=@p" + count);
 
-                    sqlParameter = newSqlParameter(count, dataRow);
+                    sqlParameter = CreateNewSqlParameter(count, dataRow);
                     sqlUpdateCommand.Parameters.Add(sqlParameter);
 
                     ++count;
@@ -330,13 +320,13 @@ namespace NDbUnit.Core.SqlLite
         private DataTable getSchemaTable(SQLiteCommand sqlSelectCommand)
         {
             DataTable dataTableSchema = null;
-            bool isClosed = ConnectionState.Closed == _sqlLiteConnection.State;
+            bool isClosed = ConnectionState.Closed == _sqlConnection.State;
 
             try
             {
                 if (isClosed)
                 {
-                    _sqlLiteConnection.Open();
+                    _sqlConnection.Open();
                 }
 
                 SQLiteDataReader sqlDataReader = sqlSelectCommand.ExecuteReader(CommandBehavior.KeyInfo);
@@ -347,16 +337,18 @@ namespace NDbUnit.Core.SqlLite
             {
                 if (isClosed)
                 {
-                    _sqlLiteConnection.Close();
+                    _sqlConnection.Close();
                 }
             }
 
             return dataTableSchema;
         }
 
-        private SQLiteParameter newSqlParameter(int index, DataRow dataRow)
+        protected override DbParameter CreateNewSqlParameter(int index, DataRow dataRow)
         {
-            return new SQLiteParameter("@p" + index, (DbType)dataRow[SchemaColumns.ProviderType], (int)dataRow[SchemaColumns.ColumnSize], (string)dataRow[SchemaColumns.ColumnName]);
+            return new SQLiteParameter("@p" + index, (DbType) dataRow[SchemaColumns.ProviderType],
+                                       (int) dataRow[SchemaColumns.ColumnSize],
+                                       (string) dataRow[SchemaColumns.ColumnName]);
         }
 
         #endregion

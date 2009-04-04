@@ -21,152 +21,184 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Data;
-using System.Data.OleDb;
-
-using MbUnit.Framework;
-
-using NDbUnit.Test;
+using NDbUnit.Core;
 using NDbUnit.Core.OleDb;
+using MbUnit.Framework;
 
 namespace NDbUnit.Test.OleDb
 {
-	/// <summary>
-	/// Summary description for Class1.
-	/// </summary>
-	/// 
-	[TestFixture]
-	public class OleDbCommandBuilderTest
-	{
-		private NDbUnit.Core.OleDb.OleDbCommandBuilder _oleDbCommandBuilder = new NDbUnit.Core.OleDb.OleDbCommandBuilder(DbConnection.OleDbConnectionString);
+    [TestFixture]
+    public class OleDbCommandBuilderTest
+    {
+        private OleDbCommandBuilder _oleDbCommandBuilder;
 
-		private bool emptyCommand(OleDbCommand oleDbCommand)
-		{
-			return (null == oleDbCommand || null == oleDbCommand.CommandText || "" == oleDbCommand.CommandText);
+        [SetUp]
+        public void SetUp()
+        {
+            _oleDbCommandBuilder =
+                new OleDbCommandBuilder(DbConnection.OleDbConnectionString);
+            string xsdFile = XmlTestFiles.XmlSchemaFile;
+            _oleDbCommandBuilder.BuildCommands(xsdFile);
+        }
+
+        [Test]
+        [ExpectedException(typeof(NDbUnitException))]
+        public void TestGetSchemaThrowsNDbUnitExceptionBecauseIsNotInitialized()
+        {
+            OleDbCommandBuilder builder = new OleDbCommandBuilder(DbConnection.OleDbConnectionString);
+            builder.GetSchema();
+
 		}
 
-		public OleDbCommandBuilderTest()
-		{
-			// needed when connecting to sql server
-			_oleDbCommandBuilder.QuotePrefix = "[";
-			_oleDbCommandBuilder.QuoteSuffix = "]";
+        [Test]
+        public void TestGetSchema()
+        {
+            OleDbCommandBuilder builder = new OleDbCommandBuilder(DbConnection.OleDbConnectionString);
+            builder.BuildCommands(XmlTestFiles.XmlSchemaFile);
+            DataSet schema = builder.GetSchema();
 
-		}
+            Assert.AreEqual(3, schema.Tables.Count, "Exptected 3 tables in dataset");
+            Assert.AreEqual("Role", schema.Tables[0].TableName, "Wrong table name");
+            Assert.AreEqual("dbo.User", schema.Tables[1].TableName, "Wrong table name");
+            Assert.AreEqual("UserRole", schema.Tables[2].TableName, "Wrong table name");
+        }
 
-		[TearDown]
-		public void TearDown()
-		{
-			Console.Out.Flush();
-		}
+        [Test]
+        public void TestGetSelectCommand()
+        {
+            List<IDbCommand> commandList = new List<IDbCommand>();
+            DataSet ds = _oleDbCommandBuilder.GetSchema();
+            foreach (DataTable dataTable in ds.Tables)
+            {
+                IDbCommand oleDbCommand = _oleDbCommandBuilder.GetSelectCommand(dataTable.TableName);
+                commandList.Add(oleDbCommand);
+            }
 
-		[Test]
-		public void TestBuildCommands()
-		{
-			string xsdFile = XmlTestFiles.XmlSchemaFile;
-			_oleDbCommandBuilder.BuildCommands(xsdFile);
-		}
+            Assert.AreEqual(3, commandList.Count, "Should be 3 commands");
+            Assert.AreEqual("SELECT [ID], [Name], [Description] FROM [Role]", commandList[0].CommandText,
+                            "Incorrect command text");
+            Assert.AreEqual("SELECT [ID], [FirstName], [LastName], [Age], [SupervisorID] FROM [dbo].[User]", commandList[1].CommandText,
+                            "Incorrect command text");
+            Assert.AreEqual("SELECT [UserID], [RoleID] FROM [UserRole]", commandList[2].CommandText,
+                            "Incorrect command text");
+        }
 
-		[Test]
-		public void TestGetSchema()
-		{
-			TestBuildCommands();
-			
-			_oleDbCommandBuilder.GetSchema();
-		}
+        [Test]
+        public void TestGetInsertCommand()
+        {
+            DataSet ds = _oleDbCommandBuilder.GetSchema();
+            List<IDbCommand> commandList = new List<IDbCommand>();
 
-		[Test]
-		public void TestGetSelectCommand()
-		{
-			TestBuildCommands();
+            foreach (DataTable dataTable in ds.Tables)
+            {
+                IDbCommand oleDbCommand = _oleDbCommandBuilder.GetInsertCommand(dataTable.TableName);
+                commandList.Add(oleDbCommand);
+            }
 
-			DataSet ds = _oleDbCommandBuilder.GetSchema();
-			foreach(DataTable dataTable in ds.Tables)
-			{
-				OleDbCommand oleDbCommand = _oleDbCommandBuilder.GetSelectCommand(dataTable.TableName);
+            Assert.AreEqual(3, commandList.Count, "Should be 3 commands");
+            Assert.AreEqual("INSERT INTO [Role]([Name], [Description]) VALUES(?, ?)", commandList[0].CommandText,
+                            "Incorrect command text");
+            Assert.AreEqual("INSERT INTO [dbo].[User]([FirstName], [LastName], [Age], [SupervisorID]) VALUES(?, ?, ?, ?)",
+                            commandList[1].CommandText,
+                            "Incorrect command text");
+            Assert.AreEqual("INSERT INTO [UserRole]([UserID], [RoleID]) VALUES(?, ?)", commandList[2].CommandText,
+                            "Incorrect command text");
+        }
 
-				Console.WriteLine("Table '" + dataTable.TableName + "' select command");
-				Console.WriteLine("\t" + oleDbCommand.CommandText);
-			}
-		}
+        [Test]
+        public void TestGetInsertIdentityCommand()
+        {
+            List<IDbCommand> commandList = new List<IDbCommand>();
+            DataSet ds = _oleDbCommandBuilder.GetSchema();
 
-		[Test]
-		public void TestGetInsertCommand()
-		{
-			TestBuildCommands();
-			
-			DataSet ds = _oleDbCommandBuilder.GetSchema();
-			foreach(DataTable dataTable in ds.Tables)
-			{
-				OleDbCommand oleDbCommand = _oleDbCommandBuilder.GetInsertCommand(dataTable.TableName);
-				Assert.IsTrue(!emptyCommand(oleDbCommand), "Insert command was not set");
+            foreach (DataTable dataTable in ds.Tables)
+            {
+                IDbCommand oleDbCommand = _oleDbCommandBuilder.GetInsertIdentityCommand(dataTable.TableName);
+                commandList.Add(oleDbCommand);
 
-				Console.WriteLine("Table '" + dataTable.TableName + "' insert command");
-				Console.WriteLine("\t" + oleDbCommand.CommandText);
-			}
-		}
+                Console.WriteLine("Table '" + dataTable.TableName + "' insert identity command");
+                Console.WriteLine("\t" + oleDbCommand.CommandText);
+            }
 
-		[Test]
-		public void TestGetInsertIdentityCommand()
-		{
-			TestBuildCommands();
-			
-			DataSet ds = _oleDbCommandBuilder.GetSchema();
-			foreach(DataTable dataTable in ds.Tables)
-			{
-				OleDbCommand oleDbCommand = _oleDbCommandBuilder.GetInsertIdentityCommand(dataTable.TableName);
-				Assert.IsTrue(!emptyCommand(oleDbCommand), "Insert identity command was not set");
+            Assert.AreEqual(3, commandList.Count, "Should be 3 commands");
+            Assert.AreEqual("INSERT INTO [Role]([ID], [Name], [Description]) VALUES(?, ?, ?)",
+                            commandList[0].CommandText,
+                            "Incorrect command text");
+            Assert.AreEqual("INSERT INTO [dbo].[User]([ID], [FirstName], [LastName], [Age], [SupervisorID]) VALUES(?, ?, ?, ?, ?)",
+                            commandList[1].CommandText,
+                            "Incorrect command text");
+            Assert.AreEqual("INSERT INTO [UserRole]([UserID], [RoleID]) VALUES(?, ?)", commandList[2].CommandText,
+                            "Incorrect command text");
+        }
 
-				Console.WriteLine("Table '" + dataTable.TableName + "' insert identity command");
-				Console.WriteLine("\t" + oleDbCommand.CommandText);
-			}
-		}
+        [Test]
+        public void TestGetDeleteCommand()
+        {
+            List<IDbCommand> commandList = new List<IDbCommand>();
 
-		[Test]
-		public void TestGetDeleteCommand()
-		{
-			TestBuildCommands();
-			
-			DataSet ds = _oleDbCommandBuilder.GetSchema();
-			foreach(DataTable dataTable in ds.Tables)
-			{
-				OleDbCommand oleDbCommand = _oleDbCommandBuilder.GetDeleteCommand(dataTable.TableName);
-				Assert.IsTrue(!emptyCommand(oleDbCommand), "Delete command was not set");
+            DataSet ds = _oleDbCommandBuilder.GetSchema();
+            foreach (DataTable dataTable in ds.Tables)
+            {
+                IDbCommand oleDbCommand = _oleDbCommandBuilder.GetDeleteCommand(dataTable.TableName);
+                commandList.Add(oleDbCommand);
+            }
 
-				Console.WriteLine("Table '" + dataTable.TableName + "' delete command");
-				Console.WriteLine("\t" + oleDbCommand.CommandText);
-			}
-		}
+            Assert.AreEqual(3, commandList.Count, "Should be 3 commands");
+            Assert.AreEqual("DELETE FROM [Role] WHERE [ID]=?", commandList[0].CommandText,
+                            "Incorrect command text");
+            Assert.AreEqual("DELETE FROM [dbo].[User] WHERE [ID]=?", commandList[1].CommandText,
+                            "Incorrect command text");
+            Assert.AreEqual("DELETE FROM [UserRole] WHERE [UserID]=? AND [RoleID]=?", commandList[2].CommandText,
+                            "Incorrect command text");
+        }
 
-		[Test]
-		public void TestGetDeleteAllCommand()
-		{
-			TestBuildCommands();
-			
-			DataSet ds = _oleDbCommandBuilder.GetSchema();
-			foreach(DataTable dataTable in ds.Tables)
-			{
-				OleDbCommand oleDbCommand = _oleDbCommandBuilder.GetDeleteAllCommand(dataTable.TableName);
-				Assert.IsTrue(!emptyCommand(oleDbCommand), "Delete command was not set");
+        [Test]
+        public void TestGetDeleteAllCommand()
+        {
+            List<IDbCommand> commandList = new List<IDbCommand>();
 
-				Console.WriteLine("Table '" + dataTable.TableName + "' delete all command");
-				Console.WriteLine("\t" + oleDbCommand.CommandText);
-			}
-		}
+            DataSet ds = _oleDbCommandBuilder.GetSchema();
+            foreach (DataTable dataTable in ds.Tables)
+            {
+                IDbCommand oleDbCommand = _oleDbCommandBuilder.GetDeleteAllCommand(dataTable.TableName);
+                commandList.Add(oleDbCommand);
+            }
 
-		[Test]
-		public void TestGetUpdateCommand()
-		{
-			TestBuildCommands();
-			
-			DataSet ds = _oleDbCommandBuilder.GetSchema();
-			foreach(DataTable dataTable in ds.Tables)
-			{
-				OleDbCommand oleDbCommand = _oleDbCommandBuilder.GetUpdateCommand(dataTable.TableName);
-				Assert.IsTrue(!emptyCommand(oleDbCommand), "Update command was not set");
+            Assert.AreEqual(3, commandList.Count, "Should be 3 commands");
+            Assert.AreEqual("DELETE FROM [Role]", commandList[0].CommandText,
+                            "Incorrect command text");
+            Assert.AreEqual("DELETE FROM [dbo].[User]", commandList[1].CommandText,
+                            "Incorrect command text");
+            Assert.AreEqual("DELETE FROM [UserRole]", commandList[2].CommandText,
+                            "Incorrect command text");
+        }
 
-				Console.WriteLine("Table '" + dataTable.TableName + "' update command");
-				Console.WriteLine("\t" + oleDbCommand.CommandText);
-			}
-		}
-	}
+        [Test]
+        public void TestGetUpdateCommand()
+        {
+            List<IDbCommand> commandList = new List<IDbCommand>();
+
+            DataSet ds = _oleDbCommandBuilder.GetSchema();
+            foreach (DataTable dataTable in ds.Tables)
+            {
+                IDbCommand oleDbCommand = _oleDbCommandBuilder.GetUpdateCommand(dataTable.TableName);
+                commandList.Add(oleDbCommand);
+
+                Console.WriteLine("Table '" + dataTable.TableName + "' update command");
+                Console.WriteLine("\t" + oleDbCommand.CommandText);
+            }
+
+            Assert.AreEqual(3, commandList.Count, "Should be 3 commands");
+            Assert.AreEqual("UPDATE [Role] SET [Name]=?, [Description]=? WHERE [ID]=?", commandList[0].CommandText,
+                            "Incorrect command text");
+            Assert.AreEqual("UPDATE [dbo].[User] SET [FirstName]=?, [LastName]=?, [Age]=?, [SupervisorID]=? WHERE [ID]=?",
+                            commandList[1].CommandText,
+                            "Incorrect command text");
+            Assert.AreEqual("UPDATE [UserRole] SET [UserID]=?, [RoleID]=? WHERE [UserID]=? AND [RoleID]=?",
+                            commandList[2].CommandText,
+                            "Incorrect command text");
+        }
+    }
 }

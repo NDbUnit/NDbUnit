@@ -20,93 +20,76 @@
  *
  */
 
-using System;
 using System.Data;
+using System.Data.Common;
 using System.Data.OleDb;
 
 namespace NDbUnit.Core.OleDb
 {
-	/// <summary>
-	/// The OleDb unit test data adapter.
-	/// </summary>
-	/// <example>
-	/// <code>
-	/// string connectionString = "Provider=SQLOLEDB;Data Source=V-AL-DIMEOLA\NETSDK;Initial Catalog=testdb;Integrated Security=SSPI;";
-	/// OleDbUnitTest oleDbUnitTest = new OleDbUnitTest(connectionString);
-	/// string xmlSchemaFile = "User.xsd";
-	/// string xmlFile = "User.xml";
-	///	oleDbUnitTest.ReadXmlSchema(xmlSchemaFile);
-	///	oleDbUnitTest.ReadXml(xmlFile);
-	///	oleDbUnitTest.PerformDbOperation(DbOperation.CleanInsertIdentity);
-	/// </code>
-	/// <seealso cref="INDbUnitTest"/>
-	/// </example>
-	public class OleDbUnitTest : NDbUnitTest
-	{
-		#region Private Fields
+    /// <summary>
+    /// The OleDb unit test data adapter.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// string connectionString = "Provider=SQLOLEDB;Data Source=V-AL-DIMEOLA\NETSDK;Initial Catalog=testdb;Integrated Security=SSPI;";
+    /// OleDbUnitTest oleDbUnitTest = new OleDbUnitTest(connectionString);
+    /// string xmlSchemaFile = "User.xsd";
+    /// string xmlFile = "User.xml";
+    ///	oleDbUnitTest.ReadXmlSchema(xmlSchemaFile);
+    ///	oleDbUnitTest.ReadXml(xmlFile);
+    ///	oleDbUnitTest.PerformDbOperation(DbOperation.CleanInsertIdentity);
+    /// </code>
+    /// <seealso cref="INDbUnitTest"/>
+    /// </example>
+    public class OleDbUnitTest : NDbUnitTest
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OleDbUnitTest"/> class.
+        /// </summary>
+        /// <param name="connectionString">The connection string 
+        /// used to open the database.
+        /// <seealso cref="System.Data.IDbConnection"/></param>
+        public OleDbUnitTest(string connectionString) : base(connectionString)
+        {
+        }
 
-		OleDbCommandBuilder _oleDbCommandBuilder = null;
-		OleDbOperation _oleDbOperation = null;
+        /// <summary>
+        /// Gets or sets the OLE database type.  The default value for an 
+        /// instance of an object is <see cref="OleDb.OleDbType.NoDb" />.
+        /// </summary>
+        public OleDbType OleOleDbType
+        {
+            get
+            {
+                return ((OleDbOperation)GetDbOperation()).OleOleDbType;
+            }
 
-		#endregion
+            set
+            {
+                ((OleDbOperation)GetDbOperation()).OleOleDbType = value;
+            }
+        }
+        protected override IDbCommandBuilder CreateDbCommandBuilder(string connectionString)
+        {
+            return new OleDbCommandBuilder(connectionString);
+        }
 
-		#region Public Methods
+        protected override IDbOperation CreateDbOperation()
+        {
+            return new OleDbOperation();
+        }
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="OleDbUnitTest"/> class.
-		/// </summary>
-		/// <param name="connectionString">The connection string 
-		/// used to open the database.
-		/// <seealso cref="System.Data.IDbConnection"/></param>
-		public OleDbUnitTest(string connectionString)
-		{
-			_oleDbCommandBuilder = new OleDbCommandBuilder(connectionString);
-			_oleDbOperation = new OleDbOperation();
-		}
+        protected override void OnGetDataSetFromDb(string tableName, ref DataSet dsToFill, IDbConnection dbConnection)
+        {
+            OleDbCommand selectCommand = (OleDbCommand) GetDbCommandBuilder().GetSelectCommand(tableName);
+            selectCommand.Connection = dbConnection as OleDbConnection;
+            OleDbDataAdapter adapter = new OleDbDataAdapter(selectCommand);
+            adapter.Fill(dsToFill, tableName);
+        }
 
-		#endregion
-
-		#region Public Properties
-
-		/// <summary>
-		/// Gets or sets the OLE database type.  The default value for an 
-		/// instance of an object is <see cref="DbType.NoDb" />.
-		/// </summary>
-		public DbType OleDbType
-		{
-			get
-			{
-				return _oleDbOperation.OleDbType;
-			}
-
-			set
-			{
-				_oleDbOperation.OleDbType = value;
-			}
-		}
-
-		#endregion
-
-		#region Protected Overrides
-
-		protected override IDbCommandBuilder GetDbCommandBuilder()
-		{
-			return _oleDbCommandBuilder;
-		}
-
-		protected override IDbOperation GetDbOperation()
-		{
-			return _oleDbOperation;
-		}
-
-		protected override void OnGetDataSetFromDb(string tableName, ref System.Data.DataSet dsToFill, IDbConnection dbConnection)
-		{
-			OleDbCommand selectCommand = _oleDbCommandBuilder.GetSelectCommand(tableName);
-			selectCommand.Connection = dbConnection as OleDbConnection;
-			OleDbDataAdapter adapter = new OleDbDataAdapter(selectCommand);
-			adapter.Fill(dsToFill, tableName);
-		}
-
-		#endregion
-	}
+        protected override DbDataAdapter CreateDataAdapter(DbCommand command)
+        {
+            return new OleDbDataAdapter((OleDbCommand) command);
+        }
+    }
 }

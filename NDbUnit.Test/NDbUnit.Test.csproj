@@ -92,9 +92,9 @@
   <ItemGroup>
     <Reference Include="Gallio, Version=3.0.5.546, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL" />
     <Reference Include="MbUnit, Version=3.0.5.546, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL" />
-    <Reference Include="NDbUnit.Core">
-      <Name>NDbUnit.Core</Name>
-      <HintPath>..\NDbUnit.Core\bin\Debug\NDbUnit.Core.dll</HintPath>
+    <Reference Include="Rhino.Mocks, Version=3.4.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\Rhino.Mocks.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -106,6 +106,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\NDbUnit.Core\Lib\System.Data.SQLite.DLL</HintPath>
     </Reference>
+    <Reference Include="System.Data.SqlServerCe, Version=3.5.1.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
@@ -143,24 +144,42 @@
     <Compile Include="SqlLite\SqlLiteDbCommandBuilderTest.cs" />
     <Compile Include="SqlLite\SqlLiteDbOperationTest.cs" />
     <Compile Include="SqlLite\SqlLiteUnitTestTest.cs" />
+    <Compile Include="SqlServerCe\SqlCeDbCommandBuilderTest.cs" />
+    <Compile Include="SqlServerCe\SqlCeDbOperationTest.cs" />
+    <Compile Include="SqlServerCe\SqlCeDbUnitTestTest.cs" />
     <Compile Include="TableNameHelperTest.cs" />
     <Compile Include="XmlTestFiles.cs">
       <SubType>Code</SubType>
     </Compile>
-    <None Include="createTestDBSchema.ddl" />
+    <None Include="app.config" />
     <None Include="NDbUnit.Test.build" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Include="SqlLite\test.sqlite.db" />
+    <None Include="Xml\UserDS.xsc">
+      <DependentUpon>UserDS.xsd</DependentUpon>
+    </None>
+    <None Include="Xml\UserDS.xss">
+      <DependentUpon>UserDS.xsd</DependentUpon>
+    </None>
+    <None Include="Xml\UserDS4SQLite.xsc">
+      <DependentUpon>UserDS4SQLite.xsd</DependentUpon>
+    </None>
     <None Include="Xml\UserDS4SQLite.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>UserDS4SQLite.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
+    <None Include="Xml\UserDS4SQLite.xss">
+      <DependentUpon>UserDS4SQLite.xsd</DependentUpon>
+    </None>
     <Content Include="Scripts\sqlite-testdb-create.sql" />
     <Content Include="Scripts\sqlserver-testdb-create.sql" />
+    <Content Include="SqlServerCe\testdb.sdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Xml\User.xml" />
     <Content Include="Xml\UserDS.xsd">
       <Generator>MSDataSetGenerator</Generator>
@@ -196,6 +215,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NDbUnit.Core\NDbUnit.Core.csproj">
+      <Project>{093E77F8-2F55-4823-B118-3D33F376F1A8}</Project>
+      <Name>NDbUnit.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

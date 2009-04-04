@@ -20,32 +20,30 @@
  *
  */
 
-using System;
 using System.IO;
 
 namespace NDbUnit.Test
 {
-	/// <summary>
-	/// Summary description for XmlFile.
-	/// </summary>
 	public class XmlTestFiles
 	{
 		// expect to be run from the bin/Debug or bin/Release directory
 		private static string _xmlPath = @"..\..\Xml\";
 
-		public XmlTestFiles()
-		{
-		}
-
-		public static string XmlSchemaFile
+	    public static string XmlSchemaFile
 		{
 			get
 			{
 				return Path.Combine(_xmlPath, "UserDS.xsd");
 			}
 		}
-
-		public static string XmlSchemaFile4SQLite
+        public static string XmlSchemaFileForSqlServerCe
+        {
+            get
+            {
+                return Path.Combine(_xmlPath, "SqlServerCeDataSet.xsd");
+            }
+        }
+		public static string xmlSchemaFileForSQLite
 		{
 			get
 			{

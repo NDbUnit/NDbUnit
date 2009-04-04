@@ -23,37 +23,26 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
-
 using MbUnit.Framework;
-
-using NDbUnit.Test;
 using NDbUnit.Core.SqlClient;
 
 namespace NDbUnit.Test.SqlClient
 {
-	/// <summary>
-	/// Summary description for SqlDbOperationTest.
-	/// </summary>
-	/// 
-	[TestFixture]
-	public class SqlDbOperationTest
-	{
-		private bool _built = false;
-		private SqlDbOperation _sqlDbOperation = new SqlDbOperation();
-		private SqlDbCommandBuilder _sqlDbCommandBuilder = new SqlDbCommandBuilder(DbConnection.SqlConnectionString);
-		private DataSet _dsData = null;
+    [TestFixture]
+    public class SqlDbOperationTest
+    {
+        private bool _built = false;
+        private SqlDbOperation _sqlDbOperation = new SqlDbOperation();
+        private SqlDbCommandBuilder _sqlDbCommandBuilder = new SqlDbCommandBuilder(DbConnection.SqlConnectionString);
+        private DataSet _dsData = null;
 
-		public SqlDbOperationTest()
-		{
-		}
-
-		[SetUp]
-		public void SetUp()
-		{
-			if (false == _built)
-			{
-				string xmlSchemaFile = XmlTestFiles.XmlSchemaFile;
-				string xmlFile = XmlTestFiles.XmlFile;
+        [SetUp]
+        public void SetUp()
+        {
+            if (false == _built)
+            {
+                string xmlSchemaFile = XmlTestFiles.XmlSchemaFile;
+                string xmlFile = XmlTestFiles.XmlFile;
 
 				try
 				{
@@ -87,19 +76,19 @@ namespace NDbUnit.Test.SqlClient
 
 			TestDeleteAll();
 
-			SqlTransaction sqlTransaction = null;
-			try
-			{
-				sqlTransaction = _sqlDbCommandBuilder.Connection.BeginTransaction();
-				_sqlDbOperation.Insert(_dsData, _sqlDbCommandBuilder, sqlTransaction);
-				sqlTransaction.Commit();
-			}
-			catch(Exception e)
-			{
-				if (sqlTransaction != null)
-				{
-					sqlTransaction.Rollback();
-				}
+            IDbTransaction sqlTransaction = null;
+            try
+            {
+                sqlTransaction = _sqlDbCommandBuilder.Connection.BeginTransaction();
+                _sqlDbOperation.Insert(_dsData, _sqlDbCommandBuilder, sqlTransaction);
+                sqlTransaction.Commit();
+            }
+            catch (Exception e)
+            {
+                if (sqlTransaction != null)
+                {
+                    sqlTransaction.Rollback();
+                }
 
 				throw(e);
 			}
@@ -110,61 +99,61 @@ namespace NDbUnit.Test.SqlClient
 		{
 			TestDeleteAll();
 
-			SqlTransaction sqlTransaction = null;
-			try
-			{
-				sqlTransaction = _sqlDbCommandBuilder.Connection.BeginTransaction();
-				_sqlDbOperation.InsertIdentity(_dsData, _sqlDbCommandBuilder, sqlTransaction);
-				sqlTransaction.Commit();
-			}
-			catch(Exception e)
-			{
-				if (sqlTransaction != null)
-				{
-					sqlTransaction.Rollback();
-				}
+            IDbTransaction sqlTransaction = null;
+            try
+            {
+                sqlTransaction = _sqlDbCommandBuilder.Connection.BeginTransaction();
+                _sqlDbOperation.InsertIdentity(_dsData, _sqlDbCommandBuilder, sqlTransaction);
+                sqlTransaction.Commit();
+            }
+            catch (Exception e)
+            {
+                if (sqlTransaction != null)
+                {
+                    sqlTransaction.Rollback();
+                }
 
 				throw(e);
 			}
 		}
 
-		[Test]
-		public void TestDeleteAll()
-		{
-			SqlTransaction sqlTransaction = null;
-			try
-			{
-				sqlTransaction = _sqlDbCommandBuilder.Connection.BeginTransaction();
-				_sqlDbOperation.DeleteAll(_sqlDbCommandBuilder, sqlTransaction);
-				sqlTransaction.Commit();
-			}
-			catch(Exception e)
-			{
-				if (sqlTransaction != null)
-				{
-					sqlTransaction.Rollback();
-				}
+        [Test]
+        public void TestDeleteAll()
+        {
+            IDbTransaction sqlTransaction = null;
+            try
+            {
+                sqlTransaction = _sqlDbCommandBuilder.Connection.BeginTransaction();
+                _sqlDbOperation.DeleteAll(_sqlDbCommandBuilder, sqlTransaction);
+                sqlTransaction.Commit();
+            }
+            catch (Exception e)
+            {
+                if (sqlTransaction != null)
+                {
+                    sqlTransaction.Rollback();
+                }
 
 				throw(e);
 			}
 		}
 
-		[Test]
-		public void TestDelete()
-		{
-			SqlTransaction sqlTransaction = null;
-			try
-			{
-				sqlTransaction = _sqlDbCommandBuilder.Connection.BeginTransaction();
-				_sqlDbOperation.Delete(_dsData, _sqlDbCommandBuilder, sqlTransaction);
-				sqlTransaction.Commit();
-			}
-			catch(Exception e)
-			{
-				if (sqlTransaction != null)
-				{
-					sqlTransaction.Rollback();
-				}
+        [Test]
+        public void TestDelete()
+        {
+            IDbTransaction sqlTransaction = null;
+            try
+            {
+                sqlTransaction = _sqlDbCommandBuilder.Connection.BeginTransaction();
+                _sqlDbOperation.Delete(_dsData, _sqlDbCommandBuilder, sqlTransaction);
+                sqlTransaction.Commit();
+            }
+            catch (Exception e)
+            {
+                if (sqlTransaction != null)
+                {
+                    sqlTransaction.Rollback();
+                }
 
 				throw(e);
 			}
@@ -176,13 +165,13 @@ namespace NDbUnit.Test.SqlClient
 			TestDeleteAll();
 			TestInsert();
 
-			SqlTransaction sqlTransaction = null;
-			try
-			{
-				DataSet dsSchema = _sqlDbCommandBuilder.GetSchema();
-				DataSet ds = dsSchema.Clone();
-				string xmlFile = XmlTestFiles.XmlModFile;
-				ds.ReadXml(xmlFile);
+            IDbTransaction sqlTransaction = null;
+            try
+            {
+                DataSet dsSchema = _sqlDbCommandBuilder.GetSchema();
+                DataSet ds = dsSchema.Clone();
+                string xmlFile = XmlTestFiles.XmlModFile;
+                ds.ReadXml(xmlFile);
 
 				sqlTransaction = _sqlDbCommandBuilder.Connection.BeginTransaction();
 				_sqlDbOperation.Update(ds, _sqlDbCommandBuilder, sqlTransaction);
@@ -205,13 +194,13 @@ namespace NDbUnit.Test.SqlClient
 			TestDeleteAll();
 			TestInsert();
 
-			SqlTransaction sqlTransaction = null;
-			try
-			{
-				DataSet dsSchema = _sqlDbCommandBuilder.GetSchema();
-				DataSet ds = dsSchema.Clone();
-				string xmlFile = XmlTestFiles.XmlRefreshFile;
-				ds.ReadXml(xmlFile);
+            IDbTransaction sqlTransaction = null;
+            try
+            {
+                DataSet dsSchema = _sqlDbCommandBuilder.GetSchema();
+                DataSet ds = dsSchema.Clone();
+                string xmlFile = XmlTestFiles.XmlRefreshFile;
+                ds.ReadXml(xmlFile);
 
 				sqlTransaction = _sqlDbCommandBuilder.Connection.BeginTransaction();
 				_sqlDbOperation.Refresh(ds, _sqlDbCommandBuilder, sqlTransaction);
@@ -228,36 +217,36 @@ namespace NDbUnit.Test.SqlClient
 			}
 		}
 
-		private void resetIdentityColumns()
-		{
-			SqlTransaction sqlTransaction = null;
-			try
-			{
-				DataSet dsSchema = _sqlDbCommandBuilder.GetSchema();
-				sqlTransaction = _sqlDbCommandBuilder.Connection.BeginTransaction();
-				foreach(DataTable table in dsSchema.Tables)
-				{
-					foreach(DataColumn column in table.Columns)
-					{
-						if(column.AutoIncrement)
-						{
-							String sql = "dbcc checkident([" + table.TableName + "], RESEED, 0)";
-							SqlCommand sqlCommand = new SqlCommand(sql, _sqlDbCommandBuilder.Connection);
-							sqlCommand.Transaction = sqlTransaction;
-							sqlCommand.ExecuteNonQuery();
+        private void resetIdentityColumns()
+        {
+            IDbTransaction sqlTransaction = null;
+            try
+            {
+                DataSet dsSchema = _sqlDbCommandBuilder.GetSchema();
+                sqlTransaction = _sqlDbCommandBuilder.Connection.BeginTransaction();
+                foreach (DataTable table in dsSchema.Tables)
+                {
+                    foreach (DataColumn column in table.Columns)
+                    {
+                        if (column.AutoIncrement)
+                        {
+                            String sql = "dbcc checkident([" + table.TableName + "], RESEED, 0)";
+                            SqlCommand sqlCommand = new SqlCommand(sql, (SqlConnection) _sqlDbCommandBuilder.Connection);
+                            sqlCommand.Transaction = (SqlTransaction) sqlTransaction;
+                            sqlCommand.ExecuteNonQuery();
 
-							break;
-						}
-					}				
-				}
-				sqlTransaction.Commit();
-			}
-			catch(Exception e)
-			{
-				if (sqlTransaction != null)
-				{
-					sqlTransaction.Rollback();
-				}
+                            break;
+                        }
+                    }
+                }
+                sqlTransaction.Commit();
+            }
+            catch (Exception e)
+            {
+                if (sqlTransaction != null)
+                {
+                    sqlTransaction.Rollback();
+                }
 
 				throw(e);
 			}

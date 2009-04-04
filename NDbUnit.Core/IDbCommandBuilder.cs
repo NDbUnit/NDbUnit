@@ -20,30 +20,36 @@
  *
  */
 
-using System.Data.Common;
-using System.Data.SQLite;
+using System.Data;
+using System.IO;
 
-namespace NDbUnit.Core.SqlLite
+namespace NDbUnit.Core
 {
-    public class SqlLiteUnitTest : NDbUnitTest
+    public interface IDbCommandBuilder
     {
-        public SqlLiteUnitTest(string connectionString) : base(connectionString)
+        string QuotePrefix
         {
+            get;
         }
 
-        protected override IDbCommandBuilder CreateDbCommandBuilder(string connectionString)
+        string QuoteSuffix
         {
-            return new SqlLiteDbCommandBuilder(connectionString);
+            get;
         }
 
-        protected override IDbOperation CreateDbOperation()
+        IDbConnection Connection
         {
-            return new SqlLiteDbOperation();
+            get;
         }
 
-        protected override DbDataAdapter CreateDataAdapter(DbCommand command)
-        {
-            return new SQLiteDataAdapter((SQLiteCommand) command);
-        }
+        DataSet GetSchema();
+        void BuildCommands(string xmlSchemaFile);
+        void BuildCommands(Stream xmlSchema);
+        IDbCommand GetSelectCommand(string tableName);
+        IDbCommand GetInsertCommand(string tableName);
+        IDbCommand GetInsertIdentityCommand(string tableName);
+        IDbCommand GetDeleteCommand(string tableName);
+        IDbCommand GetDeleteAllCommand(string tableName);
+        IDbCommand GetUpdateCommand(string tableName);
     }
 }

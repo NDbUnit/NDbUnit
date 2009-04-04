@@ -23,57 +23,18 @@
 using System;
 using System.Data;
 using System.Collections;
+using System.Data.Common;
 
 namespace NDbUnit.Core
 {
-    public interface IDbOperation
-    {
-        void Insert(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction);
-        void InsertIdentity(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction);
-        void Delete(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction);
-        void DeleteAll(IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction);
-        void Update(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction);
-        void Refresh(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction);
-    }
-
     public abstract class DbOperation : IDbOperation
     {
-        private string _quotePrefix = "";
-
-        private string _quoteSuffix = "";
-
-        public DbOperation()
-        {
-        }
-
-        public string QuotePrefix
-        {
-            get
-            {
-                return _quotePrefix;
-            }
-            set
-            {
-                _quotePrefix = value;
-            }
-        }
-
-        public string QuoteSuffix
-        {
-            get
-            {
-                return _quoteSuffix;
-            }
-            set
-            {
-                _quoteSuffix = value;
-            }
-        }
+        public virtual string QuotePrefix { get { return "";} }
+        public virtual string QuoteSuffix { get { return ""; } }
 
         protected DataRow CloneDataRow(DataTable dataTable, DataRow dataRow)
         {
             DataRow dataRowClone = dataTable.NewRow();
-            IEnumerator enumerator = dataRow.ItemArray.GetEnumerator();
             for (int i = 0; i < dataRow.ItemArray.Length; ++i)
             {
                 dataRowClone[i] = dataRow[i];
@@ -102,19 +63,11 @@ namespace NDbUnit.Core
             return true;
         }
 
-        protected abstract void OnDelete(DataTable dataTable, IDbCommand dbCommand, IDbTransaction dbTransaction);
+        protected abstract DbDataAdapter CreateDbDataAdapter();
+        protected abstract DbCommand CreateDbCommand(string cmdText);
 
-        protected abstract void OnDeleteAll(IDbCommand dbCommand, IDbTransaction dbTransaction);
-
-        protected abstract void OnInsert(DataTable dataTable, IDbCommand dbCommand, IDbTransaction dbTransaction);
-
-        protected abstract void OnInsertIdentity(DataTable dataTable, IDbCommand dbCommand, IDbTransaction dbTransaction);
-
-        protected abstract void OnRefresh(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction, string tableName);
-
-        protected abstract void OnUpdate(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction, string tableName);
-
-        private void deleteCommon(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction, bool deleteAll)
+        private void deleteCommon(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction,
+                                  bool deleteAll)
         {
             Hashtable deletedTableColl = new Hashtable();
 
@@ -128,7 +81,8 @@ namespace NDbUnit.Core
             }
         }
 
-        private void deleteRecursive(DataSet ds, DataTable dataTableSchema, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction, Hashtable deletedTableColl, bool deleteAll)
+        private void deleteRecursive(DataSet ds, DataTable dataTableSchema, IDbCommandBuilder dbCommandBuilder,
+                                     IDbTransaction dbTransaction, Hashtable deletedTableColl, bool deleteAll)
         {
             // Table has already been deleted from.
             if (deletedTableColl.ContainsKey(dataTableSchema.TableName))
@@ -147,7 +101,8 @@ namespace NDbUnit.Core
                 foreach (DataRelation childRelation in childRelations)
                 {
                     // Must delete the child table first.
-                    deleteRecursive(ds, childRelation.ChildTable, dbCommandBuilder, dbTransaction, deletedTableColl, deleteAll);
+                    deleteRecursive(ds, childRelation.ChildTable, dbCommandBuilder, dbTransaction, deletedTableColl,
+                                    deleteAll);
                 }
             }
 
@@ -189,27 +144,27 @@ namespace NDbUnit.Core
             }
         }
 
-        void IDbOperation.Delete(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction)
+        public void Delete(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction)
         {
             deleteCommon(ds, dbCommandBuilder, dbTransaction, false);
         }
 
-        void IDbOperation.DeleteAll(IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction)
+        public void DeleteAll(IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction)
         {
             deleteCommon(null, dbCommandBuilder, dbTransaction, true);
         }
 
-        void IDbOperation.Insert(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction)
+        public void Insert(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction)
         {
             insertCommon(ds, dbCommandBuilder, dbTransaction, false);
         }
 
-        void IDbOperation.InsertIdentity(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction)
+        public void InsertIdentity(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction)
         {
             insertCommon(ds, dbCommandBuilder, dbTransaction, true);
         }
 
-        void IDbOperation.Refresh(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction)
+        public void Refresh(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction)
         {
 
             DataSetTableIterator iterator = new DataSetTableIterator(ds, false);
@@ -220,7 +175,7 @@ namespace NDbUnit.Core
             }
         }
 
-        void IDbOperation.Update(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction)
+        public void Update(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction)
         {
             DataSet dsCopy = ds.Copy();
             dsCopy.AcceptChanges();
@@ -240,7 +195,8 @@ namespace NDbUnit.Core
             }
         }
 
-        private void insertCommon(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction, bool insertIdentity)
+        private void insertCommon(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction,
+                                  bool insertIdentity)
         {
             Hashtable insertedTableColl = new Hashtable();
 
@@ -254,7 +210,8 @@ namespace NDbUnit.Core
             }
         }
 
-        private void insertRecursive(DataSet ds, DataTable dataTableSchema, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction, Hashtable insertedTableColl, bool insertIdentity)
+        private void insertRecursive(DataSet ds, DataTable dataTableSchema, IDbCommandBuilder dbCommandBuilder,
+                                     IDbTransaction dbTransaction, Hashtable insertedTableColl, bool insertIdentity)
         {
             // Table has already been inserted into.
             if (insertedTableColl.ContainsKey(dataTableSchema.TableName))
@@ -275,7 +232,8 @@ namespace NDbUnit.Core
                     {
                         ForeignKeyConstraint fkConstraint = (ForeignKeyConstraint)constraint;
                         // Must insert parent table first.
-                        insertRecursive(ds, fkConstraint.RelatedTable, dbCommandBuilder, dbTransaction, insertedTableColl, insertIdentity);
+                        insertRecursive(ds, fkConstraint.RelatedTable, dbCommandBuilder, dbTransaction,
+                                        insertedTableColl, insertIdentity);
                     }
                 }
             }
@@ -286,7 +244,8 @@ namespace NDbUnit.Core
                 foreach (DataRelation parentRelation in parentRelations)
                 {
                     // Must insert parent table first.
-                    insertRecursive(ds, parentRelation.ParentTable, dbCommandBuilder, dbTransaction, insertedTableColl, insertIdentity);
+                    insertRecursive(ds, parentRelation.ParentTable, dbCommandBuilder, dbTransaction, insertedTableColl,
+                                    insertIdentity);
                 }
             }
 
@@ -312,5 +271,170 @@ namespace NDbUnit.Core
             }
         }
 
+        protected virtual void OnDelete(DataTable dataTable, IDbCommand dbCommand, IDbTransaction dbTransaction)
+        {
+            DbTransaction sqlTransaction = (DbTransaction) dbTransaction;
+
+            DbDataAdapter sqlDataAdapter = CreateDbDataAdapter();
+            sqlDataAdapter.DeleteCommand = (DbCommand) dbCommand;
+            sqlDataAdapter.DeleteCommand.Connection = sqlTransaction.Connection;
+            sqlDataAdapter.DeleteCommand.Transaction = sqlTransaction;
+
+            sqlDataAdapter.Update(dataTable);
+        }
+
+        protected virtual void OnDeleteAll(IDbCommand dbCommand, IDbTransaction dbTransaction)
+        {
+            DbTransaction sqlTransaction = (DbTransaction) dbTransaction;
+
+            DbCommand sqlCommand = (DbCommand) dbCommand;
+            sqlCommand.Connection = sqlTransaction.Connection;
+            sqlCommand.Transaction = sqlTransaction;
+
+            sqlCommand.ExecuteNonQuery();
+        }
+
+        protected virtual void OnInsert(DataTable dataTable, IDbCommand dbCommand, IDbTransaction dbTransaction)
+        {
+            DbTransaction sqlTransaction = (DbTransaction) dbTransaction;
+
+            DbDataAdapter sqlDataAdapter = CreateDbDataAdapter();
+            sqlDataAdapter.InsertCommand = (DbCommand) dbCommand;
+            sqlDataAdapter.InsertCommand.Connection = sqlTransaction.Connection;
+            sqlDataAdapter.InsertCommand.Transaction = sqlTransaction;
+
+            sqlDataAdapter.Update(dataTable);
+        }
+
+        protected virtual void OnInsertIdentity(DataTable dataTable, IDbCommand dbCommand, IDbTransaction dbTransaction)
+        {
+            DbTransaction sqlTransaction = (DbTransaction) dbTransaction;
+
+            foreach (DataColumn column in dataTable.Columns)
+            {
+                if (column.AutoIncrement)
+                {
+                    // Set identity insert on.
+                    DbCommand sqlCommand =
+                        CreateDbCommand("SET IDENTITY_INSERT " +
+                                        TableNameHelper.FormatTableName(dataTable.TableName, QuotePrefix, QuoteSuffix) +
+                                        " ON");
+                    sqlCommand.Connection = sqlTransaction.Connection;
+                    sqlCommand.Transaction = sqlTransaction;
+                    sqlCommand.ExecuteNonQuery();
+
+                    break;
+                }
+            }
+
+            try
+            {
+                DbDataAdapter sqlDataAdapter = CreateDbDataAdapter();
+                sqlDataAdapter.InsertCommand = (DbCommand) dbCommand;
+                sqlDataAdapter.InsertCommand.Connection = sqlTransaction.Connection;
+                sqlDataAdapter.InsertCommand.Transaction = sqlTransaction;
+
+                sqlDataAdapter.Update(dataTable);
+            }
+            catch (Exception e)
+            {
+                throw (e);
+            }
+            finally
+            {
+                foreach (DataColumn column in dataTable.Columns)
+                {
+                    if (column.AutoIncrement)
+                    {
+                        // Set identity insert off.
+                        DbCommand sqlCommand =
+                            CreateDbCommand("SET IDENTITY_INSERT " +
+                                            TableNameHelper.FormatTableName(dataTable.TableName, QuotePrefix,
+                                                                            QuoteSuffix) + " OFF");
+                        sqlCommand.Connection = sqlTransaction.Connection;
+                        sqlCommand.Transaction = sqlTransaction;
+                        sqlCommand.ExecuteNonQuery();
+
+                        break;
+                    }
+                }
+            }
+        }
+
+        protected virtual void OnRefresh(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction,
+                                         string tableName)
+        {
+            DbTransaction sqlTransaction = (DbTransaction) dbTransaction;
+
+            DbDataAdapter sqlDataAdapter = CreateDbDataAdapter();
+            sqlDataAdapter.SelectCommand = (DbCommand) dbCommandBuilder.GetSelectCommand(tableName);
+            sqlDataAdapter.SelectCommand.Connection = sqlTransaction.Connection;
+            sqlDataAdapter.SelectCommand.Transaction = sqlTransaction;
+
+            DataSet dsDb = new DataSet();
+            // Query all records in the database table.
+            sqlDataAdapter.Fill(dsDb, tableName);
+
+            DataSet dsUpdate = dbCommandBuilder.GetSchema().Clone();
+
+            DataTable dataTable = ds.Tables[tableName];
+            DataTable dataTableDb = dsDb.Tables[tableName];
+            // Iterate all rows in the table.
+            foreach (DataRow dataRow in dataTable.Rows)
+            {
+                bool rowDoesNotExist = true;
+                // Iterate all rows in the database table.
+                foreach (DataRow dataRowDb in dataTableDb.Rows)
+                {
+                    // The row exists in the database.
+                    if (IsPrimaryKeyValueEqual(dataRow, dataRowDb, dsUpdate.Tables[tableName].PrimaryKey))
+                    {
+                        rowDoesNotExist = false;
+                        DataRow dataRowNew = CloneDataRow(dsUpdate.Tables[tableName], dataRow);
+                        dsUpdate.Tables[tableName].Rows.Add(dataRowNew);
+                        dataRowNew.AcceptChanges();
+                        MarkRowAsModified(dataRowNew);
+                        break;
+                    }
+                }
+
+                // The row does not exist in the database.
+                if (rowDoesNotExist)
+                {
+                    DataRow dataRowNew = CloneDataRow(dsUpdate.Tables[tableName], dataRow);
+                    dsUpdate.Tables[tableName].Rows.Add(dataRowNew);
+                }
+            }
+
+            // Does not insert identity.
+            sqlDataAdapter.InsertCommand = (DbCommand) dbCommandBuilder.GetInsertCommand(tableName);
+            sqlDataAdapter.InsertCommand.Connection = sqlTransaction.Connection;
+            sqlDataAdapter.InsertCommand.Transaction = sqlTransaction;
+
+            sqlDataAdapter.UpdateCommand = (DbCommand) dbCommandBuilder.GetUpdateCommand(tableName);
+            sqlDataAdapter.UpdateCommand.Connection = sqlTransaction.Connection;
+            sqlDataAdapter.UpdateCommand.Transaction = sqlTransaction;
+
+            sqlDataAdapter.Update(dsUpdate, tableName);
+        }
+
+        private void MarkRowAsModified(DataRow dataRowNew)
+        {
+            dataRowNew.BeginEdit();
+            dataRowNew.EndEdit();
+        }
+
+        protected virtual void OnUpdate(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction,
+                                        string tableName)
+        {
+            DbTransaction sqlTransaction = (DbTransaction) dbTransaction;
+
+            DbDataAdapter sqlDataAdapter = CreateDbDataAdapter();
+            sqlDataAdapter.UpdateCommand = (DbCommand) dbCommandBuilder.GetUpdateCommand(tableName);
+            sqlDataAdapter.UpdateCommand.Connection = sqlTransaction.Connection;
+            sqlDataAdapter.UpdateCommand.Transaction = sqlTransaction;
+
+            sqlDataAdapter.Update(ds, tableName);
+        }
     }
 }

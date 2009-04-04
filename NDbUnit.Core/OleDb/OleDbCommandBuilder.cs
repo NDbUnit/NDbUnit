@@ -20,7 +20,7 @@
  *
  */
 
-using System;
+using System.Data.Common;
 using System.Text;
 using System.Data;
 using System.Data.OleDb;
@@ -28,273 +28,92 @@ using System.Collections;
 
 namespace NDbUnit.Core.OleDb
 {
-	public class OleDbCommandBuilder : DbCommandBuilder
-	{
-		#region Private Fields
+    public class OleDbCommandBuilder : DbCommandBuilder
+    {
+        private OleDbConnection _oleDbConnection;
 
-		private OleDbConnection _oleDbConnection = null;
-		private DataTable _dataTableSchema = null;
+        public OleDbCommandBuilder(string connectionString) : base(connectionString)
+        {
+            _oleDbConnection = new OleDbConnection(connectionString);
+        }
 
-		#endregion
+        public override string QuotePrefix
+        {
+            get { return "["; }
+        }
 
-		#region Public Methods
+        public override string QuoteSuffix
+        {
+            get { return "]"; }
+        }
 
-		public OleDbCommandBuilder(string connectionString)
-		{
-			_oleDbConnection = new OleDbConnection(connectionString);
-		}
+        public new OleDbConnection Connection
+        {
+            get { return _oleDbConnection; }
+        }
 
-		#endregion
-	
-		#region Type Safe Interface Implementation
 
-		public OleDbConnection Connection
-		{
-			get
-			{
-				return _oleDbConnection;
-			}
-		}
+        protected override DbConnection GetConnection(string connectionString)
+        {
+            return new OleDbConnection(connectionString);
+        }
 
-		public OleDbCommand GetSelectCommand(string tableName)
-		{
-			return ((OleDbCommand)((IDbCommandBuilder)this).GetSelectCommand(tableName));
-		}
+        protected override DbCommand CreateDbCommand()
+        {
+            return new OleDbCommand();
+        }
 
-		public OleDbCommand GetInsertCommand(string tableName)
-		{
-			return ((OleDbCommand)((IDbCommandBuilder)this).GetInsertCommand(tableName));
-		}
+        protected override string GetParameterDesignator(int count)
+        {
+            return "?";
+        }
 
-		public OleDbCommand GetInsertIdentityCommand(string tableName)
-		{
-			return ((OleDbCommand)((IDbCommandBuilder)this).GetInsertIdentityCommand(tableName));
-		}
+        protected override string GetIdentityColumnDesignator()
+        {
+            return "IsAutoIncrement";
+        }
 
-		public OleDbCommand GetDeleteCommand(string tableName)
-		{
-			return ((OleDbCommand)((IDbCommandBuilder)this).GetDeleteCommand(tableName));
-		}
-
-		public OleDbCommand GetDeleteAllCommand(string tableName)
-		{
-			return ((OleDbCommand)((IDbCommandBuilder)this).GetDeleteAllCommand(tableName));
-		}
-
-		public OleDbCommand GetUpdateCommand(string tableName)
-		{
-			return ((OleDbCommand)((IDbCommandBuilder)this).GetUpdateCommand(tableName));
-		}
-
-		#endregion
-
-		#region Protected Overrides
-
-		protected override IDbConnection GetConnection()
-		{
-			return _oleDbConnection;
-		}
-
-		protected override IDbCommand CreateSelectCommand(DataSet ds, string tableName)
-		{
-			OleDbCommand oleDbSelectCommand = new OleDbCommand();
-
-			bool notFirstColumn = false;
-			StringBuilder sb = new StringBuilder("SELECT ");
-			DataTable dataTable = ds.Tables[tableName];
-			foreach(DataColumn dataColumn in dataTable.Columns)
-			{
-				if (notFirstColumn)
-				{
-					sb.Append(", ");
-				}
-
-				notFirstColumn = true;
-
-				sb.Append(base.QuotePrefix + dataColumn.ColumnName + base.QuoteSuffix);
-			}
-
-			sb.Append(" FROM ");
-			sb.Append(TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix));
-
-			oleDbSelectCommand.CommandText = sb.ToString();
-			oleDbSelectCommand.Connection = _oleDbConnection;
-
-            try
-            {
-                _dataTableSchema = getSchemaTable(oleDbSelectCommand);
-            }
-		    catch (Exception e)
-		    {
-                string message = String.Format("OleDbCommandBuilder.CreateSelectCommand(DataSet, string) failed for tableName = '{0}'", tableName);
-                throw new NDbUnitException(message, e);
-			}
-
-			return oleDbSelectCommand;
-		}
-
-		protected override IDbCommand CreateInsertCommand(IDbCommand selectCommand, string tableName)
-		{	
-			OleDbCommand oleDbSelectCommand = (OleDbCommand)selectCommand;
-
-			int count = 1;
-			bool notFirstColumn = false;
-			StringBuilder sb = new StringBuilder();
-			sb.Append("INSERT INTO " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + "(");
-			StringBuilder sbParam = new StringBuilder();
-			OleDbParameter oleDbParameter = null;
-			OleDbCommand oleDbInsertCommand = new OleDbCommand();
-			foreach(DataRow dataRow in _dataTableSchema.Rows)
-			{			
-				// Not an identity column.
-				if (!((bool)dataRow["IsAutoIncrement"]))
-				{
-					if (notFirstColumn)
-					{
-						sb.Append(", ");
-						sbParam.Append(", ");
-					}
-
-					notFirstColumn = true;
-
-					sb.Append(base.QuotePrefix + dataRow["ColumnName"] + base.QuoteSuffix);
-					sbParam.Append("?");
-
-					oleDbParameter = newOleDbParameter(count, dataRow);
-					oleDbInsertCommand.Parameters.Add(oleDbParameter);
-
-					++count;
-				}
-			}			
-
-			sb.Append(") VALUES(" + sbParam.ToString() + ")");
-
-			oleDbInsertCommand.CommandText = sb.ToString();
-
-			return oleDbInsertCommand;
-		}
-
-		protected override IDbCommand CreateInsertIdentityCommand(IDbCommand selectCommand, string tableName)
-		{
-			OleDbCommand oleDbSelectCommand = (OleDbCommand)selectCommand;
-
-			int count = 1;
-			bool notFirstColumn = false;
-			StringBuilder sb = new StringBuilder();
-			sb.Append("INSERT INTO " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + "(");
-			StringBuilder sbParam = new StringBuilder();
-			OleDbParameter oleDbParameter = null;
-			OleDbCommand oleDbInsertIdentityCommand = new OleDbCommand();
-			foreach(DataRow dataRow in _dataTableSchema.Rows)
-			{			
-				if (notFirstColumn)
-				{
-					sb.Append(", ");
-					sbParam.Append(", ");
-				}
-
-				notFirstColumn = true;
-
-				sb.Append(base.QuotePrefix + dataRow["ColumnName"] + base.QuoteSuffix);
-				sbParam.Append("?");
-
-				oleDbParameter = newOleDbParameter(count, dataRow);
-				oleDbInsertIdentityCommand.Parameters.Add(oleDbParameter);
-
-				++count;
-			}			
-
-			sb.Append(") VALUES(" + sbParam.ToString() + ")");
-
-			oleDbInsertIdentityCommand.CommandText = sb.ToString();
-
-			return oleDbInsertIdentityCommand;
-		}
-
-		protected override IDbCommand CreateDeleteCommand(IDbCommand selectCommand, string tableName)
-		{
-			OleDbCommand oleDbSelectCommand = (OleDbCommand)selectCommand;
-
-			StringBuilder sb = new StringBuilder();
-			sb.Append("DELETE FROM " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + " WHERE ");
-
-			OleDbCommand oleDbDeleteCommand = new OleDbCommand();
-
-			int count = 1;
-			OleDbParameter oleDbParameter = null;
-			foreach(DataRow dataRow in _dataTableSchema.Rows)
-			{			
-				// A key column.
-				if ((bool)dataRow["IsKey"])
-				{
-					if (count != 1)
-					{
-						sb.Append(" AND ");
-					}
-
-					sb.Append(base.QuotePrefix + dataRow["ColumnName"] + base.QuoteSuffix);
-					sb.Append("=?");
-
-					oleDbParameter = newOleDbParameter(count, dataRow);
-					oleDbDeleteCommand.Parameters.Add(oleDbParameter);
-
-					++count;
-				}
-			}			
-
-			oleDbDeleteCommand.CommandText = sb.ToString();
-
-			return oleDbDeleteCommand;
-		}
-
-		protected override IDbCommand CreateDeleteAllCommand(string tableName)
-		{
-			return new OleDbCommand("DELETE FROM " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix));
-		}
-
-		protected override IDbCommand CreateUpdateCommand(IDbCommand selectCommand, string tableName)
-		{
-			OleDbCommand oleDbSelectCommand = (OleDbCommand)selectCommand;
-
-			StringBuilder sb = new StringBuilder();
-			sb.Append("UPDATE " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + " SET ");
+        protected override IDbCommand CreateUpdateCommand(IDbCommand selectCommand, string tableName)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("UPDATE " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + " SET ");
 
 			OleDbCommand oleDbUpdateCommand = new OleDbCommand();
 
-			int count = 1;
-			bool notFirstKey = false;
-			bool notFirstColumn = false;
-			OleDbParameter oleDbParameter = null;
-			StringBuilder sbPrimaryKey = new StringBuilder();
-			ArrayList keyParameters = new ArrayList();
+            int count = 1;
+            bool notFirstKey = false;
+            bool notFirstColumn = false;
+            DbParameter oleDbParameter;
+            StringBuilder sbPrimaryKey = new StringBuilder();
+            ArrayList keyParameters = new ArrayList();
 
-			bool containsAllPrimaryKeys = true;
-			foreach(DataRow dataRow in _dataTableSchema.Rows)
-			{
-				if(!(bool)dataRow["IsKey"])
-				{
-					containsAllPrimaryKeys = false;
-					break;
-				}
-			}
+            bool containsAllPrimaryKeys = true;
+            foreach (DataRow dataRow in _dataTableSchema.Rows)
+            {
+                if (!(bool) dataRow["IsKey"])
+                {
+                    containsAllPrimaryKeys = false;
+                    break;
+                }
+            }
 
-			foreach(DataRow dataRow in _dataTableSchema.Rows)
-			{			
-				// A key column.
-				if ((bool)dataRow["IsKey"])
-				{
-					if (notFirstKey)
-					{
-						sbPrimaryKey.Append(" AND ");
-					}
+            foreach (DataRow dataRow in _dataTableSchema.Rows)
+            {
+                // A key column.
+                if ((bool) dataRow["IsKey"])
+                {
+                    if (notFirstKey)
+                    {
+                        sbPrimaryKey.Append(" AND ");
+                    }
 
 					notFirstKey = true;
 
-					sbPrimaryKey.Append(base.QuotePrefix + dataRow["ColumnName"] + base.QuoteSuffix);
-					sbPrimaryKey.Append("=?");
+                    sbPrimaryKey.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
+                    sbPrimaryKey.Append("=?");
 
-					oleDbParameter = newOleDbParameter(count, dataRow);
-					keyParameters.Add(oleDbParameter);
+                    oleDbParameter = CreateNewSqlParameter(count, dataRow);
+                    keyParameters.Add(oleDbParameter);
 
 					++count;
 				}
@@ -308,15 +127,15 @@ namespace NDbUnit.Core.OleDb
 
 					notFirstColumn = true;
 
-					sb.Append(base.QuotePrefix + dataRow["ColumnName"] + base.QuoteSuffix);
-					sb.Append("=?");
+                    sb.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
+                    sb.Append("=?");
 
-					oleDbParameter = newOleDbParameter(count, dataRow);
-					oleDbUpdateCommand.Parameters.Add(oleDbParameter);
+                    oleDbParameter = CreateNewSqlParameter(count, dataRow);
+                    oleDbUpdateCommand.Parameters.Add(oleDbParameter);
 
-					++count;
-				}
-			}			
+                    ++count;
+                }
+            }
 
 			// Add key parameters last since ordering is important.
 			for (int i = 0; i < keyParameters.Count; ++i)
@@ -324,50 +143,17 @@ namespace NDbUnit.Core.OleDb
 				oleDbUpdateCommand.Parameters.Add((OleDbParameter)keyParameters[i]);
 			}
 
-			sb.Append(" WHERE " + sbPrimaryKey.ToString());
+            sb.Append(" WHERE " + sbPrimaryKey);
 
 			oleDbUpdateCommand.CommandText = sb.ToString();
 
 			return oleDbUpdateCommand;
 		}
 
-		#endregion
-
-		#region Private Methods
-
-		private DataTable getSchemaTable(OleDbCommand oleDbSelectCommand)
-		{
-			DataTable dataTableSchema = null;
-			bool isClosed = ConnectionState.Closed == _oleDbConnection.State;
-
-			try
-			{
-				if (isClosed)
-				{
-					_oleDbConnection.Open();
-				}
-
-				OleDbDataReader oleDbDataReader = oleDbSelectCommand.ExecuteReader(CommandBehavior.KeyInfo);
-				dataTableSchema = oleDbDataReader.GetSchemaTable();
-				oleDbDataReader.Close();
-			}
-			finally
-			{
-				if (isClosed)
-				{
-					_oleDbConnection.Close();
-				}
-			}
-
-			return dataTableSchema;
-		}
-
-		private OleDbParameter newOleDbParameter(int index, DataRow dataRow)
-		{
-			return new OleDbParameter("@p" + index.ToString(), (OleDbType)dataRow["ProviderType"], (int)dataRow["ColumnSize"], (string)dataRow["ColumnName"]);
-		}
-
-		#endregion
-
-	}
+        protected override DbParameter CreateNewSqlParameter(int index, DataRow dataRow)
+        {
+            return new OleDbParameter("@p" + index, (System.Data.OleDb.OleDbType) dataRow["ProviderType"],
+                                      (int) dataRow["ColumnSize"], (string) dataRow["ColumnName"]);
+        }
+    }
 }

@@ -82,6 +82,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Lib\System.Data.SQLite.DLL</HintPath>
     </Reference>
+    <Reference Include="System.Data.SqlServerCe, Version=3.5.1.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
@@ -97,6 +98,10 @@
     <Compile Include="DbOperation.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DbOperationFlag.cs" />
+    <Compile Include="IDbCommandBuilder.cs" />
+    <Compile Include="IDbOperation.cs" />
+    <Compile Include="INDbUnitTest.cs" />
     <Compile Include="NDbUnitException.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -109,6 +114,7 @@
     <Compile Include="OleDb\OleDbOperation.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="OleDb\OleDbType.cs" />
     <Compile Include="OleDb\OleDbUnitTest.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -124,6 +130,9 @@
     <Compile Include="SQLLite\SqlLiteDbCommandBuilder.cs" />
     <Compile Include="SQLLite\SqlLiteDbOperation.cs" />
     <Compile Include="SQLLite\SqlLiteUnitTest.cs" />
+    <Compile Include="SqlServerCe\SqlCeDbCommandBuilder.cs" />
+    <Compile Include="SqlServerCe\SqlCeDbOperation.cs" />
+    <Compile Include="SqlServerCe\SqlCeUnitTest.cs" />
     <Compile Include="TableNameHelper.cs" />
     <None Include="NDbUnit.Core.build" />
   </ItemGroup>

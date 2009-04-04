@@ -20,29 +20,17 @@
  *
  */
 
-using System;
-using System.Data;
 
-using MbUnit.Framework;
-
-using NDbUnit.Test;
 using NDbUnit.Core;
 using NDbUnit.Core.SqlClient;
+using MbUnit.Framework;
 
 namespace NDbUnit.Test.SqlClient
 {
-	/// <summary>
-	/// Summary description for SqlDbUnitTestCase.
-	/// </summary>
-	/// 
-	[TestFixture]
-	public class SqlDbUnitTestTestCase
-	{
-		private SqlDbUnitTest _sqlTest = null;
-
-		public SqlDbUnitTestTestCase()
-		{
-		}
+    [TestFixture]
+    public class SqlDbUnitTestTestCase
+    {
+        private SqlDbUnitTest _sqlTest;
 
 		[SetUp]
 		public void SetUp()

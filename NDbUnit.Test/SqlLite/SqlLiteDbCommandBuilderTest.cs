@@ -23,27 +23,20 @@
 using System;
 using System.Data;
 using System.Data.SQLite;
-using MbUnit.Framework;
 using NDbUnit.Core.SqlLite;
+using MbUnit.Framework;
 
 namespace NDbUnit.Test.SqlLite
 {
-    /// <summary>
-    /// Summary description for Class1.
-    /// </summary>
-    /// 
     [TestFixture]
     public class SqlLiteDbCommandBuilderTest
     {
-        private SqlLiteDbCommandBuilder _sqlDbCommandBuilder = new SqlLiteDbCommandBuilder(DbConnection.SqlLiteConnectionString);
+        private SqlLiteDbCommandBuilder _sqlDbCommandBuilder =
+            new SqlLiteDbCommandBuilder(DbConnection.SqlLiteConnectionString);
 
         private bool emptyCommand(SQLiteCommand sqlCommand)
         {
-            return (null == sqlCommand || null == sqlCommand.CommandText || "" == sqlCommand.CommandText);
-        }
-
-        public SqlLiteDbCommandBuilderTest()
-        {
+            return (null == sqlCommand || string.IsNullOrEmpty(sqlCommand.CommandText));
         }
 
         [TearDown]
@@ -55,7 +48,7 @@ namespace NDbUnit.Test.SqlLite
         [Test]
         public void TestBuildCommands()
         {
-            string xsdFile = XmlTestFiles.XmlSchemaFile4SQLite;
+            string xsdFile = XmlTestFiles.xmlSchemaFileForSQLite;
             _sqlDbCommandBuilder.BuildCommands(xsdFile);
         }
 
@@ -75,7 +68,7 @@ namespace NDbUnit.Test.SqlLite
             DataSet ds = _sqlDbCommandBuilder.GetSchema();
             foreach (DataTable dataTable in ds.Tables)
             {
-                SQLiteCommand SQLiteCommand = _sqlDbCommandBuilder.GetSelectCommand(dataTable.TableName);
+                SQLiteCommand SQLiteCommand = (SQLiteCommand) _sqlDbCommandBuilder.GetSelectCommand(dataTable.TableName);
 
                 Console.WriteLine("Table '" + dataTable.TableName + "' select command");
                 Console.WriteLine("\t" + SQLiteCommand.CommandText);
@@ -90,7 +83,7 @@ namespace NDbUnit.Test.SqlLite
             DataSet ds = _sqlDbCommandBuilder.GetSchema();
             foreach (DataTable dataTable in ds.Tables)
             {
-                SQLiteCommand SQLiteCommand = _sqlDbCommandBuilder.GetInsertCommand(dataTable.TableName);
+                SQLiteCommand SQLiteCommand = (SQLiteCommand) _sqlDbCommandBuilder.GetInsertCommand(dataTable.TableName);
                 Assert.IsTrue(!emptyCommand(SQLiteCommand), "Insert command was not set");
 
                 Console.WriteLine("Table '" + dataTable.TableName + "' insert command");
@@ -106,7 +99,8 @@ namespace NDbUnit.Test.SqlLite
             DataSet ds = _sqlDbCommandBuilder.GetSchema();
             foreach (DataTable dataTable in ds.Tables)
             {
-                SQLiteCommand sqlCommand = _sqlDbCommandBuilder.GetInsertIdentityCommand(dataTable.TableName);
+                SQLiteCommand sqlCommand =
+                    (SQLiteCommand) _sqlDbCommandBuilder.GetInsertIdentityCommand(dataTable.TableName);
                 Assert.IsTrue(!emptyCommand(sqlCommand), "Insert identity command was not set");
 
                 Console.WriteLine("Table '" + dataTable.TableName + "' insert identity command");
@@ -122,7 +116,7 @@ namespace NDbUnit.Test.SqlLite
             DataSet ds = _sqlDbCommandBuilder.GetSchema();
             foreach (DataTable dataTable in ds.Tables)
             {
-                SQLiteCommand SQLiteCommand = _sqlDbCommandBuilder.GetDeleteCommand(dataTable.TableName);
+                SQLiteCommand SQLiteCommand = (SQLiteCommand) _sqlDbCommandBuilder.GetDeleteCommand(dataTable.TableName);
                 Assert.IsTrue(!emptyCommand(SQLiteCommand), "Delete command was not set");
 
                 Console.WriteLine("Table '" + dataTable.TableName + "' delete command");
@@ -138,7 +132,8 @@ namespace NDbUnit.Test.SqlLite
             DataSet ds = _sqlDbCommandBuilder.GetSchema();
             foreach (DataTable dataTable in ds.Tables)
             {
-                SQLiteCommand SQLiteCommand = _sqlDbCommandBuilder.GetDeleteAllCommand(dataTable.TableName);
+                SQLiteCommand SQLiteCommand =
+                    (SQLiteCommand) _sqlDbCommandBuilder.GetDeleteAllCommand(dataTable.TableName);
                 Assert.IsTrue(!emptyCommand(SQLiteCommand), "Delete all command was not set");
 
                 Console.WriteLine("Table '" + dataTable.TableName + "' delete all command");
@@ -154,7 +149,7 @@ namespace NDbUnit.Test.SqlLite
             DataSet ds = _sqlDbCommandBuilder.GetSchema();
             foreach (DataTable dataTable in ds.Tables)
             {
-                SQLiteCommand sqlCommand = _sqlDbCommandBuilder.GetUpdateCommand(dataTable.TableName);
+                SQLiteCommand sqlCommand = (SQLiteCommand) _sqlDbCommandBuilder.GetUpdateCommand(dataTable.TableName);
                 Assert.IsTrue(!emptyCommand(sqlCommand), "Update command was not set");
 
                 Console.WriteLine("Table '" + dataTable.TableName + "' update command");

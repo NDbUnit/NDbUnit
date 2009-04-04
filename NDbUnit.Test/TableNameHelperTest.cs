@@ -20,11 +20,9 @@
  *
  */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using MbUnit.Framework;
+
 using NDbUnit.Core;
+using MbUnit.Framework;
 
 namespace NDbUnit.Test
 {

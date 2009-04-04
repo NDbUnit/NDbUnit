@@ -20,8 +20,6 @@
  *
  */
 
-using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace NDbUnit.Core
@@ -52,15 +50,13 @@ namespace NDbUnit.Core
                     if (firstElement)
                         result.Append(temp.ToString());
                     else
-                        result.Append("." + temp.ToString());
+                        result.Append("." + temp);
 
                     firstElement = false;
                 }
-
             }
 
             return result.ToString();
         }
-
     }
 }

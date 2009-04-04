@@ -21,102 +21,50 @@
  */
 
 using System;
+using System.Data.Common;
 using System.IO;
+using System.Text;
 using System.Xml;
 using System.Data;
 using System.Collections;
-using System.Text;
 
 namespace NDbUnit.Core
 {
-    public interface IDbCommandBuilder
-    {
-        string QuotePrefix
-        {
-            get;
-            set;
-        }
-
-        string QuoteSuffix
-        {
-            get;
-            set;
-        }
-
-        IDbConnection Connection
-        {
-            get;
-        }
-
-        DataSet GetSchema();
-        void BuildCommands(string xmlSchemaFile);
-        void BuildCommands(Stream xmlSchema);
-        IDbCommand GetSelectCommand(string tableName);
-        IDbCommand GetInsertCommand(string tableName);
-        IDbCommand GetInsertIdentityCommand(string tableName);
-        IDbCommand GetDeleteCommand(string tableName);
-        IDbCommand GetDeleteAllCommand(string tableName);
-        IDbCommand GetUpdateCommand(string tableName);
-    }
-
     public abstract class DbCommandBuilder : IDbCommandBuilder
     {
         private Hashtable _dbCommandColl = new Hashtable();
 
-        private bool _initialized = false;
-
-        private string _quotePrefix = "";
-
-        private string _quoteSuffix = "";
+        private bool _initialized;
 
         private XmlDataDocument _xdd = new XmlDataDocument();
 
         private string _xmlSchemaFile = "";
+        protected DbConnection _sqlConnection;
+        protected DataTable _dataTableSchema;
 
-        public DbCommandBuilder()
+        protected DbCommandBuilder(string connectionString)
         {
+            _sqlConnection = GetConnection(connectionString);
         }
 
-        IDbConnection IDbCommandBuilder.Connection
+        public IDbConnection Connection
         {
-            get
-            {
-                return GetConnection();
-            }
+            get { return _sqlConnection; }
         }
 
-        public string QuotePrefix
+        public virtual string QuotePrefix
         {
-            get
-            {
-                return _quotePrefix;
-            }
-
-            set
-            {
-                _quotePrefix = value;
-            }
+            get { return ""; }
         }
 
-        public string QuoteSuffix
+        public virtual string QuoteSuffix
         {
-            get
-            {
-                return _quoteSuffix;
-            }
-
-            set
-            {
-                _quoteSuffix = value;
-            }
+            get { return ""; }
         }
 
         public string XmlSchemaFile
         {
-            get
-            {
-                return _xmlSchemaFile;
-            }
+            get { return _xmlSchemaFile; }
         }
 
         public void BuildCommands(Stream xmlSchema)
@@ -130,7 +78,7 @@ namespace NDbUnit.Core
 
             Hashtable ht = new Hashtable();
 
-            Commands commands = null;
+            Commands commands;
             foreach (DataTable dataTable in xdd.DataSet.Tables)
             {
                 // Virtual overrides.
@@ -155,7 +103,7 @@ namespace NDbUnit.Core
             Stream stream = null;
             try
             {
-                stream = new FileStream(xmlSchemaFile, System.IO.FileMode.Open);
+                stream = new FileStream(xmlSchemaFile, FileMode.Open);
                 BuildCommands(stream);
             }
             finally
@@ -175,53 +123,40 @@ namespace NDbUnit.Core
             return _xdd.DataSet;
         }
 
-        protected abstract IDbCommand CreateDeleteAllCommand(string tableName);
+        protected abstract DbConnection GetConnection(string connectionString);
 
-        protected abstract IDbCommand CreateDeleteCommand(IDbCommand selectCommand, string tableName);
 
-        protected abstract IDbCommand CreateInsertCommand(IDbCommand selectCommand, string tableName);
-
-        protected abstract IDbCommand CreateInsertIdentityCommand(IDbCommand selectCommand, string tableName);
-
-        protected abstract IDbCommand CreateSelectCommand(DataSet ds, string tableName);
-
-        protected abstract IDbCommand CreateUpdateCommand(IDbCommand selectCommand, string tableName);
-
-        protected abstract IDbConnection GetConnection();
-
-     
-
-        IDbCommand IDbCommandBuilder.GetDeleteAllCommand(string tableName)
+        public IDbCommand GetDeleteAllCommand(string tableName)
         {
             isInitialized();
             return ((Commands)_dbCommandColl[tableName]).DeleteAllCommand;
         }
 
-        IDbCommand IDbCommandBuilder.GetDeleteCommand(string tableName)
+        public IDbCommand GetDeleteCommand(string tableName)
         {
             isInitialized();
             return ((Commands)_dbCommandColl[tableName]).DeleteCommand;
         }
 
-        IDbCommand IDbCommandBuilder.GetInsertCommand(string tableName)
+        public IDbCommand GetInsertCommand(string tableName)
         {
             isInitialized();
             return ((Commands)_dbCommandColl[tableName]).InsertCommand;
         }
 
-        IDbCommand IDbCommandBuilder.GetInsertIdentityCommand(string tableName)
+        public IDbCommand GetInsertIdentityCommand(string tableName)
         {
             isInitialized();
             return ((Commands)_dbCommandColl[tableName]).InsertIdentityCommand;
         }
 
-        IDbCommand IDbCommandBuilder.GetSelectCommand(string tableName)
+        public IDbCommand GetSelectCommand(string tableName)
         {
             isInitialized();
             return ((Commands)_dbCommandColl[tableName]).SelectCommand;
         }
 
-        IDbCommand IDbCommandBuilder.GetUpdateCommand(string tableName)
+        public IDbCommand GetUpdateCommand(string tableName)
         {
             isInitialized();
             return ((Commands)_dbCommandColl[tableName]).UpdateCommand;
@@ -231,20 +166,287 @@ namespace NDbUnit.Core
         {
             if (!_initialized)
             {
-                string message = "IDbCommandBuilder.BuildCommands(string) or IDbCommandBuilder.BuildCommands(Stream) must be called successfully";
+                string message =
+                    "IDbCommandBuilder.BuildCommands(string) or IDbCommandBuilder.BuildCommands(Stream) must be called successfully";
                 throw new NDbUnitException(message);
             }
         }
 
         private class Commands
         {
-            public IDbCommand SelectCommand = null;
-            public IDbCommand InsertCommand = null;
-            public IDbCommand InsertIdentityCommand = null;
-            public IDbCommand DeleteCommand = null;
-            public IDbCommand DeleteAllCommand = null;
-            public IDbCommand UpdateCommand = null;
+            public IDbCommand SelectCommand;
+            public IDbCommand InsertCommand;
+            public IDbCommand InsertIdentityCommand;
+            public IDbCommand DeleteCommand;
+            public IDbCommand DeleteAllCommand;
+            public IDbCommand UpdateCommand;
         }
 
+        protected virtual IDbCommand CreateSelectCommand(DataSet ds, string tableName)
+        {
+            DbCommand sqlSelectCommand = CreateDbCommand();
+
+            bool notFirstColumn = false;
+            StringBuilder sb = new StringBuilder("SELECT ");
+            DataTable dataTable = ds.Tables[tableName];
+            foreach (DataColumn dataColumn in dataTable.Columns)
+            {
+                if (notFirstColumn)
+                {
+                    sb.Append(", ");
+                }
+
+                notFirstColumn = true;
+
+                sb.Append(QuotePrefix + dataColumn.ColumnName + QuoteSuffix);
+            }
+
+            sb.Append(" FROM ");
+            sb.Append(TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix));
+
+            sqlSelectCommand.CommandText = sb.ToString();
+            sqlSelectCommand.Connection = _sqlConnection;
+
+            try
+            {
+                _dataTableSchema = GetSchemaTable(sqlSelectCommand);
+            }
+            catch (Exception e)
+            {
+                string message =
+                    String.Format(
+                        "DbCommandBuilder.CreateSelectCommand(DataSet, string) failed for tableName = '{0}'",
+                        tableName);
+                throw new NDbUnitException(message, e);
+            }
+
+            return sqlSelectCommand;
+        }
+
+        protected abstract DbCommand CreateDbCommand();
+
+        private DataTable GetSchemaTable(DbCommand sqlSelectCommand)
+        {
+            DataTable dataTableSchema;
+            bool isClosed = ConnectionState.Closed == _sqlConnection.State;
+
+            try
+            {
+                if (isClosed)
+                {
+                    _sqlConnection.Open();
+                }
+
+                DbDataReader sqlDataReader = sqlSelectCommand.ExecuteReader(CommandBehavior.KeyInfo);
+                dataTableSchema = sqlDataReader.GetSchemaTable();
+                sqlDataReader.Close();
+            }
+            finally
+            {
+                if (isClosed)
+                {
+                    _sqlConnection.Close();
+                }
+            }
+
+            return dataTableSchema;
+        }
+
+
+        protected virtual IDbCommand CreateInsertCommand(IDbCommand selectCommand, string tableName)
+        {
+            int count = 1;
+            bool notFirstColumn = false;
+            StringBuilder sb = new StringBuilder();
+            sb.Append("INSERT INTO " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + "(");
+            StringBuilder sbParam = new StringBuilder();
+            DbParameter sqlParameter;
+            DbCommand sqlInsertCommand = CreateDbCommand();
+            foreach (DataRow dataRow in _dataTableSchema.Rows)
+            {
+                // Not an identity column.
+                if (!((bool)dataRow[GetIdentityColumnDesignator()]))
+                {
+                    if (notFirstColumn)
+                    {
+                        sb.Append(", ");
+                        sbParam.Append(", ");
+                    }
+
+                    notFirstColumn = true;
+
+                    sb.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
+                    sbParam.Append(GetParameterDesignator(count));
+
+                    sqlParameter = CreateNewSqlParameter(count, dataRow);
+                    sqlInsertCommand.Parameters.Add(sqlParameter);
+
+                    ++count;
+                }
+            }
+
+            sb.Append(") VALUES(" + sbParam + ")");
+
+            sqlInsertCommand.CommandText = sb.ToString();
+
+            return sqlInsertCommand;
+        }
+
+        protected virtual string GetParameterDesignator(int count)
+        {
+            return "@p" + count;
+        }
+
+        protected virtual string GetIdentityColumnDesignator()
+        {
+            return "IsIdentity";
+        }
+
+        protected virtual IDbCommand CreateInsertIdentityCommand(IDbCommand selectCommand, string tableName)
+        {
+            int count = 1;
+            bool notFirstColumn = false;
+            StringBuilder sb = new StringBuilder();
+            sb.Append("INSERT INTO " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + "(");
+            StringBuilder sbParam = new StringBuilder();
+            DbParameter sqlParameter;
+            DbCommand sqlInsertIdentityCommand = CreateDbCommand();
+            foreach (DataRow dataRow in _dataTableSchema.Rows)
+            {
+                if (notFirstColumn)
+                {
+                    sb.Append(", ");
+                    sbParam.Append(", ");
+                }
+
+                notFirstColumn = true;
+
+                sb.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
+                sbParam.Append(GetParameterDesignator(count));
+
+                sqlParameter = CreateNewSqlParameter(count, dataRow);
+                sqlInsertIdentityCommand.Parameters.Add(sqlParameter);
+
+                ++count;
+            }
+
+            sb.Append(") VALUES(" + sbParam + ")");
+
+            sqlInsertIdentityCommand.CommandText = sb.ToString();
+
+            return sqlInsertIdentityCommand;
+        }
+
+        protected virtual IDbCommand CreateDeleteCommand(IDbCommand selectCommand, string tableName)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("DELETE FROM " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + " WHERE ");
+
+            DbCommand sqlDeleteCommand = CreateDbCommand();
+
+            int count = 1;
+            foreach (DataRow dataRow in _dataTableSchema.Rows)
+            {
+                // A key column.
+                if ((bool) dataRow["IsKey"])
+                {
+                    if (count != 1)
+                    {
+                        sb.Append(" AND ");
+                    }
+
+                    sb.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
+                    sb.Append("=" + GetParameterDesignator(count));
+
+                    DbParameter sqlParameter = CreateNewSqlParameter(count, dataRow);
+                    sqlDeleteCommand.Parameters.Add(sqlParameter);
+
+                    ++count;
+                }
+            }
+
+            sqlDeleteCommand.CommandText = sb.ToString();
+
+            return sqlDeleteCommand;
+        }
+
+        protected virtual IDbCommand CreateDeleteAllCommand(string tableName)
+        {
+            DbCommand command = CreateDbCommand();
+            command.CommandText = "DELETE FROM " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix);
+            return command;
+        }
+
+        protected virtual IDbCommand CreateUpdateCommand(IDbCommand selectCommand, string tableName)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("UPDATE " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + " SET ");
+
+            DbCommand sqlUpdateCommand = CreateDbCommand();
+
+            int count = 1;
+            bool notFirstKey = false;
+            bool notFirstColumn = false;
+            StringBuilder sbPrimaryKey = new StringBuilder();
+
+            bool containsAllPrimaryKeys = true;
+            foreach (DataRow dataRow in _dataTableSchema.Rows)
+            {
+                if (!(bool) dataRow["IsKey"])
+                {
+                    containsAllPrimaryKeys = false;
+                    break;
+                }
+            }
+
+            foreach (DataRow dataRow in _dataTableSchema.Rows)
+            {
+                // A key column.
+                DbParameter sqlParameter;
+                if ((bool) dataRow["IsKey"])
+                {
+                    if (notFirstKey)
+                    {
+                        sbPrimaryKey.Append(" AND ");
+                    }
+
+                    notFirstKey = true;
+
+                    sbPrimaryKey.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
+                    sbPrimaryKey.Append("=" + GetParameterDesignator(count));
+
+                    sqlParameter = CreateNewSqlParameter(count, dataRow);
+                    sqlUpdateCommand.Parameters.Add(sqlParameter);
+
+                    ++count;
+                }
+
+                if (containsAllPrimaryKeys || !(bool) dataRow["IsKey"])
+                {
+                    if (notFirstColumn)
+                    {
+                        sb.Append(", ");
+                    }
+
+                    notFirstColumn = true;
+
+                    sb.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
+                    sb.Append("=" + GetParameterDesignator(count));
+
+                    sqlParameter = CreateNewSqlParameter(count, dataRow);
+                    sqlUpdateCommand.Parameters.Add(sqlParameter);
+
+                    ++count;
+                }
+            }
+
+            sb.Append(" WHERE " + sbPrimaryKey);
+
+            sqlUpdateCommand.CommandText = sb.ToString();
+
+            return sqlUpdateCommand;
+        }
+
+        protected abstract DbParameter CreateNewSqlParameter(int index, DataRow dataRow);
     }
 }

@@ -20,30 +20,17 @@
  *
  */
 
-using System.Data.Common;
-using System.Data.SQLite;
+using System.Data;
 
-namespace NDbUnit.Core.SqlLite
+namespace NDbUnit.Core
 {
-    public class SqlLiteUnitTest : NDbUnitTest
+    public interface IDbOperation
     {
-        public SqlLiteUnitTest(string connectionString) : base(connectionString)
-        {
-        }
-
-        protected override IDbCommandBuilder CreateDbCommandBuilder(string connectionString)
-        {
-            return new SqlLiteDbCommandBuilder(connectionString);
-        }
-
-        protected override IDbOperation CreateDbOperation()
-        {
-            return new SqlLiteDbOperation();
-        }
-
-        protected override DbDataAdapter CreateDataAdapter(DbCommand command)
-        {
-            return new SQLiteDataAdapter((SQLiteCommand) command);
-        }
+        void Insert(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction);
+        void InsertIdentity(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction);
+        void Delete(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction);
+        void DeleteAll(IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction);
+        void Update(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction);
+        void Refresh(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction);
     }
 }

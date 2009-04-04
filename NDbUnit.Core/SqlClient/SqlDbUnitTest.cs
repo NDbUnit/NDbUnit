@@ -20,8 +20,7 @@
  *
  */
 
-using System;
-using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 
 namespace NDbUnit.Core.SqlClient
@@ -43,49 +42,24 @@ namespace NDbUnit.Core.SqlClient
 	/// </example>
 	public class SqlDbUnitTest : NDbUnitTest
 	{
-		#region Private Fields
 
-		SqlDbCommandBuilder _sqlDbCommandBuilder = null;
-		SqlDbOperation _sqlDbOperation = null;
-
-		#endregion
-
-		#region Public Methods
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="SqlDbUnitTest"/> class.
-		/// </summary>
-		/// <param name="connectionString">The connection string 
-		/// used to open the database.
-		/// <seealso cref="System.Data.IDbConnection.ConnectionString"/></param>
-		public SqlDbUnitTest(string connectionString)
+		public SqlDbUnitTest(string connectionString) : base(connectionString)
 		{
-			_sqlDbCommandBuilder = new SqlDbCommandBuilder(connectionString);
-			_sqlDbOperation = new SqlDbOperation();
 		}
+        
+	    protected override IDbCommandBuilder CreateDbCommandBuilder(string connectionString)
+	    {
+	        return new SqlDbCommandBuilder(connectionString);
+	    }
 
-		#endregion
+	    protected override IDbOperation CreateDbOperation()
+	    {
+	        return new SqlDbOperation();
+	    }
 
-		#region Protected Overrides
-
-		protected override IDbCommandBuilder GetDbCommandBuilder()
-		{
-			return _sqlDbCommandBuilder;
-		}
-
-		protected override IDbOperation GetDbOperation()
-		{
-			return _sqlDbOperation;
-		}
-
-		protected override void OnGetDataSetFromDb(string tableName, ref System.Data.DataSet dsToFill, System.Data.IDbConnection dbConnection)
-		{
-			SqlCommand selectCommand = _sqlDbCommandBuilder.GetSelectCommand(tableName);
-			selectCommand.Connection = dbConnection as SqlConnection;
-			SqlDataAdapter adapter = new SqlDataAdapter(selectCommand);
-			adapter.Fill(dsToFill, tableName);
-		}
-
-		#endregion
+	    protected override DbDataAdapter CreateDataAdapter(DbCommand command)
+	    {
+	        return new SqlDataAdapter((SqlCommand) command);
+	    }
 	}
 }

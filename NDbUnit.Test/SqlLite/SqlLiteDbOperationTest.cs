@@ -28,10 +28,6 @@ using NDbUnit.Core.SqlLite;
 
 namespace NDbUnit.Test.SqlLite
 {
-    /// <summary>
-    /// Summary description for SqlDbOperationTest.
-    /// </summary>
-    /// 
     [TestFixture]
     public class SqlLiteDbOperationTest
     {
@@ -45,7 +41,7 @@ namespace NDbUnit.Test.SqlLite
         {
             if (false == _built)
             {
-                string xmlSchemaFile = XmlTestFiles.XmlSchemaFile4SQLite;
+                string xmlSchemaFile = XmlTestFiles.xmlSchemaFileForSQLite;
                 string xmlFile = XmlTestFiles.XmlFile;
 
                 try
@@ -80,7 +76,7 @@ namespace NDbUnit.Test.SqlLite
 
             TestDeleteAll();
 
-            SQLiteTransaction sqlTransaction = null;
+            IDbTransaction sqlTransaction = null;
             try
             {
                 sqlTransaction = _sqlDbCommandBuilder.Connection.BeginTransaction();
@@ -103,7 +99,7 @@ namespace NDbUnit.Test.SqlLite
         {
             TestDeleteAll();
 
-            SQLiteTransaction sqlTransaction = null;
+            IDbTransaction sqlTransaction = null;
             try
             {
                 sqlTransaction = _sqlDbCommandBuilder.Connection.BeginTransaction();
@@ -124,7 +120,7 @@ namespace NDbUnit.Test.SqlLite
         [Test]
         public void TestDeleteAll()
         {
-            SQLiteTransaction sqlTransaction = null;
+            IDbTransaction sqlTransaction = null;
 
             try
             {
@@ -146,7 +142,7 @@ namespace NDbUnit.Test.SqlLite
         [Test]
         public void TestDelete()
         {
-            SQLiteTransaction sqlTransaction = null;
+            IDbTransaction sqlTransaction = null;
             try
             {
                 sqlTransaction = _sqlDbCommandBuilder.Connection.BeginTransaction();
@@ -170,7 +166,7 @@ namespace NDbUnit.Test.SqlLite
             TestDeleteAll();
             TestInsert();
 
-            SQLiteTransaction sqlTransaction = null;
+            IDbTransaction sqlTransaction = null;
             try
             {
                 DataSet dsSchema = _sqlDbCommandBuilder.GetSchema();
@@ -198,8 +194,8 @@ namespace NDbUnit.Test.SqlLite
         {
             TestDeleteAll();
             TestInsert();
-            
-            SQLiteTransaction sqlTransaction = null;
+
+            IDbTransaction sqlTransaction = null;
             try
             {
                 DataSet dsSchema = _sqlDbCommandBuilder.GetSchema();
@@ -225,7 +221,7 @@ namespace NDbUnit.Test.SqlLite
 
 		private void resetIdentityColumns()
 		{
-			SQLiteTransaction transaction = null;
+            IDbTransaction transaction = null;
 			try
 			{
 				DataSet dsSchema = _sqlDbCommandBuilder.GetSchema();
@@ -238,8 +234,8 @@ namespace NDbUnit.Test.SqlLite
 						{
 						    String sql = "delete from sqlite_sequence where name = '" + table.TableName + "'"; 
                             Console.Out.WriteLine(sql);
-							SQLiteCommand command = new SQLiteCommand(sql, _sqlDbCommandBuilder.Connection);
-							command.Transaction = transaction;
+							SQLiteCommand command = new SQLiteCommand(sql, (SQLiteConnection) _sqlDbCommandBuilder.Connection);
+							command.Transaction = (SQLiteTransaction) transaction;
 							command.ExecuteNonQuery();
 
 							break;

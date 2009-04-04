@@ -20,41 +20,28 @@
  *
  */
 
-using System;
-using System.Data;
-
-using MbUnit.Framework;
-
-using NDbUnit.Test;
 using NDbUnit.Core;
 using NDbUnit.Core.OleDb;
+using MbUnit.Framework;
 
 namespace NDbUnit.Test.OleDb
 {
-	/// <summary>
-	/// Summary description for OleDbUnitTestCase.
-	/// </summary>
-	/// 
-	[TestFixture]
-	public class OleDbUnitTestTestCase
-	{
-		private OleDbUnitTest _oleTest = null;
+    [TestFixture]
+    public class OleDbUnitTestTestCase
+    {
+        private OleDbUnitTest _oleTest;
 
-		public OleDbUnitTestTestCase()
-		{
-		}
-
-		[SetUp]
-		public void SetUp()
-		{
-			_oleTest = new OleDbUnitTest(DbConnection.OleDbConnectionString);
-			_oleTest.OleDbType = NDbUnit.Core.OleDb.DbType.SqlServer;
-			_oleTest.QuotePrefix = "[";
-			_oleTest.QuoteSuffix = "]";
-			_oleTest.ReadXmlSchema(XmlTestFiles.XmlSchemaFile);
-			_oleTest.ReadXml(XmlTestFiles.XmlFile);
-			_oleTest.PerformDbOperation(DbOperationFlag.DeleteAll);
-		}
+        [SetUp]
+        public void SetUp()
+        {
+            _oleTest = new OleDbUnitTest(DbConnection.OleDbConnectionString);
+            _oleTest.OleOleDbType = OleDbType.SqlServer;
+//			_oleTest.QuotePrefix = "[";
+//			_oleTest.QuoteSuffix = "]";
+            _oleTest.ReadXmlSchema(XmlTestFiles.XmlSchemaFile);
+            _oleTest.ReadXml(XmlTestFiles.XmlFile);
+            _oleTest.PerformDbOperation(DbOperationFlag.DeleteAll);
+        }
 
 		[Test]
 		public void Test()

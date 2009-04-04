@@ -4,6 +4,56 @@
         <name>NDbUnit.Core</name>
     </assembly>
     <members>
+        <member name="M:NDbUnit.Core.SqlLite.SqlLiteDbOperation.OnInsertIdentity(System.Data.DataTable,System.Data.IDbCommand,System.Data.IDbTransaction)">
+            <summary>
+            SQLite doesn't need any changes to insert PK values.
+            </summary>
+            <param name="dataTable"></param>
+            <param name="dbCommand"></param>
+            <param name="dbTransaction"></param>
+        </member>
+        <member name="T:NDbUnit.Core.DbOperationFlag">
+            <summary>
+            The database operation to perform.
+            </summary>
+        </member>
+        <member name="F:NDbUnit.Core.DbOperationFlag.None">
+            <summary>No operation.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.DbOperationFlag.Insert">
+            <summary>Insert rows into a set of database tables.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.DbOperationFlag.InsertIdentity">
+            <summary>Insert rows into a set of database tables.  Allow identity 
+            inserts to occur.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.DbOperationFlag.Delete">
+            <summary>Delete rows from a set of database tables.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.DbOperationFlag.DeleteAll">
+            <summary>Delete all rows from a set of database tables.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.DbOperationFlag.Update">
+            <summary>Update rows in a set of database tables.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.DbOperationFlag.Refresh">
+            <summary>Refresh rows in a set of database tables.  Rows that exist 
+            in the database are updated.  Rows that don't exist are inserted.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.DbOperationFlag.CleanInsert">
+            <summary>Composite operation of DeleteAll and Insert.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.DbOperationFlag.CleanInsertIdentity">
+            <summary>Composite operation of DeleteAll and InsertIdentity.</summary>
+        </member>
+        <member name="M:NDbUnit.Core.SqlLite.SqlLiteDbCommandBuilder.IsAutoIncrementing(System.Data.DataRow)">
+            <summary>
+            Since SQLite keys are auto incremented by default we need to check to see if the column
+            is a key as well, since not all columns will be marked with AUTOINCREMENT
+            </summary>
+            <param name="row"></param>
+            <returns></returns>
+        </member>
         <member name="T:NDbUnit.Core.DataSetTableIterator">
             <summary>
             Class that builds an iterator for tables.  The order of the tables returned by the iterator
@@ -198,69 +248,6 @@
             schema will be exported.</param>
             <exception cref="T:NDbUnit.Core.NDbUnitException"/>
         </member>
-        <member name="P:NDbUnit.Core.INDbUnitTest.QuotePrefix">
-            <summary>
-            Gets or sets the beginning character or characters to use 
-            when working with database objects (for example, tables or 
-            columns) whose names contain characters such as spaces or 
-            reserved tokens.
-            </summary>
-        </member>
-        <member name="P:NDbUnit.Core.INDbUnitTest.QuoteSuffix">
-            <summary>
-            Gets or sets the ending character or characters to use 
-            when working with database objects (for example, tables or 
-            columns) whose names contain characters such as spaces or 
-            reserved tokens.
-            </summary>
-        </member>
-        <member name="M:NDbUnit.Core.SqlClient.SqlDbUnitTest.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:NDbUnit.Core.SqlClient.SqlDbUnitTest"/> class.
-            </summary>
-            <param name="connectionString">The connection string 
-            used to open the database.
-            <seealso cref="P:System.Data.IDbConnection.ConnectionString"/></param>
-        </member>
-        <member name="T:NDbUnit.Core.SqlClient.SqlDbOperation">
-            <summary>
-            Summary description for SqlDbOperation.
-            </summary>
-        </member>
-        <member name="T:NDbUnit.Core.DbOperationFlag">
-            <summary>
-            The database operation to perform.
-            </summary>
-        </member>
-        <member name="F:NDbUnit.Core.DbOperationFlag.None">
-            <summary>No operation.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.DbOperationFlag.Insert">
-            <summary>Insert rows into a set of database tables.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.DbOperationFlag.InsertIdentity">
-            <summary>Insert rows into a set of database tables.  Allow identity 
-            inserts to occur.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.DbOperationFlag.Delete">
-            <summary>Delete rows from a set of database tables.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.DbOperationFlag.DeleteAll">
-            <summary>Delete all rows from a set of database tables.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.DbOperationFlag.Update">
-            <summary>Update rows in a set of database tables.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.DbOperationFlag.Refresh">
-            <summary>Refresh rows in a set of database tables.  Rows that exist 
-            in the database are updated.  Rows that don't exist are inserted.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.DbOperationFlag.CleanInsert">
-            <summary>Composite operation of DeleteAll and Insert.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.DbOperationFlag.CleanInsertIdentity">
-            <summary>Composite operation of DeleteAll and InsertIdentity.</summary>
-        </member>
         <member name="T:NDbUnit.Core.NDbUnitException">
             <summary>
             The base class exception of all exceptions thrown by objects
@@ -321,52 +308,28 @@
             used to open the database.
             <seealso cref="T:System.Data.IDbConnection"/></param>
         </member>
-        <member name="P:NDbUnit.Core.OleDb.OleDbUnitTest.OleDbType">
+        <member name="P:NDbUnit.Core.OleDb.OleDbUnitTest.OleOleDbType">
             <summary>
             Gets or sets the OLE database type.  The default value for an 
-            instance of an object is <see cref="F:NDbUnit.Core.OleDb.DbType.NoDb"/>.
+            instance of an object is <see cref="F:NDbUnit.Core.OleDb.OleDbType.NoDb"/>.
             </summary>
         </member>
-        <member name="T:NDbUnit.Core.OleDb.DbType">
+        <member name="T:NDbUnit.Core.OleDb.OleDbType">
             <summary>
             An enumeration specifying the OLE database type.
             </summary>
         </member>
-        <member name="F:NDbUnit.Core.OleDb.DbType.NoDb">
+        <member name="F:NDbUnit.Core.OleDb.OleDbType.NoDb">
             <summary>No database.</summary>
         </member>
-        <member name="F:NDbUnit.Core.OleDb.DbType.SqlServer">
+        <member name="F:NDbUnit.Core.OleDb.OleDbType.SqlServer">
             <summary>Sql server.</summary>
         </member>
-        <member name="F:NDbUnit.Core.OleDb.DbType.Oracle">
+        <member name="F:NDbUnit.Core.OleDb.OleDbType.Oracle">
             <summary>Oracle.</summary>
         </member>
-        <member name="F:NDbUnit.Core.OleDb.DbType.DB2">
+        <member name="F:NDbUnit.Core.OleDb.OleDbType.DB2">
             <summary>DB2.</summary>
-        </member>
-        <member name="M:NDbUnit.Core.SqlLite.SqlLiteDbCommandBuilder.IsAutoIncrementing(System.Data.DataRow)">
-            <summary>
-            Since SQLite keys are auto incremented by default we need to check to see if the column
-            is a key as well, since not all columns will be marked with AUTOINCREMENT
-            </summary>
-            <param name="row"></param>
-            <returns></returns>
-        </member>
-        <member name="M:NDbUnit.Core.SqlLite.SqlLiteDbOperation.OnInsertIdentity(System.Data.DataTable,System.Data.IDbCommand,System.Data.IDbTransaction)">
-            <summary>
-            SQLite doesn't need any changes to insert PK values.
-            </summary>
-            <param name="dataTable"></param>
-            <param name="dbCommand"></param>
-            <param name="dbTransaction"></param>
-        </member>
-        <member name="M:NDbUnit.Core.SqlLite.SqlLiteUnitTest.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:NDbUnit.Core.SqlLite.SqlLiteUnitTest"/> class.
-            </summary>
-            <param name="connectionString">The connection string 
-            used to open the database.
-            <seealso cref="P:System.Data.IDbConnection.ConnectionString"/></param>
         </member>
     </members>
 </doc>
