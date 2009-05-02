@@ -20,18 +20,16 @@
  *
  */
 
-using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
+using System.Data;
+using System;
 
-namespace NDbUnit.Core.SqlClient
+namespace NDbUnit.Core.MySqlClient
 {
-    public class SqlDbCommandBuilder : DbCommandBuilder
+    public class MySqlDbOperation : DbOperation
     {
-        public SqlDbCommandBuilder(string connectionString) : base(connectionString)
-        {
-        }
-
         public override string QuotePrefix
         {
             get { return "["; }
@@ -42,20 +40,38 @@ namespace NDbUnit.Core.SqlClient
             get { return "]"; }
         }
 
-        protected override IDbConnection GetConnection(string connectionString)
+        protected override IDbDataAdapter CreateDbDataAdapter()
         {
-            return new SqlConnection(connectionString);
+            return new MySqlDataAdapter();
         }
 
-        protected override IDbCommand CreateDbCommand()
+        protected override IDbCommand CreateDbCommand(string cmdText)
         {
-            return new SqlCommand();
+            return new MySqlCommand(cmdText);
         }
 
-        protected override IDataParameter CreateNewSqlParameter(int index, DataRow dataRow)
+        protected override void OnInsertIdentity(DataTable dataTable, IDbCommand dbCommand, IDbTransaction dbTransaction)
         {
-            return new SqlParameter("@p" + index, (SqlDbType) dataRow["ProviderType"],
-                                    (int) dataRow["ColumnSize"], (string) dataRow["ColumnName"]);
+            IDbTransaction sqlTransaction = (IDbTransaction)dbTransaction;
+
+            try
+            {
+                IDbDataAdapter sqlDataAdapter = CreateDbDataAdapter();
+                sqlDataAdapter.InsertCommand = dbCommand;
+                sqlDataAdapter.InsertCommand.Connection = sqlTransaction.Connection;
+                sqlDataAdapter.InsertCommand.Transaction = sqlTransaction;
+
+                ((DbDataAdapter)sqlDataAdapter).Update(dataTable);
+
+            }
+            catch (Exception e)
+            {
+                throw (e);
+            }
+            finally
+            {
+
+            }
         }
     }
 }

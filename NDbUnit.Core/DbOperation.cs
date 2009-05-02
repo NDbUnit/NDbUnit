@@ -29,7 +29,7 @@ namespace NDbUnit.Core
 {
     public abstract class DbOperation : IDbOperation
     {
-        public virtual string QuotePrefix { get { return "";} }
+        public virtual string QuotePrefix { get { return ""; } }
         public virtual string QuoteSuffix { get { return ""; } }
 
         protected DataRow CloneDataRow(DataTable dataTable, DataRow dataRow)
@@ -63,8 +63,8 @@ namespace NDbUnit.Core
             return true;
         }
 
-        protected abstract DbDataAdapter CreateDbDataAdapter();
-        protected abstract DbCommand CreateDbCommand(string cmdText);
+        protected abstract IDbDataAdapter CreateDbDataAdapter();
+        protected abstract IDbCommand CreateDbCommand(string cmdText);
 
         private void deleteCommon(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction,
                                   bool deleteAll)
@@ -273,49 +273,73 @@ namespace NDbUnit.Core
 
         protected virtual void OnDelete(DataTable dataTable, IDbCommand dbCommand, IDbTransaction dbTransaction)
         {
-            DbTransaction sqlTransaction = (DbTransaction) dbTransaction;
+            IDbTransaction sqlTransaction = dbTransaction;
 
-            DbDataAdapter sqlDataAdapter = CreateDbDataAdapter();
-            sqlDataAdapter.DeleteCommand = (DbCommand) dbCommand;
+            IDbDataAdapter sqlDataAdapter = CreateDbDataAdapter();
+            sqlDataAdapter.DeleteCommand = dbCommand;
             sqlDataAdapter.DeleteCommand.Connection = sqlTransaction.Connection;
             sqlDataAdapter.DeleteCommand.Transaction = sqlTransaction;
 
-            sqlDataAdapter.Update(dataTable);
+            ((DbDataAdapter)sqlDataAdapter).Update(dataTable);
         }
 
         protected virtual void OnDeleteAll(IDbCommand dbCommand, IDbTransaction dbTransaction)
         {
-            DbTransaction sqlTransaction = (DbTransaction) dbTransaction;
+            IDbTransaction sqlTransaction = dbTransaction;
 
-            DbCommand sqlCommand = (DbCommand) dbCommand;
+            IDbCommand sqlCommand = dbCommand;
             sqlCommand.Connection = sqlTransaction.Connection;
             sqlCommand.Transaction = sqlTransaction;
 
             sqlCommand.ExecuteNonQuery();
         }
 
+
+        protected virtual void OnBeforeInsert(DataTable dataTable, DbTransaction dbTransaction)
+        {
+            //DbCommand sqlCommand =
+            //        CreateDbCommand("ALTER TABLE " +
+            //                        TableNameHelper.FormatTableName(dataTable.TableName, QuotePrefix, QuoteSuffix) +
+            //                        " NOCHECK CONSTRAINT ALL");
+            //sqlCommand.Connection = dbTransaction.Connection;
+            //sqlCommand.Transaction = dbTransaction;
+            //sqlCommand.ExecuteNonQuery();
+            //
+        }
+
+        protected virtual void OnAfterInsert(DataTable dataTable, DbTransaction dbTransaction)
+        {
+            //DbCommand sqlCommand =
+            //        CreateDbCommand("ALTER TABLE " +
+            //                        TableNameHelper.FormatTableName(dataTable.TableName, QuotePrefix, QuoteSuffix) +
+            //                        " CHECK CONSTRAINT ALL");
+            //sqlCommand.Connection = dbTransaction.Connection;
+            //sqlCommand.Transaction = dbTransaction;
+            //sqlCommand.ExecuteNonQuery();
+        }
+
         protected virtual void OnInsert(DataTable dataTable, IDbCommand dbCommand, IDbTransaction dbTransaction)
         {
-            DbTransaction sqlTransaction = (DbTransaction) dbTransaction;
+            IDbTransaction sqlTransaction =  dbTransaction;
 
-            DbDataAdapter sqlDataAdapter = CreateDbDataAdapter();
-            sqlDataAdapter.InsertCommand = (DbCommand) dbCommand;
+            IDbDataAdapter sqlDataAdapter = CreateDbDataAdapter();
+            sqlDataAdapter.InsertCommand = dbCommand;
             sqlDataAdapter.InsertCommand.Connection = sqlTransaction.Connection;
             sqlDataAdapter.InsertCommand.Transaction = sqlTransaction;
 
-            sqlDataAdapter.Update(dataTable);
+            ((DbDataAdapter)sqlDataAdapter).Update(dataTable);
         }
 
         protected virtual void OnInsertIdentity(DataTable dataTable, IDbCommand dbCommand, IDbTransaction dbTransaction)
         {
-            DbTransaction sqlTransaction = (DbTransaction) dbTransaction;
+            IDbTransaction sqlTransaction = dbTransaction;
 
             foreach (DataColumn column in dataTable.Columns)
             {
                 if (column.AutoIncrement)
                 {
                     // Set identity insert on.
-                    DbCommand sqlCommand =
+                    IDbCommand sqlCommand =
                         CreateDbCommand("SET IDENTITY_INSERT " +
                                         TableNameHelper.FormatTableName(dataTable.TableName, QuotePrefix, QuoteSuffix) +
                                         " ON");
@@ -329,12 +353,12 @@ namespace NDbUnit.Core
 
             try
             {
-                DbDataAdapter sqlDataAdapter = CreateDbDataAdapter();
-                sqlDataAdapter.InsertCommand = (DbCommand) dbCommand;
+                IDbDataAdapter sqlDataAdapter = CreateDbDataAdapter();
+                sqlDataAdapter.InsertCommand = dbCommand;
                 sqlDataAdapter.InsertCommand.Connection = sqlTransaction.Connection;
                 sqlDataAdapter.InsertCommand.Transaction = sqlTransaction;
 
-                sqlDataAdapter.Update(dataTable);
+                ((DbDataAdapter)sqlDataAdapter).Update(dataTable);
             }
             catch (Exception e)
             {
@@ -347,7 +371,7 @@ namespace NDbUnit.Core
                     if (column.AutoIncrement)
                     {
                         // Set identity insert off.
-                        DbCommand sqlCommand =
+                        IDbCommand sqlCommand =
                             CreateDbCommand("SET IDENTITY_INSERT " +
                                             TableNameHelper.FormatTableName(dataTable.TableName, QuotePrefix,
                                                                             QuoteSuffix) + " OFF");
@@ -364,16 +388,16 @@ namespace NDbUnit.Core
         protected virtual void OnRefresh(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction,
                                          string tableName)
         {
-            DbTransaction sqlTransaction = (DbTransaction) dbTransaction;
+            IDbTransaction sqlTransaction = dbTransaction;
 
-            DbDataAdapter sqlDataAdapter = CreateDbDataAdapter();
-            sqlDataAdapter.SelectCommand = (DbCommand) dbCommandBuilder.GetSelectCommand(tableName);
+            IDbDataAdapter sqlDataAdapter = CreateDbDataAdapter();
+            sqlDataAdapter.SelectCommand = dbCommandBuilder.GetSelectCommand(tableName);
             sqlDataAdapter.SelectCommand.Connection = sqlTransaction.Connection;
             sqlDataAdapter.SelectCommand.Transaction = sqlTransaction;
 
             DataSet dsDb = new DataSet();
             // Query all records in the database table.
-            sqlDataAdapter.Fill(dsDb, tableName);
+            ((DbDataAdapter)sqlDataAdapter).Fill(dsDb, tableName);
 
             DataSet dsUpdate = dbCommandBuilder.GetSchema().Clone();
 
@@ -407,15 +431,15 @@ namespace NDbUnit.Core
             }
 
             // Does not insert identity.
-            sqlDataAdapter.InsertCommand = (DbCommand) dbCommandBuilder.GetInsertCommand(tableName);
+            sqlDataAdapter.InsertCommand = dbCommandBuilder.GetInsertCommand(tableName);
             sqlDataAdapter.InsertCommand.Connection = sqlTransaction.Connection;
             sqlDataAdapter.InsertCommand.Transaction = sqlTransaction;
 
-            sqlDataAdapter.UpdateCommand = (DbCommand) dbCommandBuilder.GetUpdateCommand(tableName);
+            sqlDataAdapter.UpdateCommand = dbCommandBuilder.GetUpdateCommand(tableName);
             sqlDataAdapter.UpdateCommand.Connection = sqlTransaction.Connection;
             sqlDataAdapter.UpdateCommand.Transaction = sqlTransaction;
 
-            sqlDataAdapter.Update(dsUpdate, tableName);
+            ((DbDataAdapter)sqlDataAdapter).Update(dsUpdate, tableName);
         }
 
         private void MarkRowAsModified(DataRow dataRowNew)
@@ -427,14 +451,14 @@ namespace NDbUnit.Core
         protected virtual void OnUpdate(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction,
                                         string tableName)
         {
-            DbTransaction sqlTransaction = (DbTransaction) dbTransaction;
+            IDbTransaction sqlTransaction = dbTransaction;
 
-            DbDataAdapter sqlDataAdapter = CreateDbDataAdapter();
-            sqlDataAdapter.UpdateCommand = (DbCommand) dbCommandBuilder.GetUpdateCommand(tableName);
+            IDbDataAdapter sqlDataAdapter = CreateDbDataAdapter();
+            sqlDataAdapter.UpdateCommand = dbCommandBuilder.GetUpdateCommand(tableName);
             sqlDataAdapter.UpdateCommand.Connection = sqlTransaction.Connection;
             sqlDataAdapter.UpdateCommand.Transaction = sqlTransaction;
 
-            sqlDataAdapter.Update(ds, tableName);
+            ((DbDataAdapter)sqlDataAdapter).Update(ds, tableName);
         }
     }
 }

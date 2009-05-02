@@ -20,31 +20,33 @@
  *
  */
 
-using System.Data.Common;
-using System.Data.SQLite;
-using System.Data;
+using NDbUnit.Core;
+using NDbUnit.Core.MySqlClient;
+using MbUnit.Framework;
 
-namespace NDbUnit.Core.SqlLite
+namespace NDbUnit.Test.Mysql
 {
-    public class SqlLiteUnitTest : NDbUnitTest
+    [TestFixture]
+    public class MySqlDbUnitTestTest
     {
-        public SqlLiteUnitTest(string connectionString) : base(connectionString)
+        private MySqlDbUnitTest _mysqlTest;
+        [SetUp]
+        public void SetUp()
+        {
+            _mysqlTest = new MySqlDbUnitTest(DbConnection.MysqlConnectionString);
+            _mysqlTest.ReadXmlSchema(XmlTestFiles.MySqlTestFiles.XmlSchemaFile);
+            _mysqlTest.ReadXml(XmlTestFiles.MySqlTestFiles.XmlFile);
+            _mysqlTest.PerformDbOperation(DbOperationFlag.DeleteAll);
+        }
+
+        [Test]
+        public void Test()
         {
         }
 
-        protected override IDbCommandBuilder CreateDbCommandBuilder(string connectionString)
+        [TearDown]
+        public void TearDown()
         {
-            return new SqlLiteDbCommandBuilder(connectionString);
-        }
-
-        protected override IDbOperation CreateDbOperation()
-        {
-            return new SqlLiteDbOperation();
-        }
-
-        protected override IDbDataAdapter CreateDataAdapter(IDbCommand command)
-        {
-            return new SQLiteDataAdapter((SQLiteCommand) command);
         }
     }
 }

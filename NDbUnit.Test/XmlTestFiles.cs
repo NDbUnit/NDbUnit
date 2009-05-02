@@ -26,6 +26,44 @@ namespace NDbUnit.Test
 {
 	public class XmlTestFiles
 	{
+
+        public class MySqlTestFiles
+        {
+            private static string _xmlPath = @"..\..\Xml\MySql\";
+
+            public static string XmlSchemaFile
+            {
+                get
+                {
+                    return Path.Combine(_xmlPath, "UserDS4MySql.xsd");
+                }
+            }
+
+
+            public static string XmlFile
+            {
+                get
+                {
+                    return Path.Combine(_xmlPath, "User.xml");
+                }
+            }
+
+            public static string XmlModFile
+            {
+                get
+                {
+                    return Path.Combine(_xmlPath, "UserMod.xml");
+                }
+            }
+
+            public static string XmlRefreshFile
+            {
+                get
+                {
+                    return Path.Combine(_xmlPath, "UserRefresh.xml");
+                }
+            }
+        }
 		// expect to be run from the bin/Debug or bin/Release directory
 		private static string _xmlPath = @"..\..\Xml\";
 

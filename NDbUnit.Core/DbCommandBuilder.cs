@@ -39,7 +39,7 @@ namespace NDbUnit.Core
         private XmlDataDocument _xdd = new XmlDataDocument();
 
         private string _xmlSchemaFile = "";
-        protected DbConnection _sqlConnection;
+        protected IDbConnection _sqlConnection;
         protected DataTable _dataTableSchema;
 
         protected DbCommandBuilder(string connectionString)
@@ -123,7 +123,7 @@ namespace NDbUnit.Core
             return _xdd.DataSet;
         }
 
-        protected abstract DbConnection GetConnection(string connectionString);
+        protected abstract IDbConnection GetConnection(string connectionString);
 
 
         public IDbCommand GetDeleteAllCommand(string tableName)
@@ -184,7 +184,7 @@ namespace NDbUnit.Core
 
         protected virtual IDbCommand CreateSelectCommand(DataSet ds, string tableName)
         {
-            DbCommand sqlSelectCommand = CreateDbCommand();
+            IDbCommand sqlSelectCommand = CreateDbCommand();
 
             bool notFirstColumn = false;
             StringBuilder sb = new StringBuilder("SELECT ");
@@ -223,9 +223,9 @@ namespace NDbUnit.Core
             return sqlSelectCommand;
         }
 
-        protected abstract DbCommand CreateDbCommand();
+        protected abstract IDbCommand CreateDbCommand();
 
-        private DataTable GetSchemaTable(DbCommand sqlSelectCommand)
+        private DataTable GetSchemaTable(IDbCommand sqlSelectCommand)
         {
             DataTable dataTableSchema;
             bool isClosed = ConnectionState.Closed == _sqlConnection.State;
@@ -237,7 +237,7 @@ namespace NDbUnit.Core
                     _sqlConnection.Open();
                 }
 
-                DbDataReader sqlDataReader = sqlSelectCommand.ExecuteReader(CommandBehavior.KeyInfo);
+                IDataReader sqlDataReader = sqlSelectCommand.ExecuteReader(CommandBehavior.KeyInfo);
                 dataTableSchema = sqlDataReader.GetSchemaTable();
                 sqlDataReader.Close();
             }
@@ -260,8 +260,8 @@ namespace NDbUnit.Core
             StringBuilder sb = new StringBuilder();
             sb.Append("INSERT INTO " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + "(");
             StringBuilder sbParam = new StringBuilder();
-            DbParameter sqlParameter;
-            DbCommand sqlInsertCommand = CreateDbCommand();
+            IDataParameter sqlParameter;
+            IDbCommand sqlInsertCommand = CreateDbCommand();
             foreach (DataRow dataRow in _dataTableSchema.Rows)
             {
                 // Not an identity column.
@@ -309,8 +309,8 @@ namespace NDbUnit.Core
             StringBuilder sb = new StringBuilder();
             sb.Append("INSERT INTO " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + "(");
             StringBuilder sbParam = new StringBuilder();
-            DbParameter sqlParameter;
-            DbCommand sqlInsertIdentityCommand = CreateDbCommand();
+            IDataParameter sqlParameter;
+            IDbCommand sqlInsertIdentityCommand = CreateDbCommand();
             foreach (DataRow dataRow in _dataTableSchema.Rows)
             {
                 if (notFirstColumn)
@@ -342,7 +342,7 @@ namespace NDbUnit.Core
             StringBuilder sb = new StringBuilder();
             sb.Append("DELETE FROM " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + " WHERE ");
 
-            DbCommand sqlDeleteCommand = CreateDbCommand();
+            IDbCommand sqlDeleteCommand = CreateDbCommand();
 
             int count = 1;
             foreach (DataRow dataRow in _dataTableSchema.Rows)
@@ -358,7 +358,7 @@ namespace NDbUnit.Core
                     sb.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
                     sb.Append("=" + GetParameterDesignator(count));
 
-                    DbParameter sqlParameter = CreateNewSqlParameter(count, dataRow);
+                    IDataParameter sqlParameter = CreateNewSqlParameter(count, dataRow);
                     sqlDeleteCommand.Parameters.Add(sqlParameter);
 
                     ++count;
@@ -372,7 +372,7 @@ namespace NDbUnit.Core
 
         protected virtual IDbCommand CreateDeleteAllCommand(string tableName)
         {
-            DbCommand command = CreateDbCommand();
+            IDbCommand command = CreateDbCommand();
             command.CommandText = "DELETE FROM " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix);
             return command;
         }
@@ -382,7 +382,7 @@ namespace NDbUnit.Core
             StringBuilder sb = new StringBuilder();
             sb.Append("UPDATE " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + " SET ");
 
-            DbCommand sqlUpdateCommand = CreateDbCommand();
+            IDbCommand sqlUpdateCommand = CreateDbCommand();
 
             int count = 1;
             bool notFirstKey = false;
@@ -402,7 +402,7 @@ namespace NDbUnit.Core
             foreach (DataRow dataRow in _dataTableSchema.Rows)
             {
                 // A key column.
-                DbParameter sqlParameter;
+                IDataParameter sqlParameter;
                 if ((bool) dataRow["IsKey"])
                 {
                     if (notFirstKey)
@@ -447,6 +447,6 @@ namespace NDbUnit.Core
             return sqlUpdateCommand;
         }
 
-        protected abstract DbParameter CreateNewSqlParameter(int index, DataRow dataRow);
+        protected abstract IDataParameter CreateNewSqlParameter(int index, DataRow dataRow);
     }
 }

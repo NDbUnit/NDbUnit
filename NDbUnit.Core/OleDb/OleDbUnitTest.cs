@@ -87,7 +87,7 @@ namespace NDbUnit.Core.OleDb
             adapter.Fill(dsToFill, tableName);
         }
 
-        protected override DbDataAdapter CreateDataAdapter(DbCommand command)
+        protected override IDbDataAdapter CreateDataAdapter(IDbCommand command)
         {
             return new OleDbDataAdapter((OleDbCommand) command);
         }

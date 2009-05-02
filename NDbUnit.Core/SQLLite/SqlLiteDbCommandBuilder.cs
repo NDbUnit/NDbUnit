@@ -65,7 +65,7 @@ namespace NDbUnit.Core.SqlLite
             get { return "]"; }
         }
 
-        protected override DbConnection GetConnection(string connectionString)
+        protected override IDbConnection GetConnection(string connectionString)
         {
             return new SQLiteConnection(connectionString);
         }
@@ -113,7 +113,7 @@ namespace NDbUnit.Core.SqlLite
             return sqlSelectCommand;
         }
 
-        protected override DbCommand CreateDbCommand()
+        protected override IDbCommand CreateDbCommand()
         {
             throw new System.NotImplementedException();
         }
@@ -154,7 +154,7 @@ namespace NDbUnit.Core.SqlLite
                     sb.Append(base.QuotePrefix + dataRow[SchemaColumns.ColumnName] + base.QuoteSuffix);
                     sbParam.Append("@p" + count);
 
-                    sqlParameter = CreateNewSqlParameter(count, dataRow);
+                    sqlParameter = (SQLiteParameter)CreateNewSqlParameter(count, dataRow);
                     sqlInsertCommand.Parameters.Add(sqlParameter);
 
                     ++count;
@@ -190,7 +190,7 @@ namespace NDbUnit.Core.SqlLite
                 sb.Append(base.QuotePrefix + dataRow[SchemaColumns.ColumnName] + base.QuoteSuffix);
                 sbParam.Append("@p" + count);
 
-                sqlParameter = CreateNewSqlParameter(count, dataRow);
+                sqlParameter = (SQLiteParameter)CreateNewSqlParameter(count, dataRow);
                 sqlInsertIdentityCommand.Parameters.Add(sqlParameter);
 
                 ++count;
@@ -225,7 +225,7 @@ namespace NDbUnit.Core.SqlLite
                     sb.Append(QuotePrefix + dataRow[SchemaColumns.ColumnName] + QuoteSuffix);
                     sb.Append("=@p" + count);
 
-                    sqlParameter = CreateNewSqlParameter(count, dataRow);
+                    sqlParameter = (SQLiteParameter)CreateNewSqlParameter(count, dataRow);
                     sqlDeleteCommand.Parameters.Add(sqlParameter);
 
                     ++count;
@@ -281,7 +281,7 @@ namespace NDbUnit.Core.SqlLite
                     sbPrimaryKey.Append(base.QuotePrefix + dataRow[SchemaColumns.ColumnName] + base.QuoteSuffix);
                     sbPrimaryKey.Append("=@p" + count);
 
-                    sqlParameter = CreateNewSqlParameter(count, dataRow);
+                    sqlParameter = (SQLiteParameter)CreateNewSqlParameter(count, dataRow);
                     sqlUpdateCommand.Parameters.Add(sqlParameter);
 
                     ++count;
@@ -299,7 +299,7 @@ namespace NDbUnit.Core.SqlLite
                     sb.Append(base.QuotePrefix + dataRow[SchemaColumns.ColumnName] + base.QuoteSuffix);
                     sb.Append("=@p" + count);
 
-                    sqlParameter = CreateNewSqlParameter(count, dataRow);
+                    sqlParameter = (SQLiteParameter)CreateNewSqlParameter(count, dataRow);
                     sqlUpdateCommand.Parameters.Add(sqlParameter);
 
                     ++count;
@@ -344,7 +344,7 @@ namespace NDbUnit.Core.SqlLite
             return dataTableSchema;
         }
 
-        protected override DbParameter CreateNewSqlParameter(int index, DataRow dataRow)
+        protected override IDataParameter CreateNewSqlParameter(int index, DataRow dataRow)
         {
             return new SQLiteParameter("@p" + index, (DbType) dataRow[SchemaColumns.ProviderType],
                                        (int) dataRow[SchemaColumns.ColumnSize],

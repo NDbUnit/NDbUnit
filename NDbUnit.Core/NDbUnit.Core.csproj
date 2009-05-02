@@ -72,6 +72,10 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MySql.Data, Version=1.0.10.1, Culture=neutral, PublicKeyToken=c5687fc88969c44d">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\MySql.Data.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -102,6 +106,9 @@
     <Compile Include="IDbCommandBuilder.cs" />
     <Compile Include="IDbOperation.cs" />
     <Compile Include="INDbUnitTest.cs" />
+    <Compile Include="MySql\MySqlDbCommandBuilder.cs" />
+    <Compile Include="MySql\MySqlDbOperation.cs" />
+    <Compile Include="MySql\MySqlDbUnitTest.cs" />
     <Compile Include="NDbUnitException.cs">
       <SubType>Code</SubType>
     </Compile>

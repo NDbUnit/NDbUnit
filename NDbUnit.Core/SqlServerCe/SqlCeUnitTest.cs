@@ -22,6 +22,7 @@
 
 using System.Data.Common;
 using System.Data.SqlServerCe;
+using System.Data;
 
 namespace NDbUnit.Core.SqlServerCe
 {
@@ -41,7 +42,7 @@ namespace NDbUnit.Core.SqlServerCe
             return new SqlCeDbOperation();
         }
 
-        protected override DbDataAdapter CreateDataAdapter(DbCommand command)
+        protected override IDbDataAdapter CreateDataAdapter(IDbCommand command)
         {
             return new SqlCeDataAdapter((SqlCeCommand) command);
         }

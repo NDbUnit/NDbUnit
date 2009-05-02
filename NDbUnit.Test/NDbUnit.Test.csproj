@@ -92,6 +92,10 @@
   <ItemGroup>
     <Reference Include="Gallio, Version=3.0.5.546, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL" />
     <Reference Include="MbUnit, Version=3.0.5.546, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL" />
+    <Reference Include="MySql.Data, Version=1.0.10.1, Culture=neutral, PublicKeyToken=c5687fc88969c44d">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NDbUnit.Core\Lib\MySql.Data.dll</HintPath>
+    </Reference>
     <Reference Include="Rhino.Mocks, Version=3.4.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Lib\Rhino.Mocks.dll</HintPath>
@@ -118,6 +122,9 @@
     <Compile Include="DbConnection.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Mysql\MySqlDbCommandBuilderTest.cs" />
+    <Compile Include="Mysql\MysqlDbOperationTest.cs" />
+    <Compile Include="Mysql\MySqlDbUnitTestTest.cs" />
     <Compile Include="OleDb\OleDbCommandBuilderTest.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -151,6 +158,16 @@
     <Compile Include="XmlTestFiles.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Xml\MySql\UserDS4MySql.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UserDS4MySql.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Xml\northwind.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>northwind.xsd</DependentUpon>
+    </Compile>
     <None Include="app.config" />
     <None Include="NDbUnit.Test.build" />
     <None Include="Properties\Settings.settings">
@@ -158,6 +175,33 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Include="SqlLite\test.sqlite.db" />
+    <None Include="Xml\MySql\UserDS4MySql.xsc">
+      <DependentUpon>UserDS4MySql.xsd</DependentUpon>
+    </None>
+    <None Include="Xml\MySql\UserDS4MySql.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>UserDS4MySql.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Xml\MySql\UserDS4MySql.xss">
+      <DependentUpon>UserDS4MySql.xsd</DependentUpon>
+    </None>
+    <None Include="Xml\northwind.xsc">
+      <DependentUpon>northwind.xsd</DependentUpon>
+    </None>
+    <None Include="Xml\northwind.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>northwind.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Xml\northwind.xss">
+      <DependentUpon>northwind.xsd</DependentUpon>
+    </None>
+    <None Include="Xml\SqlServerCeDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>SqlServerCeDataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Xml\UserDS.xsc">
       <DependentUpon>UserDS.xsd</DependentUpon>
     </None>
@@ -175,11 +219,15 @@
     <None Include="Xml\UserDS4SQLite.xss">
       <DependentUpon>UserDS4SQLite.xsd</DependentUpon>
     </None>
+    <Content Include="Scripts\mysql-testdb-create.sql" />
     <Content Include="Scripts\sqlite-testdb-create.sql" />
     <Content Include="Scripts\sqlserver-testdb-create.sql" />
     <Content Include="SqlServerCe\testdb.sdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Xml\MySql\User.xml" />
+    <Content Include="Xml\MySql\UserMod.xml" />
+    <Content Include="Xml\MySql\UserRefresh.xml" />
     <Content Include="Xml\User.xml" />
     <Content Include="Xml\UserDS.xsd">
       <Generator>MSDataSetGenerator</Generator>

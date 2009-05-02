@@ -28,12 +28,12 @@ namespace NDbUnit.Core.SqlLite
 {
     public class SqlLiteDbOperation : DbOperation
     {
-        protected override DbDataAdapter CreateDbDataAdapter()
+        protected override IDbDataAdapter CreateDbDataAdapter()
         {
             return new SQLiteDataAdapter();
         }
 
-        protected override DbCommand CreateDbCommand(string cmdText)
+        protected override IDbCommand CreateDbCommand(string cmdText)
         {
             return new SQLiteCommand(cmdText);
         }

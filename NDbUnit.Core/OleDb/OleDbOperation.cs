@@ -46,12 +46,12 @@ namespace NDbUnit.Core.OleDb
             set { _oleOleDbType = value; }
         }
 
-        protected override DbDataAdapter CreateDbDataAdapter()
+        protected override IDbDataAdapter CreateDbDataAdapter()
         {
             return new OleDbDataAdapter();
         }
 
-        protected override DbCommand CreateDbCommand(string cmdText)
+        protected override IDbCommand CreateDbCommand(string cmdText)
         {
             return new OleDbCommand(cmdText);
         }

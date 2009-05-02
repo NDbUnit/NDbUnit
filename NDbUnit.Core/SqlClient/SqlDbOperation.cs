@@ -22,6 +22,7 @@
 
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Data;
 
 namespace NDbUnit.Core.SqlClient
 {
@@ -37,12 +38,12 @@ namespace NDbUnit.Core.SqlClient
             get { return "]"; }
         }
 
-        protected override DbDataAdapter CreateDbDataAdapter()
+        protected override IDbDataAdapter CreateDbDataAdapter()
         {
             return new SqlDataAdapter();
         }
 
-        protected override DbCommand CreateDbCommand(string cmdText)
+        protected override IDbCommand CreateDbCommand(string cmdText)
         {
             return new SqlCommand(cmdText);
         }

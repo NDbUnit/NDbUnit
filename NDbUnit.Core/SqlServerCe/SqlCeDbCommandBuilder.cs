@@ -42,17 +42,17 @@ namespace NDbUnit.Core.SqlServerCe
             get { return "]"; }
         }
 
-        protected override DbConnection GetConnection(string connectionString)
+        protected override IDbConnection GetConnection(string connectionString)
         {
             return new SqlCeConnection(connectionString);
         }
 
-        protected override DbCommand CreateDbCommand()
+        protected override IDbCommand CreateDbCommand()
         {
             return new SqlCeCommand();
         }
 
-        protected override DbParameter CreateNewSqlParameter(int index, DataRow dataRow)
+        protected override IDataParameter CreateNewSqlParameter(int index, DataRow dataRow)
         {
             return new SqlCeParameter("@p" + index, ((SqlCeType) dataRow["ProviderType"]).SqlDbType,
                                       (int) dataRow["ColumnSize"], (string) dataRow["ColumnName"]);

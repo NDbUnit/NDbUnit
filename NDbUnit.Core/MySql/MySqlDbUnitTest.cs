@@ -22,17 +22,18 @@
 
 using System.Data.Common;
 using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
 using System.Data;
 
-namespace NDbUnit.Core.SqlClient
+namespace NDbUnit.Core.MySqlClient
 {
 	/// <summary>
-	/// The Sql Server unit test data adapter.
+	/// The MySql unit test data adapter.
 	/// </summary>
 	/// <example>
 	/// <code>
 	/// string connectionString = "Persist Security Info=False;Integrated Security=SSPI;database=testdb;server=V-AL-DIMEOLA\NETSDK";
-	/// SqlDbUnitTest sqlDbUnitTest = new SqlDbUnitTest(connectionString);
+	/// MySqlDbUnitTest sqlDbUnitTest = new SqlDbUnitTest(connectionString);
 	/// string xmlSchemaFile = "User.xsd";
 	/// string xmlFile = "User.xml";
 	/// sqlDbUnitTest.ReadXmlSchema(xmlSchemaFile);
@@ -41,26 +42,38 @@ namespace NDbUnit.Core.SqlClient
 	/// </code>
 	/// <seealso cref="INDbUnitTest"/>
 	/// </example>
-	public class SqlDbUnitTest : NDbUnitTest
+    public class MySqlDbUnitTest : NDbUnitTest
 	{
 
-		public SqlDbUnitTest(string connectionString) : base(connectionString)
+        public MySqlDbUnitTest(string connectionString)
+            : base(connectionString)
 		{
 		}
         
 	    protected override IDbCommandBuilder CreateDbCommandBuilder(string connectionString)
 	    {
-	        return new SqlDbCommandBuilder(connectionString);
+	        return new MySqlDbCommandBuilder(connectionString);
 	    }
 
 	    protected override IDbOperation CreateDbOperation()
 	    {
-	        return new SqlDbOperation();
+	        return new MySqlDbOperation();
 	    }
 
 	    protected override IDbDataAdapter CreateDataAdapter(IDbCommand command)
 	    {
-	        return new SqlDataAdapter((SqlCommand) command);
+            return null;
+            //return new MySqlDataAdapter((MySqlCommand) command);
 	    }
+
+        protected override void OnGetDataSetFromDb(string tableName, ref DataSet dsToFill, IDbConnection dbConnection)
+        {
+            MySqlCommand selectCommand = (MySqlCommand)GetDbCommandBuilder().GetSelectCommand(tableName);
+            selectCommand.Connection = dbConnection as MySqlConnection;
+            MySqlDataAdapter adapter = new MySqlDataAdapter(selectCommand);
+            adapter.Fill(dsToFill, tableName);
+        }
+
+        
 	}
 }

@@ -46,6 +46,23 @@
         <member name="F:NDbUnit.Core.DbOperationFlag.CleanInsertIdentity">
             <summary>Composite operation of DeleteAll and InsertIdentity.</summary>
         </member>
+        <member name="T:NDbUnit.Core.OleDb.OleDbType">
+            <summary>
+            An enumeration specifying the OLE database type.
+            </summary>
+        </member>
+        <member name="F:NDbUnit.Core.OleDb.OleDbType.NoDb">
+            <summary>No database.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.OleDb.OleDbType.SqlServer">
+            <summary>Sql server.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.OleDb.OleDbType.Oracle">
+            <summary>Oracle.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.OleDb.OleDbType.DB2">
+            <summary>DB2.</summary>
+        </member>
         <member name="M:NDbUnit.Core.SqlLite.SqlLiteDbCommandBuilder.IsAutoIncrementing(System.Data.DataRow)">
             <summary>
             Since SQLite keys are auto incremented by default we need to check to see if the column
@@ -314,22 +331,22 @@
             instance of an object is <see cref="F:NDbUnit.Core.OleDb.OleDbType.NoDb"/>.
             </summary>
         </member>
-        <member name="T:NDbUnit.Core.OleDb.OleDbType">
+        <member name="T:NDbUnit.Core.MySqlClient.MySqlDbUnitTest">
             <summary>
-            An enumeration specifying the OLE database type.
+            The MySql unit test data adapter.
             </summary>
-        </member>
-        <member name="F:NDbUnit.Core.OleDb.OleDbType.NoDb">
-            <summary>No database.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.OleDb.OleDbType.SqlServer">
-            <summary>Sql server.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.OleDb.OleDbType.Oracle">
-            <summary>Oracle.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.OleDb.OleDbType.DB2">
-            <summary>DB2.</summary>
+            <example>
+            <code>
+            string connectionString = "Persist Security Info=False;Integrated Security=SSPI;database=testdb;server=V-AL-DIMEOLA\NETSDK";
+            MySqlDbUnitTest sqlDbUnitTest = new SqlDbUnitTest(connectionString);
+            string xmlSchemaFile = "User.xsd";
+            string xmlFile = "User.xml";
+            sqlDbUnitTest.ReadXmlSchema(xmlSchemaFile);
+            sqlDbUnitTest.ReadXml(xmlFile);
+            sqlDbUnitTest.PerformDbOperation(DbOperation.CleanInsertIdentity);
+            </code>
+            <seealso cref="T:NDbUnit.Core.INDbUnitTest"/>
+            </example>
         </member>
     </members>
 </doc>

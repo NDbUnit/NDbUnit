@@ -26,12 +26,12 @@ namespace NDbUnit.Test
     {
         public static string SqlConnectionString
         {
-            get { return @"Data Source=localhost\SQLServer2005;Database=testdb;Trusted_Connection=True"; }
+            get { return @"Data Source=localhost\SQLserver2005;Database=testdb;Trusted_Connection=True"; }
         }
 
         public static string OleDbConnectionString
         {
-            get { return @"Provider=SQLOLEDB;Data Source=localhost\SQLServer2005;Database=testdb;Integrated Security=SSPI"; }
+            get { return @"Provider=SQLOLEDB;Data Source=localhost\SQLserver2005;Database=testdb;Integrated Security=SSPI"; }
         }
 
         public static string SqlLiteConnectionString
@@ -42,6 +42,11 @@ namespace NDbUnit.Test
         public static string SqlCeConnectionString
         {
             get { return @"Data Source=SqlServerCe\testdb.sdf;Persist Security Info=False;"; }
+        }
+
+        public static string MysqlConnectionString
+        {
+            get { return @"Data Source=localhost;Uid=root; Pwd=password; Database=testdb; Port=4000"; }
         }
     }
 }

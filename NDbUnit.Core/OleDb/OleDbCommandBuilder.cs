@@ -53,12 +53,12 @@ namespace NDbUnit.Core.OleDb
         }
 
 
-        protected override DbConnection GetConnection(string connectionString)
+        protected override IDbConnection GetConnection(string connectionString)
         {
             return new OleDbConnection(connectionString);
         }
 
-        protected override DbCommand CreateDbCommand()
+        protected override IDbCommand CreateDbCommand()
         {
             return new OleDbCommand();
         }
@@ -112,7 +112,7 @@ namespace NDbUnit.Core.OleDb
                     sbPrimaryKey.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
                     sbPrimaryKey.Append("=?");
 
-                    oleDbParameter = CreateNewSqlParameter(count, dataRow);
+                    oleDbParameter = (OleDbParameter)CreateNewSqlParameter(count, dataRow);
                     keyParameters.Add(oleDbParameter);
 
 					++count;
@@ -130,7 +130,7 @@ namespace NDbUnit.Core.OleDb
                     sb.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
                     sb.Append("=?");
 
-                    oleDbParameter = CreateNewSqlParameter(count, dataRow);
+                    oleDbParameter = (OleDbParameter)CreateNewSqlParameter(count, dataRow);
                     oleDbUpdateCommand.Parameters.Add(oleDbParameter);
 
                     ++count;
@@ -150,7 +150,7 @@ namespace NDbUnit.Core.OleDb
 			return oleDbUpdateCommand;
 		}
 
-        protected override DbParameter CreateNewSqlParameter(int index, DataRow dataRow)
+        protected override IDataParameter CreateNewSqlParameter(int index, DataRow dataRow)
         {
             return new OleDbParameter("@p" + index, (System.Data.OleDb.OleDbType) dataRow["ProviderType"],
                                       (int) dataRow["ColumnSize"], (string) dataRow["ColumnName"]);

@@ -215,7 +215,7 @@ namespace NDbUnit.Test.SqlServerCe
                 return mockDbOperation;
             }
 
-            protected override DbDataAdapter CreateDataAdapter(DbCommand command)
+            protected override IDbDataAdapter CreateDataAdapter(IDbCommand command)
             {
                 return base.CreateDataAdapter(command);
             }

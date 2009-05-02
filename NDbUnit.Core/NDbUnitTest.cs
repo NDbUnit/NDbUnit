@@ -351,12 +351,12 @@ namespace NDbUnit.Core
 
         protected virtual void OnGetDataSetFromDb(string tableName, ref DataSet dsToFill, IDbConnection dbConnection)
         {
-            DbCommand selectCommand = (DbCommand) _dbCommandBuilder.GetSelectCommand(tableName);
-            selectCommand.Connection = dbConnection as DbConnection;
-            DbDataAdapter adapter = CreateDataAdapter(selectCommand);
-            adapter.Fill(dsToFill, tableName);
+            IDbCommand selectCommand = _dbCommandBuilder.GetSelectCommand(tableName);
+            selectCommand.Connection = dbConnection;
+            IDbDataAdapter adapter = CreateDataAdapter(selectCommand);
+            ((DbDataAdapter)adapter).Fill(dsToFill, tableName);
         }
 
-        protected abstract DbDataAdapter CreateDataAdapter(DbCommand command);
+        protected abstract IDbDataAdapter CreateDataAdapter(IDbCommand command);
     }
 }
