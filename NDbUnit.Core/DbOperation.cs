@@ -295,32 +295,21 @@ namespace NDbUnit.Core
         }
 
 
-        protected virtual void OnBeforeInsert(DataTable dataTable, DbTransaction dbTransaction)
+        protected virtual void DisableTableConstraints(DataTable dataTable, IDbTransaction dbTransaction)
         {
-            //DbCommand sqlCommand =
-            //        CreateDbCommand("ALTER TABLE " +
-            //                        TableNameHelper.FormatTableName(dataTable.TableName, QuotePrefix, QuoteSuffix) +
-            //                        " NOCHECK CONSTRAINT ALL");
-            //sqlCommand.Connection = dbTransaction.Connection;
-            //sqlCommand.Transaction = dbTransaction;
-            //sqlCommand.ExecuteNonQuery();
-            //
+            //base class implementation does NOTHING in this method, derived classes must override as needed
         }
 
-        protected virtual void OnAfterInsert(DataTable dataTable, DbTransaction dbTransaction)
+        protected virtual void EnableTableConstraints(DataTable dataTable, IDbTransaction dbTransaction)
         {
-            //DbCommand sqlCommand =
-            //        CreateDbCommand("ALTER TABLE " +
-            //                        TableNameHelper.FormatTableName(dataTable.TableName, QuotePrefix, QuoteSuffix) +
-            //                        " CHECK CONSTRAINT ALL");
-            //sqlCommand.Connection = dbTransaction.Connection;
-            //sqlCommand.Transaction = dbTransaction;
-            //sqlCommand.ExecuteNonQuery();
+            //base class implementation does NOTHING in this method, derived classes must override as needed
         }
 
         protected virtual void OnInsert(DataTable dataTable, IDbCommand dbCommand, IDbTransaction dbTransaction)
         {
             IDbTransaction sqlTransaction =  dbTransaction;
+
+            DisableTableConstraints(dataTable, dbTransaction);
 
             IDbDataAdapter sqlDataAdapter = CreateDbDataAdapter();
             sqlDataAdapter.InsertCommand = dbCommand;
@@ -328,11 +317,16 @@ namespace NDbUnit.Core
             sqlDataAdapter.InsertCommand.Transaction = sqlTransaction;
 
             ((DbDataAdapter)sqlDataAdapter).Update(dataTable);
+
+            EnableTableConstraints(dataTable, dbTransaction);
         }
 
         protected virtual void OnInsertIdentity(DataTable dataTable, IDbCommand dbCommand, IDbTransaction dbTransaction)
         {
             IDbTransaction sqlTransaction = dbTransaction;
+
+            DisableTableConstraints(dataTable, dbTransaction);
+
 
             foreach (DataColumn column in dataTable.Columns)
             {
@@ -382,6 +376,8 @@ namespace NDbUnit.Core
                         break;
                     }
                 }
+
+                EnableTableConstraints(dataTable, dbTransaction);
             }
         }
 

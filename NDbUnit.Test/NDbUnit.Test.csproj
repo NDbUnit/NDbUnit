@@ -103,6 +103,7 @@
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
@@ -139,6 +140,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="SqlClient\PerformDBOperationOnNorthwindFailsBugReportTest.cs" />
+    <Compile Include="SqlClient\ReproduceIncorrectDeleteOrderBugReportTest.cs" />
     <Compile Include="SqlClient\SqlDbCommandBuilderTest.cs">
       <SubType>Code</SubType>
     </Compile>

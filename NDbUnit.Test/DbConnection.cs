@@ -20,33 +20,40 @@
  *
  */
 
+using System.Configuration;
 namespace NDbUnit.Test
 {
     public class DbConnection
     {
+
+        public static string SqlNorthwindConnectionString
+        {
+            get { return ConfigurationManager.ConnectionStrings["SqlNorthwindConnectionString"].ConnectionString; }
+        }
+
         public static string SqlConnectionString
         {
-            get { return @"Data Source=localhost\SQLserver2005;Database=testdb;Trusted_Connection=True"; }
+            get { return ConfigurationManager.ConnectionStrings["SqlConnectionString"].ConnectionString; }            
         }
 
         public static string OleDbConnectionString
         {
-            get { return @"Provider=SQLOLEDB;Data Source=localhost\SQLserver2005;Database=testdb;Integrated Security=SSPI"; }
+            get { return ConfigurationManager.ConnectionStrings["OleDbConnectionString"].ConnectionString; }            
         }
 
         public static string SqlLiteConnectionString
         {
-            get { return @"Data Source=SqlLite\test.sqlite.db;Version=3;New=True"; }
+            get { return ConfigurationManager.ConnectionStrings["SqlLiteConnectionString"].ConnectionString; }            
         }
 
         public static string SqlCeConnectionString
         {
-            get { return @"Data Source=SqlServerCe\testdb.sdf;Persist Security Info=False;"; }
+            get { return ConfigurationManager.ConnectionStrings["SqlCeConnectionString"].ConnectionString; }            
         }
 
         public static string MysqlConnectionString
         {
-            get { return @"Data Source=localhost;Uid=root; Pwd=password; Database=testdb; Port=4000"; }
+            get { return ConfigurationManager.ConnectionStrings["MysqlConnectionString"].ConnectionString; }            
         }
     }
 }

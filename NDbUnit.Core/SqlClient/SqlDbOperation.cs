@@ -47,5 +47,28 @@ namespace NDbUnit.Core.SqlClient
         {
             return new SqlCommand(cmdText);
         }
+
+        protected override void EnableTableConstraints(DataTable dataTable, IDbTransaction dbTransaction)
+        {
+            DbCommand sqlCommand =
+                    (DbCommand)CreateDbCommand("ALTER TABLE " +
+                                    TableNameHelper.FormatTableName(dataTable.TableName, QuotePrefix, QuoteSuffix) +
+                                    " CHECK CONSTRAINT ALL");
+            sqlCommand.Connection = (DbConnection)dbTransaction.Connection;
+            sqlCommand.Transaction = (DbTransaction)dbTransaction;
+            sqlCommand.ExecuteNonQuery();
+        }
+
+        protected override void DisableTableConstraints(DataTable dataTable, IDbTransaction dbTransaction)
+        {
+            DbCommand sqlCommand =
+                    (DbCommand)CreateDbCommand("ALTER TABLE " +
+                                    TableNameHelper.FormatTableName(dataTable.TableName, QuotePrefix, QuoteSuffix) +
+                                    " NOCHECK CONSTRAINT ALL");
+            sqlCommand.Connection = (DbConnection)dbTransaction.Connection;
+            sqlCommand.Transaction = (DbTransaction)dbTransaction;
+            sqlCommand.ExecuteNonQuery();
+
+        }
     }
 }
