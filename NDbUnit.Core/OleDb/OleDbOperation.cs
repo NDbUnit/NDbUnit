@@ -29,7 +29,7 @@ namespace NDbUnit.Core.OleDb
     public class OleDbOperation : DbOperation
     {
         private OleDbType _oleOleDbType = OleDbType.NoDb;
-        
+
         public override string QuotePrefix
         {
             get { return "["; }
@@ -63,5 +63,34 @@ namespace NDbUnit.Core.OleDb
                 base.OnInsertIdentity(dataTable, dbCommand, dbTransaction);
             }
         }
+
+        protected override void EnableTableConstraints(DataTable dataTable, IDbTransaction dbTransaction)
+        {
+            if (_oleOleDbType != OleDbType.SqlServer) return;
+
+            DbCommand sqlCommand =
+                    (DbCommand)CreateDbCommand("ALTER TABLE " +
+                                    TableNameHelper.FormatTableName(dataTable.TableName, QuotePrefix, QuoteSuffix) +
+                                    " CHECK CONSTRAINT ALL");
+            sqlCommand.Connection = (DbConnection)dbTransaction.Connection;
+            sqlCommand.Transaction = (DbTransaction)dbTransaction;
+            sqlCommand.ExecuteNonQuery();
+        }
+
+        protected override void DisableTableConstraints(DataTable dataTable, IDbTransaction dbTransaction)
+        {
+            if (_oleOleDbType != OleDbType.SqlServer) return;
+
+            DbCommand sqlCommand =
+                    (DbCommand)CreateDbCommand("ALTER TABLE " +
+                                    TableNameHelper.FormatTableName(dataTable.TableName, QuotePrefix, QuoteSuffix) +
+                                    " NOCHECK CONSTRAINT ALL");
+            sqlCommand.Connection = (DbConnection)dbTransaction.Connection;
+            sqlCommand.Transaction = (DbTransaction)dbTransaction;
+            sqlCommand.ExecuteNonQuery();
+
+        }
+
+
     }
 }

@@ -56,6 +56,8 @@ namespace NDbUnit.Core.MySqlClient
 
             try
             {
+                DisableTableConstraints(dataTable, dbTransaction);
+
                 IDbDataAdapter sqlDataAdapter = CreateDbDataAdapter();
                 sqlDataAdapter.InsertCommand = dbCommand;
                 sqlDataAdapter.InsertCommand.Connection = sqlTransaction.Connection;
@@ -70,8 +72,25 @@ namespace NDbUnit.Core.MySqlClient
             }
             finally
             {
-
+                EnableTableConstraints(dataTable, dbTransaction);                
             }
+        }
+
+        protected override void EnableTableConstraints(DataTable dataTable, IDbTransaction dbTransaction)
+        {
+            MySqlCommand sqlCommand = (MySqlCommand)CreateDbCommand("SET foreign_key_checks = 1;");
+            sqlCommand.Connection = (MySqlConnection)dbTransaction.Connection;
+            sqlCommand.Transaction = (MySqlTransaction)dbTransaction;
+            sqlCommand.ExecuteNonQuery();
+        }
+
+        protected override void DisableTableConstraints(DataTable dataTable, IDbTransaction dbTransaction)
+        {
+            MySqlCommand sqlCommand = (MySqlCommand)CreateDbCommand("SET foreign_key_checks = 0;");
+            sqlCommand.Connection = (MySqlConnection)dbTransaction.Connection;
+            sqlCommand.Transaction = (MySqlTransaction)dbTransaction;
+            sqlCommand.ExecuteNonQuery();
+
         }
     }
 }

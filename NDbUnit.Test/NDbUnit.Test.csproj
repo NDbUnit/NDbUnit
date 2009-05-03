@@ -140,7 +140,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="SqlClient\PerformDBOperationOnNorthwindFailsBugReportTest.cs" />
     <Compile Include="SqlClient\ReproduceIncorrectDeleteOrderBugReportTest.cs" />
     <Compile Include="SqlClient\SqlDbCommandBuilderTest.cs">
       <SubType>Code</SubType>
@@ -161,16 +160,6 @@
     <Compile Include="XmlTestFiles.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Xml\MySql\UserDS4MySql.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>UserDS4MySql.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Xml\northwind.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>northwind.xsd</DependentUpon>
-    </Compile>
     <None Include="app.config" />
     <None Include="NDbUnit.Test.build" />
     <None Include="Properties\Settings.settings">
@@ -178,27 +167,10 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Include="SqlLite\test.sqlite.db" />
-    <None Include="Xml\MySql\UserDS4MySql.xsc">
-      <DependentUpon>UserDS4MySql.xsd</DependentUpon>
-    </None>
     <None Include="Xml\MySql\UserDS4MySql.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>UserDS4MySql.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Xml\MySql\UserDS4MySql.xss">
-      <DependentUpon>UserDS4MySql.xsd</DependentUpon>
-    </None>
-    <None Include="Xml\northwind.xsc">
-      <DependentUpon>northwind.xsd</DependentUpon>
-    </None>
-    <None Include="Xml\northwind.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>northwind.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="Xml\northwind.xss">
-      <DependentUpon>northwind.xsd</DependentUpon>
     </None>
     <None Include="Xml\SqlServerCeDataSet.xsd">
       <Generator>MSDataSetGenerator</Generator>
