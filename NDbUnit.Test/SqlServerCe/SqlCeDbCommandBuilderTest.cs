@@ -39,7 +39,7 @@ namespace NDbUnit.Test.SqlServerCe
         {
             commandBuilder =
                 new SqlCeDbCommandBuilder(DbConnection.SqlCeConnectionString);
-            string xsdFile = XmlTestFiles.XmlSchemaFileForSqlServerCe;
+            string xsdFile = XmlTestFiles.SqlServerCe.XmlSchemaFile;
             commandBuilder.BuildCommands(xsdFile);
         }
 
@@ -55,7 +55,7 @@ namespace NDbUnit.Test.SqlServerCe
         public void TestGetSchema()
         {
             SqlCeDbCommandBuilder builder = new SqlCeDbCommandBuilder(DbConnection.SqlCeConnectionString);
-            builder.BuildCommands(XmlTestFiles.XmlSchemaFileForSqlServerCe);
+            builder.BuildCommands(XmlTestFiles.SqlServerCe.XmlSchemaFile);
             DataSet schema = builder.GetSchema();
 
             Assert.AreEqual(3, schema.Tables.Count, "Exptected 3 tables in dataset");

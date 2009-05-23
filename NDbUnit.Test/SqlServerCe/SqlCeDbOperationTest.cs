@@ -41,8 +41,8 @@ namespace NDbUnit.Test.SqlServerCe
         {
             commandBuilder = new SqlCeDbCommandBuilder(DbConnection.SqlCeConnectionString);
 
-            string xmlSchemaFile = XmlTestFiles.XmlSchemaFileForSqlServerCe;
-            xmlFile = XmlTestFiles.XmlFile;
+            string xmlSchemaFile = XmlTestFiles.SqlServerCe.XmlSchemaFile;
+            xmlFile = XmlTestFiles.SqlServerCe.XmlFile;
 
             try
             {
@@ -172,7 +172,7 @@ namespace NDbUnit.Test.SqlServerCe
             {
                 DataSet dsSchema = commandBuilder.GetSchema();
                 DataSet ds = dsSchema.Clone();
-                string xmlFile = XmlTestFiles.XmlModFile;
+                string xmlFile = XmlTestFiles.SqlServerCe.XmlModFile;
                 ds.ReadXml(xmlFile);
 
                 sqlTransaction = commandBuilder.Connection.BeginTransaction();
@@ -201,7 +201,7 @@ namespace NDbUnit.Test.SqlServerCe
             {
                 DataSet dsSchema = commandBuilder.GetSchema();
                 DataSet ds = dsSchema.Clone();
-                string xmlFile = XmlTestFiles.XmlRefreshFile;
+                string xmlFile = XmlTestFiles.SqlServerCe.XmlRefreshFile;
                 ds.ReadXml(xmlFile);
 
                 sqlTransaction = commandBuilder.Connection.BeginTransaction();

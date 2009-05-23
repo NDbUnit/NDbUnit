@@ -38,8 +38,8 @@ namespace NDbUnit.Test.OleDb
             _oleTest.OleOleDbType = OleDbType.SqlServer;
 //			_oleTest.QuotePrefix = "[";
 //			_oleTest.QuoteSuffix = "]";
-            _oleTest.ReadXmlSchema(XmlTestFiles.XmlSchemaFile);
-            _oleTest.ReadXml(XmlTestFiles.XmlFile);
+            _oleTest.ReadXmlSchema(XmlTestFiles.OleDb.XmlSchemaFile);
+            _oleTest.ReadXml(XmlTestFiles.OleDb.XmlFile);
             _oleTest.PerformDbOperation(DbOperationFlag.DeleteAll);
         }
 

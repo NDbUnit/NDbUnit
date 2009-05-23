@@ -48,7 +48,7 @@ namespace NDbUnit.Test.SqlLite
         [Test]
         public void TestBuildCommands()
         {
-            string xsdFile = XmlTestFiles.xmlSchemaFileForSQLite;
+            string xsdFile = XmlTestFiles.Sqlite.XmlSchemaFile;
             _sqlDbCommandBuilder.BuildCommands(xsdFile);
         }
 

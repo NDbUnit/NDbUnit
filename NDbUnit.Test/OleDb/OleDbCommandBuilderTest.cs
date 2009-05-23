@@ -39,7 +39,7 @@ namespace NDbUnit.Test.OleDb
         {
             _oleDbCommandBuilder =
                 new OleDbCommandBuilder(DbConnection.OleDbConnectionString);
-            string xsdFile = XmlTestFiles.XmlSchemaFile;
+            string xsdFile = XmlTestFiles.OleDb.XmlSchemaFile;
             _oleDbCommandBuilder.BuildCommands(xsdFile);
         }
 
@@ -56,7 +56,7 @@ namespace NDbUnit.Test.OleDb
         public void TestGetSchema()
         {
             OleDbCommandBuilder builder = new OleDbCommandBuilder(DbConnection.OleDbConnectionString);
-            builder.BuildCommands(XmlTestFiles.XmlSchemaFile);
+            builder.BuildCommands(XmlTestFiles.OleDb.XmlSchemaFile);
             DataSet schema = builder.GetSchema();
 
             Assert.AreEqual(3, schema.Tables.Count, "Exptected 3 tables in dataset");

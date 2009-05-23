@@ -49,10 +49,10 @@ namespace NDbUnit.Test.SqlServerCe
         [SetUp]
         public void SetUp()
         {
-            mockSchemaFileStream = new FileStream(XmlTestFiles.XmlSchemaFileForSqlServerCe, FileMode.Open,
+            mockSchemaFileStream = new FileStream(XmlTestFiles.SqlServerCe.XmlSchemaFile, FileMode.Open,
                                                   FileAccess.Read, FileShare.Read);
 
-            mockDataFileStream = new FileStream(XmlTestFiles.XmlFile, FileMode.Open);
+            mockDataFileStream = new FileStream(XmlTestFiles.SqlServerCe.XmlFile, FileMode.Open);
 
             mocker = new MockRepository();
             mockDbCommandBuilder = mocker.CreateMock<IDbCommandBuilder>();
@@ -103,7 +103,7 @@ namespace NDbUnit.Test.SqlServerCe
             SetupResult.For(mockDbCommandBuilder.GetSchema()).Return(dummyDS);
 
             mocker.ReplayAll();
-            sqlCeTest.ReadXmlSchema(XmlTestFiles.XmlSchemaFileForSqlServerCe);
+            sqlCeTest.ReadXmlSchema(XmlTestFiles.SqlServerCe.XmlSchemaFile);
             DataSet copyOfDataSet = sqlCeTest.TestDataSet;
             Assert.IsNotNull(copyOfDataSet.Tables["dummyTable"], "Expected to see dummy table");
         }
@@ -113,7 +113,7 @@ namespace NDbUnit.Test.SqlServerCe
         public void TestReadXmlDataFileWithoutFirstCallingReadXmlSchemaThrowsException()
         {
             mocker.ReplayAll();
-            sqlCeTest.ReadXml(XmlTestFiles.XmlFile);
+            sqlCeTest.ReadXml(XmlTestFiles.SqlServerCe.XmlFile);
         }
 
         [Test]
@@ -122,12 +122,12 @@ namespace NDbUnit.Test.SqlServerCe
             //expectations
             mockDbCommandBuilder.BuildCommands(mockSchemaFileStream);
             DataSet dummyDS = new DataSet();
-            dummyDS.ReadXmlSchema(XmlTestFiles.XmlSchemaFileForSqlServerCe);
+            dummyDS.ReadXmlSchema(XmlTestFiles.SqlServerCe.XmlSchemaFile);
             SetupResult.For(mockDbCommandBuilder.GetSchema()).Return(dummyDS);
 
             mocker.ReplayAll();
-            sqlCeTest.ReadXmlSchema(XmlTestFiles.XmlSchemaFileForSqlServerCe);
-            sqlCeTest.ReadXml(XmlTestFiles.XmlFile);
+            sqlCeTest.ReadXmlSchema(XmlTestFiles.SqlServerCe.XmlSchemaFile);
+            sqlCeTest.ReadXml(XmlTestFiles.SqlServerCe.XmlFile);
             DataSet copyOfDataSet = sqlCeTest.TestDataSet;
             Assert.AreEqual(3, copyOfDataSet.Tables.Count, "Expected 3 tables");
             Assert.AreEqual("Role", copyOfDataSet.Tables[0].TableName, "Wrong table");
@@ -158,7 +158,7 @@ namespace NDbUnit.Test.SqlServerCe
             //expectations
             mockDbCommandBuilder.BuildCommands(mockSchemaFileStream);
             DataSet dummyDS = new DataSet();
-            dummyDS.ReadXmlSchema(XmlTestFiles.XmlSchemaFileForSqlServerCe);
+            dummyDS.ReadXmlSchema(XmlTestFiles.SqlServerCe.XmlSchemaFile);
             SetupResult.For(mockDbCommandBuilder.GetSchema()).Return(dummyDS);
             SetupResult.For(mockDbCommandBuilder.Connection).Return(mockConnection);
             mockConnection.Open();
@@ -173,8 +173,8 @@ namespace NDbUnit.Test.SqlServerCe
             //end expectations
 
             mocker.ReplayAll();
-            sqlCeTest.ReadXmlSchema(XmlTestFiles.XmlSchemaFileForSqlServerCe);
-            sqlCeTest.ReadXml(XmlTestFiles.XmlFile);
+            sqlCeTest.ReadXmlSchema(XmlTestFiles.SqlServerCe.XmlSchemaFile);
+            sqlCeTest.ReadXml(XmlTestFiles.SqlServerCe.XmlFile);
             sqlCeTest.PerformDbOperation(DbOperationFlag.Update);
 
             DataSet copyOfDataSet = sqlCeTest.TestDataSet;

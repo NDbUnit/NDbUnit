@@ -44,8 +44,8 @@ namespace NDbUnit.Test.OleDb
                 new Core.OleDb.OleDbCommandBuilder(DbConnection.OleDbConnectionString);
             _oleDbOperation = new OleDbOperation();
 
-				string xmlSchemaFile = XmlTestFiles.XmlSchemaFile;
-				string xmlFile = XmlTestFiles.XmlFile;
+				string xmlSchemaFile = XmlTestFiles.OleDb.XmlSchemaFile;
+				string xmlFile = XmlTestFiles.OleDb.XmlFile;
 
 				try
 				{
@@ -176,7 +176,7 @@ namespace NDbUnit.Test.OleDb
 			{
 				DataSet dsSchema = _oleDbCommandBuilder.GetSchema();
 				DataSet ds = dsSchema.Clone();
-				string xmlFile = XmlTestFiles.XmlModFile;
+				string xmlFile = XmlTestFiles.OleDb.XmlModFile;
 				ds.ReadXml(xmlFile);
 
 				oleDbTransaction = _oleDbCommandBuilder.Connection.BeginTransaction();
@@ -205,7 +205,7 @@ namespace NDbUnit.Test.OleDb
 			{
 				DataSet dsSchema = _oleDbCommandBuilder.GetSchema();
 				DataSet ds = dsSchema.Clone();
-				string xmlFile = XmlTestFiles.XmlRefreshFile;
+				string xmlFile = XmlTestFiles.OleDb.XmlRefreshFile;
 				ds.ReadXml(xmlFile);
 
 				oleDbTransaction = _oleDbCommandBuilder.Connection.BeginTransaction();

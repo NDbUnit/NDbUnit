@@ -34,8 +34,8 @@ namespace NDbUnit.Test.Mysql
         public void SetUp()
         {
             _mysqlTest = new MySqlDbUnitTest(DbConnection.MysqlConnectionString);
-            _mysqlTest.ReadXmlSchema(XmlTestFiles.MySqlTestFiles.XmlSchemaFile);
-            _mysqlTest.ReadXml(XmlTestFiles.MySqlTestFiles.XmlFile);
+            _mysqlTest.ReadXmlSchema(XmlTestFiles.MySql.XmlSchemaFile);
+            _mysqlTest.ReadXml(XmlTestFiles.MySql.XmlFile);
             _mysqlTest.PerformDbOperation(DbOperationFlag.DeleteAll);
         }
 

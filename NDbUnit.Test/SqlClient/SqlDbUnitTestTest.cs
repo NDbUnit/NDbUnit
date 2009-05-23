@@ -36,8 +36,8 @@ namespace NDbUnit.Test.SqlClient
 		public void SetUp()
 		{
 			_sqlTest = new SqlDbUnitTest(DbConnection.SqlConnectionString);
-			_sqlTest.ReadXmlSchema(XmlTestFiles.XmlSchemaFile);
-			_sqlTest.ReadXml(XmlTestFiles.XmlFile);
+			_sqlTest.ReadXmlSchema(XmlTestFiles.SqlServer.XmlSchemaFile);
+			_sqlTest.ReadXml(XmlTestFiles.SqlServer.XmlFile);
 			_sqlTest.PerformDbOperation(DbOperationFlag.DeleteAll);
 		}
 

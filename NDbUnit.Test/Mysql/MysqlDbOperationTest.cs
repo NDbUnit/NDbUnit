@@ -41,8 +41,8 @@ namespace NDbUnit.Test.Mysql
         {
             if (false == _built)
             {
-                string xmlSchemaFile = XmlTestFiles.MySqlTestFiles.XmlSchemaFile;
-                string xmlFile = XmlTestFiles.MySqlTestFiles.XmlFile;
+                string xmlSchemaFile = XmlTestFiles.MySql.XmlSchemaFile;
+                string xmlFile = XmlTestFiles.MySql.XmlFile;
 
                 try
                 {
@@ -172,7 +172,7 @@ namespace NDbUnit.Test.Mysql
             {
                 DataSet dsSchema = _mysqlDbCommandBuilder.GetSchema();
                 DataSet ds = dsSchema.Clone();
-                string xmlFile = XmlTestFiles.MySqlTestFiles.XmlModFile;
+                string xmlFile = XmlTestFiles.MySql.XmlModFile;
                 ds.ReadXml(xmlFile);
 
                 mysqlTransaction = _mysqlDbCommandBuilder.Connection.BeginTransaction();
@@ -201,7 +201,7 @@ namespace NDbUnit.Test.Mysql
             {
                 DataSet dsSchema = _mysqlDbCommandBuilder.GetSchema();
                 DataSet ds = dsSchema.Clone();
-                string xmlFile = XmlTestFiles.MySqlTestFiles.XmlRefreshFile;
+                string xmlFile = XmlTestFiles.MySql.XmlRefreshFile;
                 ds.ReadXml(xmlFile);
 
                 mysqlTransaction = _mysqlDbCommandBuilder.Connection.BeginTransaction();

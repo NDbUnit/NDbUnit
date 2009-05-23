@@ -36,8 +36,8 @@ namespace NDbUnit.Test.SqlLite
         public void SetUp()
         {
             _sqlLiteTest = new SqlLiteUnitTest(DbConnection.SqlLiteConnectionString);
-            _sqlLiteTest.ReadXmlSchema(XmlTestFiles.xmlSchemaFileForSQLite);
-            _sqlLiteTest.ReadXml(XmlTestFiles.XmlFile);
+            _sqlLiteTest.ReadXmlSchema(XmlTestFiles.Sqlite.XmlSchemaFile);
+            _sqlLiteTest.ReadXml(XmlTestFiles.Sqlite.XmlFile);
             _sqlLiteTest.PerformDbOperation(DbOperationFlag.DeleteAll);
         }
 

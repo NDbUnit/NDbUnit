@@ -140,7 +140,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="SqlClient\ReproduceIncorrectDeleteOrderBugReportTest.cs" />
     <Compile Include="SqlClient\SqlDbCommandBuilderTest.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -160,6 +159,21 @@
     <Compile Include="XmlTestFiles.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Xml\OleDb\UserDS.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UserDS.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Xml\SQLite\UserDS.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UserDS.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Xml\SqlServer\UserDS.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UserDS.xsd</DependentUpon>
+    </Compile>
     <None Include="app.config" />
     <None Include="NDbUnit.Test.build" />
     <None Include="Properties\Settings.settings">
@@ -172,27 +186,41 @@
       <LastGenOutput>UserDS4MySql.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
-    <None Include="Xml\SqlServerCeDataSet.xsd">
+    <Content Include="Xml\OleDb\UserDS.xsd">
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>SqlServerCeDataSet.Designer.cs</LastGenOutput>
+      <LastGenOutput>UserDS.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Xml\UserDS.xsc">
+    </Content>
+    <None Include="Xml\OleDb\UserDS.xsc">
       <DependentUpon>UserDS.xsd</DependentUpon>
     </None>
-    <None Include="Xml\UserDS.xss">
+    <None Include="Xml\OleDb\UserDS.xss">
       <DependentUpon>UserDS.xsd</DependentUpon>
     </None>
-    <None Include="Xml\UserDS4SQLite.xsc">
-      <DependentUpon>UserDS4SQLite.xsd</DependentUpon>
-    </None>
-    <None Include="Xml\UserDS4SQLite.xsd">
+    <None Include="Xml\SqlServerCe\UserDS.xsd">
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>UserDS4SQLite.Designer.cs</LastGenOutput>
+      <LastGenOutput>UserDS.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
-    <None Include="Xml\UserDS4SQLite.xss">
-      <DependentUpon>UserDS4SQLite.xsd</DependentUpon>
+    <Content Include="Xml\OleDb\User.xml" />
+    <Content Include="Xml\OleDb\UserMod.xml" />
+    <Content Include="Xml\OleDb\UserRefresh.xml" />
+    <Content Include="Xml\SqlServer\User.xml" />
+    <Content Include="Xml\SqlServer\UserDS.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>UserDS.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </Content>
+    <None Include="Xml\SqlServer\UserDS.xsc">
+      <DependentUpon>UserDS.xsd</DependentUpon>
+    </None>
+    <None Include="Xml\SqlServer\UserDS.xss">
+      <DependentUpon>UserDS.xsd</DependentUpon>
+    </None>
+    <None Include="Xml\SQLite\UserDS.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>UserDS.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </None>
     <Content Include="Scripts\mysql-testdb-create.sql" />
     <Content Include="Scripts\sqlite-testdb-create.sql" />
@@ -203,14 +231,14 @@
     <Content Include="Xml\MySql\User.xml" />
     <Content Include="Xml\MySql\UserMod.xml" />
     <Content Include="Xml\MySql\UserRefresh.xml" />
-    <Content Include="Xml\User.xml" />
-    <Content Include="Xml\UserDS.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <SubType>Designer</SubType>
-      <LastGenOutput>UserDS.Designer.cs</LastGenOutput>
-    </Content>
-    <Content Include="Xml\UserMod.xml" />
-    <Content Include="Xml\UserRefresh.xml" />
+    <Content Include="Xml\SQLite\User.xml" />
+    <Content Include="Xml\SQLite\UserMod.xml" />
+    <Content Include="Xml\SQLite\UserRefresh.xml" />
+    <Content Include="Xml\SqlServer\UserMod.xml" />
+    <Content Include="Xml\SqlServer\UserRefresh.xml" />
+    <Content Include="Xml\SqlServerCe\User.xml" />
+    <Content Include="Xml\SqlServerCe\UserMod.xml" />
+    <Content Include="Xml\SqlServerCe\UserRefresh.xml" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

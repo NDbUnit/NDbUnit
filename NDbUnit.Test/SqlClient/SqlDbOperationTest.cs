@@ -41,8 +41,8 @@ namespace NDbUnit.Test.SqlClient
         {
             if (false == _built)
             {
-                string xmlSchemaFile = XmlTestFiles.XmlSchemaFile;
-                string xmlFile = XmlTestFiles.XmlFile;
+                string xmlSchemaFile = XmlTestFiles.SqlServer.XmlSchemaFile;
+                string xmlFile = XmlTestFiles.SqlServer.XmlFile;
 
 				try
 				{
@@ -170,7 +170,7 @@ namespace NDbUnit.Test.SqlClient
             {
                 DataSet dsSchema = _sqlDbCommandBuilder.GetSchema();
                 DataSet ds = dsSchema.Clone();
-                string xmlFile = XmlTestFiles.XmlModFile;
+                string xmlFile = XmlTestFiles.SqlServer.XmlModFile;
                 ds.ReadXml(xmlFile);
 
 				sqlTransaction = _sqlDbCommandBuilder.Connection.BeginTransaction();
@@ -199,7 +199,7 @@ namespace NDbUnit.Test.SqlClient
             {
                 DataSet dsSchema = _sqlDbCommandBuilder.GetSchema();
                 DataSet ds = dsSchema.Clone();
-                string xmlFile = XmlTestFiles.XmlRefreshFile;
+                string xmlFile = XmlTestFiles.SqlServer.XmlRefreshFile;
                 ds.ReadXml(xmlFile);
 
 				sqlTransaction = _sqlDbCommandBuilder.Connection.BeginTransaction();

@@ -41,8 +41,8 @@ namespace NDbUnit.Test.SqlLite
         {
             if (false == _built)
             {
-                string xmlSchemaFile = XmlTestFiles.xmlSchemaFileForSQLite;
-                string xmlFile = XmlTestFiles.XmlFile;
+                string xmlSchemaFile = XmlTestFiles.Sqlite.XmlSchemaFile;
+                string xmlFile = XmlTestFiles.Sqlite.XmlFile;
 
                 try
                 {
@@ -171,7 +171,7 @@ namespace NDbUnit.Test.SqlLite
             {
                 DataSet dsSchema = _sqlDbCommandBuilder.GetSchema();
                 DataSet ds = dsSchema.Clone();
-                string xmlFile = XmlTestFiles.XmlModFile;
+                string xmlFile = XmlTestFiles.Sqlite.XmlModFile;
                 ds.ReadXml(xmlFile);
 
                 sqlTransaction = _sqlDbCommandBuilder.Connection.BeginTransaction();
@@ -200,7 +200,7 @@ namespace NDbUnit.Test.SqlLite
             {
                 DataSet dsSchema = _sqlDbCommandBuilder.GetSchema();
                 DataSet ds = dsSchema.Clone();
-                string xmlFile = XmlTestFiles.XmlRefreshFile;
+                string xmlFile = XmlTestFiles.Sqlite.XmlRefreshFile;
                 ds.ReadXml(xmlFile);
 
                 sqlTransaction = _sqlDbCommandBuilder.Connection.BeginTransaction();

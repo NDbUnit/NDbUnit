@@ -47,7 +47,7 @@ namespace NDbUnit.Test.SqlClient
 		[Test]
 		public void TestBuildCommands()
 		{
-			string xsdFile = XmlTestFiles.XmlSchemaFile;
+			string xsdFile = XmlTestFiles.SqlServer.XmlSchemaFile;
 			_sqlDbCommandBuilder.BuildCommands(xsdFile);
 		}
 

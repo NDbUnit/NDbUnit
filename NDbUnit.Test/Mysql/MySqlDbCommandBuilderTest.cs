@@ -48,7 +48,7 @@ namespace NDbUnit.Test.Mysql
         [Test]
         public void TestBuildCommands()
         {
-            string xsdFile = XmlTestFiles.MySqlTestFiles.XmlSchemaFile;
+            string xsdFile = XmlTestFiles.MySql.XmlSchemaFile;
             _mySqlDbCommandBuilder.BuildCommands(xsdFile);
         }
 
