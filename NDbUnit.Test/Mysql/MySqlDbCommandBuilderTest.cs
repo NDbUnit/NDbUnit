@@ -1,159 +1,115 @@
-/*
- *
- * NDbUnit
- * Copyright (C)2005
- * http://code.google.com/p/ndbunit
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- */
-
-using System;
-using System.Data;
-using MySql.Data.MySqlClient;
-using MbUnit.Framework;
-using NDbUnit.Core.MySqlClient;
+﻿using System;
 using System.Collections.Generic;
+using System.Text;
+using NDbUnit.Core.SqlClient;
+using MbUnit.Framework;
+using NDbUnit.Core;
+using NDbUnit.Core.MySqlClient;
 
-namespace NDbUnit.Test.Mysql
+namespace NDbUnit.Test.SqlClient
 {
     [TestFixture]
-    public class MySqlDbCommandBuilderTest
+    class MySqlDbCommandBuilderTest : NDbUnit.Test.Common.DbCommandBuilderTestBase
     {
-        private MySqlDbCommandBuilder _mySqlDbCommandBuilder = new MySqlDbCommandBuilder(DbConnection.MysqlConnectionString);
-
-        private bool IsEmptyCommand(IDbCommand mySqlCommand)
+        public override IList<string> ExpectedDataSetTableNames
         {
-            return (null == mySqlCommand || string.IsNullOrEmpty(mySqlCommand.CommandText));
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            Console.Out.Flush();
-        }
-
-        [Test]
-        public void TestBuildCommands()
-        {
-            string xsdFile = XmlTestFiles.MySql.XmlSchemaFile;
-            _mySqlDbCommandBuilder.BuildCommands(xsdFile);
-        }
-
-        [Test]
-        public void TestGetSchema()
-        {
-            TestBuildCommands();
-
-            _mySqlDbCommandBuilder.GetSchema();
-        }
-
-        [Test]
-        public void TestGetSelectCommand()
-        {
-            TestBuildCommands();
-
-            DataSet ds = _mySqlDbCommandBuilder.GetSchema();
-            foreach (DataTable dataTable in ds.Tables)
+            get
             {
-                IDbCommand mySqlCommand = _mySqlDbCommandBuilder.GetSelectCommand(dataTable.TableName);
-
-                Console.WriteLine("Table '" + dataTable.TableName + "' select command");
-                Console.WriteLine("\t" + mySqlCommand.CommandText);
+                return new List<string>()
+                {
+                    "Role", "User", "UserRole" 
+                };
             }
         }
 
-        [Test]
-        public void TestGetInsertCommand()
+        public override IList<string> ExpectedDeleteAllCommands
         {
-            TestBuildCommands();
-
-            DataSet ds = _mySqlDbCommandBuilder.GetSchema();
-            foreach (DataTable dataTable in ds.Tables)
+            get
             {
-                IDbCommand mySqlCommand = _mySqlDbCommandBuilder.GetInsertCommand( dataTable.TableName);
-                Assert.IsTrue(!IsEmptyCommand(mySqlCommand), "Insert command was not set");
-
-                Console.WriteLine("Table '" + dataTable.TableName + "' insert command");
-                Console.WriteLine("\t" + mySqlCommand.CommandText);
+                return new List<string>()
+                {
+                    "DELETE FROM Role",
+                    "DELETE FROM User",
+                    "DELETE FROM UserRole"
+                };
             }
         }
 
-        [Test]
-        public void TestGetInsertIdentityCommand()
+        public override IList<string> ExpectedDeleteCommands
         {
-            TestBuildCommands();
-
-            DataSet ds = _mySqlDbCommandBuilder.GetSchema();
-            foreach (DataTable dataTable in ds.Tables)
+            get
             {
-                IDbCommand mySqlCommand = _mySqlDbCommandBuilder.GetInsertIdentityCommand(dataTable.TableName);
-                Assert.IsTrue(!IsEmptyCommand(mySqlCommand), "Insert identity command was not set");
-
-                Console.WriteLine("Table '" + dataTable.TableName + "' insert identity command");
-                Console.WriteLine("\t" + mySqlCommand.CommandText);
+                return new List<string>()
+                {
+                    "DELETE FROM Role WHERE ID=?p1",
+                    "DELETE FROM User WHERE ID=?p1",
+                    "DELETE FROM UserRole WHERE UserID=?p1 AND RoleID=?p2"
+                };
             }
         }
 
-        [Test]
-        public void TestGetDeleteCommand()
+        public override IList<string> ExpectedInsertCommands
         {
-            TestBuildCommands();
-
-            DataSet ds = _mySqlDbCommandBuilder.GetSchema();
-            foreach (DataTable dataTable in ds.Tables)
+            get
             {
-                IDbCommand mySqlCommand = _mySqlDbCommandBuilder.GetDeleteCommand(dataTable.TableName);
-                Assert.IsTrue(!IsEmptyCommand(mySqlCommand), "Delete command was not set");
+                return new List<string>()
+                {
+                    "INSERT INTO Role(ID, Name, Description) VALUES(?p1, ?p2, ?p3)",
+                    "INSERT INTO User(ID, FirstName, LastName, Age, SupervisorID) VALUES(?p1, ?p2, ?p3, ?p4, ?p5)",
+                    "INSERT INTO UserRole(UserID, RoleID) VALUES(?p1, ?p2)"
+                };
 
-                Console.WriteLine("Table '" + dataTable.TableName + "' delete command");
-                Console.WriteLine("\t" + mySqlCommand.CommandText);
             }
         }
 
-        [Test]
-        public void TestGetDeleteAllCommand()
+        public override IList<string> ExpectedInsertIdentityCommands
         {
-            TestBuildCommands();
-
-            DataSet ds = _mySqlDbCommandBuilder.GetSchema();
-            foreach (DataTable dataTable in ds.Tables)
+            get
             {
-                IDbCommand mySqlCommand = _mySqlDbCommandBuilder.GetDeleteAllCommand(dataTable.TableName);
-                Assert.IsTrue(!IsEmptyCommand(mySqlCommand), "Delete all command was not set");
-
-                Console.WriteLine("Table '" + dataTable.TableName + "' delete all command");
-                Console.WriteLine("\t" + mySqlCommand.CommandText);
+                return new List<string>()
+                {
+                    "INSERT INTO Role(ID, Name, Description) VALUES(?p1, ?p2, ?p3)",
+                    "INSERT INTO User(ID, FirstName, LastName, Age, SupervisorID) VALUES(?p1, ?p2, ?p3, ?p4, ?p5)",
+                    "INSERT INTO UserRole(UserID, RoleID) VALUES(?p1, ?p2)"
+                };
             }
         }
 
-        [Test]
-        public void TestGetUpdateCommand()
+        public override IList<string> ExpectedSelectCommands
         {
-            TestBuildCommands();
-
-            DataSet ds = _mySqlDbCommandBuilder.GetSchema();
-            foreach (DataTable dataTable in ds.Tables)
+            get
             {
-                IDbCommand mySqlCommand = _mySqlDbCommandBuilder.GetUpdateCommand(dataTable.TableName);
-                Assert.IsTrue(!IsEmptyCommand(mySqlCommand), "Update command was not set");
-
-                Console.WriteLine("Table '" + dataTable.TableName + "' update command");
-                Console.WriteLine("\t" + mySqlCommand.CommandText);
+                return new List<string>()
+                {
+                    "SELECT ID, Name, Description FROM Role",
+                    "SELECT ID, FirstName, LastName, Age, SupervisorID FROM User",
+                    "SELECT UserID, RoleID FROM UserRole"
+                };
             }
         }
+
+        public override IList<string> ExpectedUpdateCommands
+        {
+            get
+            {
+                return new List<string>()
+                {
+                    "UPDATE Role SET Name=?p2, Description=?p3 WHERE ID=?p1",
+                    "UPDATE User SET FirstName=?p2, LastName=?p3, Age=?p4, SupervisorID=?p5 WHERE ID=?p1",
+                    "UPDATE UserRole SET UserID=?p2, RoleID=?p4 WHERE UserID=?p1 AND RoleID=?p3"
+                };
+            }
+        }
+
+        protected override IDbCommandBuilder GetDbCommandBuilder()
+        {
+            return new MySqlDbCommandBuilder(DbConnection.MySqlConnectionString);
+        }
+
+        protected override string GetXmlSchemaFilename()
+        {
+            return XmlTestFiles.MySql.XmlSchemaFile;
+        }
+
     }
 }
-

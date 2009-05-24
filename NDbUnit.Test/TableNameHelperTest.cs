@@ -27,10 +27,10 @@ using MbUnit.Framework;
 namespace NDbUnit.Test
 {
     [TestFixture]
-    public class WhenInitialTableNameContainsNoEscapeCharactersAndEscapeCharactersAreProvided
+    public class When_Initial_TableName_Contains_No_Escape_Characters_And_Escape_Characters_Are_Provided
     {
         [Test]
-        public void ReturnsProperlyEscapedTableName()
+        public void Returns_Properly_Escaped_TableName()
         {
             const string INITIAL_TABLENAME = "schema.tablename";
             const string ESCAPED_TABLENAME = "[schema].[tablename]";
@@ -41,10 +41,10 @@ namespace NDbUnit.Test
     }
 
     [TestFixture]
-    public class WhenInitialTableNameContainsSingleElementAndEscapeCharactersAreProvided
+    public class When_Initial_TableName_Contains_Single_Element_And_Escape_Characters_Are_Provided
     {
         [Test]
-        public void ReturnsProperlyEscapedTableName()
+        public void Returns_Properly_Escaped_TableName()
         {
             const string INITIAL_TABLENAME = "tablename";
             const string ESCAPED_TABLENAME = "[tablename]";
@@ -55,10 +55,10 @@ namespace NDbUnit.Test
     }
 
     [TestFixture]
-    public class WhenInitialTableNameContainsSingleElementAndExtraLeadingDelimeter
+    public class When_Initial_TableName_Contains_Single_Element_And_Extra_Leading_Delimeter
     {
         [Test]
-        public void ReturnsProperlyEscapedTableName()
+        public void Returns_Properly_Escaped_TableName()
         {
             const string INITIAL_TABLENAME = ".tablename";
             const string ESCAPED_TABLENAME = "[tablename]";
@@ -69,10 +69,10 @@ namespace NDbUnit.Test
     }
 
     [TestFixture]
-    public class WhenInitialTableNameContainsSingleElementAndExtraTrailingDelimeter
+    public class When_Initial_TableName_Contains_Single_Element_And_Extra_Trailing_Delimeter
     {
         [Test]
-        public void ReturnsProperlyEscapedTableName()
+        public void Returns_Properly_Escaped_TableName()
         {
             const string INITIAL_TABLENAME = "tablename.";
             const string ESCAPED_TABLENAME = "[tablename]";
@@ -83,10 +83,10 @@ namespace NDbUnit.Test
     }
 
     [TestFixture]
-    public class WhenInitialTableNameContainsEscapeCharactersAndEscapeCharactersAreProvided
+    public class When_Initial_TableName_Contains_Escape_Characters_And_Escape_Characters_Are_Provided
     {
         [Test]
-        public void ReturnsOriginalTableName()
+        public void Returns_Original_TableName()
         {
             const string INITIAL_TABLENAME = "[schema].[tablename]";
 
@@ -97,10 +97,10 @@ namespace NDbUnit.Test
 
 
     [TestFixture]
-    public class WhenInitialTableNameContainsNoEscapeCharactersAndNoEscapeCharactersAreProvided
+    public class When_Initial_TableName_Contains_No_Escape_Characters_And_No_Escape_Characters_Are_Provided
     {
         [Test]
-        public void ReturnsOriginalTableName()
+        public void Returns_Original_TableName()
         {
             const string INITIAL_TABLENAME = "schema.tablename";
 
@@ -109,10 +109,10 @@ namespace NDbUnit.Test
     }
 
     [TestFixture]
-    public class WhenInitialTableNameContainsEscapeCharactersAndNoEscapeCharactersAreProvided
+    public class When_Initial_TableName_Contains_Escape_Characters_And_No_Escape_Characters_Are_Provided
     {
         [Test]
-        public void ReturnsOriginalTableName()
+        public void Returns_Original_TableName()
         {
             const string INITIAL_TABLENAME = "[schema].[tablename]";
 
@@ -121,10 +121,10 @@ namespace NDbUnit.Test
     }
 
     [TestFixture]
-    public class WhenInitialTableNameContainsEscapeCharactersForASingleElementAndEscapeCharactersAreProvided
+    public class When_Initial_TableName_Contains_Escape_Characters_For_A_Single_Element_And_Escape_Characters_Are_Provided
     {
         [Test]
-        public void ReturnsProperlyEscapedTableName()
+        public void Returns_Properly_Escaped_TableName()
         {
             const string INITIAL_TABLENAME = "[schema].tablename";
             const string ESCAPED_TABLENAME = "[schema].[tablename]";

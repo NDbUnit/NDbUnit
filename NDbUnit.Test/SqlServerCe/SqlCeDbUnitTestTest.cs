@@ -28,191 +28,236 @@ using NDbUnit.Core;
 using NDbUnit.Core.SqlServerCe;
 using MbUnit.Framework;
 using Rhino.Mocks;
-using Is=Rhino.Mocks.Constraints.Is;
+using Is = Rhino.Mocks.Constraints.Is;
 
 namespace NDbUnit.Test.SqlServerCe
 {
     [TestFixture]
     public class SqlCeDbUnitTestTestCase
     {
-        private TestableSqlCeUnitTest sqlCeTest;
-        private MockRepository mocker;
-        private static IDbCommandBuilder mockDbCommandBuilder;
-        private static IDbOperation mockDbOperation;
-        private static FileStream mockSchemaFileStream;
-        private static FileStream mockDataFileStream;
-        private IDbConnection mockConnection;
-        private bool preOperationCalled;
-        private bool postOperationCalled;
-        private IDbTransaction mockTransaction;
+        private IDbConnection _mockConnection;
+
+        private static FileStream _mockDataFileStream;
+
+        private static IDbCommandBuilder _mockDbCommandBuilder;
+
+        private static IDbOperation _mockDbOperation;
+
+        private MockRepository _mocker;
+
+        private static FileStream _mockSchemaFileStream;
+
+        private IDbTransaction _mockTransaction;
+
+        private bool _postOperationCalled;
+
+        private bool _preOperationCalled;
+
+        private SqlCeUnitTestStub _sqlCeTest;
 
         [SetUp]
-        public void SetUp()
+        public void _SetUp()
         {
-            mockSchemaFileStream = new FileStream(XmlTestFiles.SqlServerCe.XmlSchemaFile, FileMode.Open,
+            _mockSchemaFileStream = new FileStream(XmlTestFiles.SqlServerCe.XmlSchemaFile, FileMode.Open,
                                                   FileAccess.Read, FileShare.Read);
 
-            mockDataFileStream = new FileStream(XmlTestFiles.SqlServerCe.XmlFile, FileMode.Open);
+            _mockDataFileStream = new FileStream(XmlTestFiles.SqlServerCe.XmlFile, FileMode.Open);
 
-            mocker = new MockRepository();
-            mockDbCommandBuilder = mocker.CreateMock<IDbCommandBuilder>();
-            mockDbOperation = mocker.CreateMock<IDbOperation>();
-            sqlCeTest = new TestableSqlCeUnitTest(DbConnection.SqlCeConnectionString);
-            mockConnection = mocker.CreateMock<IDbConnection>();
-            mockTransaction = mocker.CreateMock<IDbTransaction>();
+            _mocker = new MockRepository();
+            _mockDbCommandBuilder = _mocker.CreateMock<IDbCommandBuilder>();
+            _mockDbOperation = _mocker.CreateMock<IDbOperation>();
+            _sqlCeTest = new SqlCeUnitTestStub(DbConnection.SqlCeConnectionString);
+            _mockConnection = _mocker.CreateMock<IDbConnection>();
+            _mockTransaction = _mocker.CreateMock<IDbTransaction>();
         }
 
         [TearDown]
-        public void TearDown()
+        public void _TearDown()
         {
-            mocker.ReplayAll();
-            mocker.VerifyAll();
+            _mocker.ReplayAll();
+            _mocker.VerifyAll();
 
-            mockSchemaFileStream.Close();
-            mockDataFileStream.Close();
+            _mockSchemaFileStream.Close();
+            _mockDataFileStream.Close();
         }
 
         [Test]
-        [ExpectedException(typeof (NDbUnitException))]
-        public void TestCopyDataSetWhenIsNotInitializedThrowsException()
+        public void CopyDataSet_When_DataSet_Not_Initialized_Throws_Exception()
         {
-            sqlCeTest.CopyDataSet();
+            try
+            {
+                _sqlCeTest.CopyDataSet();
+                Assert.Fail("Expected Exception of Type NDbUnitException not Thrown!");
+            }
+            catch (NDbUnitException ex)
+            {
+                Assert.IsNotNull(ex);
+            }
         }
 
         [Test]
-        [ExpectedException(typeof (NDbUnitException))]
-        public void TestCopySchemaWhenIsNotInitializedThrowsException()
+
+        public void CopySchema_When_DataSet_Not_Initialized_Throws_Exception()
         {
-            sqlCeTest.CopySchema();
+            try
+            {
+                _sqlCeTest.CopySchema();
+                Assert.Fail("Expected Exception of Type NDbUnitException not Thrown!");
+            }
+            catch (NDbUnitException ex)
+            {
+                Assert.IsNotNull(ex);
+            }
         }
 
         [Test]
-        [ExpectedException(typeof (ArgumentException))]
-        public void TestReadXmlSchemaWithEmptyStringThrowsException()
+        public void PerformDbOperation_Raises_PreOperation_and_PostOperation_Events()
         {
-            sqlCeTest.ReadXmlSchema("");
+            _sqlCeTest.PreOperation += new PreOperationEvent(sqlCeTest_PreOperation);
+            _sqlCeTest.PostOperation += new PostOperationEvent(sqlCeTest_PostOperation);
+
+            //expectations
+            _mockDbCommandBuilder.BuildCommands(_mockSchemaFileStream);
+            DataSet dummyDS = new DataSet();
+            dummyDS.ReadXmlSchema(XmlTestFiles.SqlServerCe.XmlSchemaFile);
+            SetupResult.For(_mockDbCommandBuilder.GetSchema()).Return(dummyDS);
+            SetupResult.For(_mockDbCommandBuilder.Connection).Return(_mockConnection);
+            _mockConnection.Open();
+            SetupResult.For(_mockConnection.BeginTransaction()).Return(_mockTransaction);
+            _mockDbOperation.Update(dummyDS, _mockDbCommandBuilder, _mockTransaction);
+            LastCall.IgnoreArguments().Constraints(Is.TypeOf<DataSet>(), Is.Equal(_mockDbCommandBuilder),
+                                                   Is.Equal(_mockTransaction));
+            _mockTransaction.Commit();
+            SetupResult.For(_mockConnection.State).Return(ConnectionState.Open);
+            _mockConnection.Close();
+
+            //end expectations
+
+            _mocker.ReplayAll();
+            _sqlCeTest.ReadXmlSchema(XmlTestFiles.SqlServerCe.XmlSchemaFile);
+            _sqlCeTest.ReadXml(XmlTestFiles.SqlServerCe.XmlFile);
+            _sqlCeTest.PerformDbOperation(DbOperationFlag.Update);
+
+            Assert.IsTrue(_preOperationCalled, "PreOperation() callback was not fired.");
+            Assert.IsTrue(_postOperationCalled, "PostOperation() callback was not fired.");
         }
 
         [Test]
-        public void TestReadXmlSchemaInitializesDataSet()
+        public void PerformDbOperation_When_Not_Initialized_Throws_Exception()
+        {
+            try
+            {
+                _sqlCeTest.PerformDbOperation(DbOperationFlag.Update);
+                Assert.Fail("Expected Exception of type NDbUnitException was not thrown!");
+            }
+            catch (NDbUnitException ex)
+            {
+                Assert.IsNotNull(ex);
+            }
+        }
+
+        [Test]
+        public void ReadXml_From_DataSet_File_Loads_Tables()
         {
             //expectations
-            mockDbCommandBuilder.BuildCommands(mockSchemaFileStream);
+            _mockDbCommandBuilder.BuildCommands(_mockSchemaFileStream);
+            DataSet dummyDS = new DataSet();
+            dummyDS.ReadXmlSchema(XmlTestFiles.SqlServerCe.XmlSchemaFile);
+            SetupResult.For(_mockDbCommandBuilder.GetSchema()).Return(dummyDS);
+            _mocker.ReplayAll();
+
+            _sqlCeTest.ReadXmlSchema(XmlTestFiles.SqlServerCe.XmlSchemaFile);
+            _sqlCeTest.ReadXml(XmlTestFiles.SqlServerCe.XmlFile);
+            DataSet copyOfDataSet = _sqlCeTest.TestDataSet;
+            Assert.AreEqual(3, copyOfDataSet.Tables.Count, "Expected 3 tables");
+            Assert.AreEqual("Role", copyOfDataSet.Tables[0].TableName, "Wrong table");
+            Assert.AreEqual("User", copyOfDataSet.Tables[1].TableName, "Wrong table");
+            Assert.AreEqual("UserRole", copyOfDataSet.Tables[2].TableName, "Wrong table");
+        }
+
+        [Test]
+        public void ReadXml_From_DataSet_File_With_Empty_String_Throws_Exception()
+        {
+            try
+            {
+                _sqlCeTest.ReadXml("");
+                Assert.Fail("Expected Exception of Type ArgumentException was not Thrown!");
+            }
+            catch (ArgumentException ex)
+            {
+                Assert.IsNotNull(ex);
+            }
+        }
+
+        [Test]
+        public void ReadXml_From_DataSet_File_Without_First_Calling_ReadXmlSchema_Throws_Exception()
+        {
+            _mocker.ReplayAll();
+            try
+            {
+                _sqlCeTest.ReadXml(XmlTestFiles.SqlServerCe.XmlFile);
+                Assert.Fail("Expected Exception of Type InvalidOperationException was not Thrown!");
+            }
+            catch (InvalidOperationException ex)
+            {
+                Assert.IsNotNull(ex);
+            }
+        }
+
+        [Test]
+        public void ReadXmlSchema_Initializes_DataSet()
+        {
+            //expectations
+            _mockDbCommandBuilder.BuildCommands(_mockSchemaFileStream);
             DataSet dummyDS = new DataSet();
             dummyDS.Tables.Add("dummyTable");
-            SetupResult.For(mockDbCommandBuilder.GetSchema()).Return(dummyDS);
+            SetupResult.For(_mockDbCommandBuilder.GetSchema()).Return(dummyDS);
 
-            mocker.ReplayAll();
-            sqlCeTest.ReadXmlSchema(XmlTestFiles.SqlServerCe.XmlSchemaFile);
-            DataSet copyOfDataSet = sqlCeTest.TestDataSet;
+            _mocker.ReplayAll();
+            _sqlCeTest.ReadXmlSchema(XmlTestFiles.SqlServerCe.XmlSchemaFile);
+            DataSet copyOfDataSet = _sqlCeTest.TestDataSet;
             Assert.IsNotNull(copyOfDataSet.Tables["dummyTable"], "Expected to see dummy table");
         }
 
         [Test]
-        [ExpectedException(typeof (InvalidOperationException))]
-        public void TestReadXmlDataFileWithoutFirstCallingReadXmlSchemaThrowsException()
+        public void ReadXmlSchema_With_Empty_String_Throws_Exception()
         {
-            mocker.ReplayAll();
-            sqlCeTest.ReadXml(XmlTestFiles.SqlServerCe.XmlFile);
-        }
-
-        [Test]
-        public void TestReadXmlDataFile()
-        {
-            //expectations
-            mockDbCommandBuilder.BuildCommands(mockSchemaFileStream);
-            DataSet dummyDS = new DataSet();
-            dummyDS.ReadXmlSchema(XmlTestFiles.SqlServerCe.XmlSchemaFile);
-            SetupResult.For(mockDbCommandBuilder.GetSchema()).Return(dummyDS);
-
-            mocker.ReplayAll();
-            sqlCeTest.ReadXmlSchema(XmlTestFiles.SqlServerCe.XmlSchemaFile);
-            sqlCeTest.ReadXml(XmlTestFiles.SqlServerCe.XmlFile);
-            DataSet copyOfDataSet = sqlCeTest.TestDataSet;
-            Assert.AreEqual(3, copyOfDataSet.Tables.Count, "Expected 3 tables");
-            Assert.AreEqual("Role", copyOfDataSet.Tables[0].TableName, "Wrong table");
-            Assert.AreEqual("User", copyOfDataSet.Tables[1].TableName, "Wrong table");
-            Assert.AreEqual("UserRole", copyOfDataSet.Tables[2].TableName, "Wrong table");
-        }
-
-        [Test]
-        [ExpectedException(typeof (ArgumentException))]
-        public void TestReadXmlDataFileWithEmptyStringThrowsException()
-        {
-            sqlCeTest.ReadXml("");
-        }
-
-        [Test]
-        [ExpectedException(typeof (NDbUnitException))]
-        public void TestPerformDbOperationWhenNotInitializedThrowsException()
-        {
-            sqlCeTest.PerformDbOperation(DbOperationFlag.Update);
-        }
-
-        [Test]
-        public void TestPerformDbOperation()
-        {
-            sqlCeTest.PreOperation += new PreOperationEvent(sqlCeTest_PreOperation);
-            sqlCeTest.PostOperation += new PostOperationEvent(sqlCeTest_PostOperation);
-
-            //expectations
-            mockDbCommandBuilder.BuildCommands(mockSchemaFileStream);
-            DataSet dummyDS = new DataSet();
-            dummyDS.ReadXmlSchema(XmlTestFiles.SqlServerCe.XmlSchemaFile);
-            SetupResult.For(mockDbCommandBuilder.GetSchema()).Return(dummyDS);
-            SetupResult.For(mockDbCommandBuilder.Connection).Return(mockConnection);
-            mockConnection.Open();
-            SetupResult.For(mockConnection.BeginTransaction()).Return(mockTransaction);
-            mockDbOperation.Update(dummyDS, mockDbCommandBuilder, mockTransaction);
-            LastCall.IgnoreArguments().Constraints(Is.TypeOf<DataSet>(), Is.Equal(mockDbCommandBuilder),
-                                                   Is.Equal(mockTransaction));
-            mockTransaction.Commit();
-            SetupResult.For(mockConnection.State).Return(ConnectionState.Open);
-            mockConnection.Close();
-
-            //end expectations
-
-            mocker.ReplayAll();
-            sqlCeTest.ReadXmlSchema(XmlTestFiles.SqlServerCe.XmlSchemaFile);
-            sqlCeTest.ReadXml(XmlTestFiles.SqlServerCe.XmlFile);
-            sqlCeTest.PerformDbOperation(DbOperationFlag.Update);
-
-            DataSet copyOfDataSet = sqlCeTest.TestDataSet;
-
-            Assert.AreEqual(3, copyOfDataSet.Tables.Count, "Expected 3 tables");
-            Assert.AreEqual("Role", copyOfDataSet.Tables[0].TableName, "Wrong table");
-            Assert.AreEqual("User", copyOfDataSet.Tables[1].TableName, "Wrong table");
-            Assert.AreEqual("UserRole", copyOfDataSet.Tables[2].TableName, "Wrong table");
-
-            Assert.IsTrue(preOperationCalled, "PreOperation() callback was not fired.");
-            Assert.IsTrue(postOperationCalled, "PostOperation() callback was not fired.");
+            try
+            {
+                _sqlCeTest.ReadXmlSchema("");
+                Assert.Fail("Expected Exception of Type ArgumentException was not Thrown!");
+            }
+            catch (ArgumentException ex)
+            {
+                Assert.IsNotNull(ex);
+            }
         }
 
         private void sqlCeTest_PostOperation(object sender, OperationEventArgs args)
         {
-            postOperationCalled = true;
+            _postOperationCalled = true;
         }
 
         private void sqlCeTest_PreOperation(object sender, OperationEventArgs args)
         {
-            preOperationCalled = true;
+            _preOperationCalled = true;
         }
 
-
-        private class TestableSqlCeUnitTest : SqlCeUnitTest
+        private class SqlCeUnitTestStub : SqlCeUnitTest
         {
-            public TestableSqlCeUnitTest(string connectionString) : base(connectionString)
+            public SqlCeUnitTestStub(string connectionString)
+                : base(connectionString)
             {
             }
 
             protected override IDbCommandBuilder CreateDbCommandBuilder(string connectionString)
             {
-                return mockDbCommandBuilder;
+                return _mockDbCommandBuilder;
             }
 
             protected override IDbOperation CreateDbOperation()
             {
-                return mockDbOperation;
+                return _mockDbOperation;
             }
 
             protected override IDbDataAdapter CreateDataAdapter(IDbCommand command)
@@ -222,12 +267,12 @@ namespace NDbUnit.Test.SqlServerCe
 
             protected override FileStream GetXmlSchemaFileStream(string xmlSchemaFile)
             {
-                return mockSchemaFileStream;
+                return _mockSchemaFileStream;
             }
 
             protected override FileStream GetXmlDataFileStream(string xmlFile)
             {
-                return mockDataFileStream;
+                return _mockDataFileStream;
             }
 
             protected override DataSet DS

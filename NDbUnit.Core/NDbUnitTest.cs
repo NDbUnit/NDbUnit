@@ -78,19 +78,19 @@ namespace NDbUnit.Core
             return _dbOperation;
         }
 
-		#region Public Interface Implementation
+        #region Public Interface Implementation
 
-		public void ReadXmlSchema(Stream xmlSchema)
-		{
-			IDbCommandBuilder dbCommandBuilder = GetDbCommandBuilder();
-			dbCommandBuilder.BuildCommands(xmlSchema);
+        public void ReadXmlSchema(Stream xmlSchema)
+        {
+            IDbCommandBuilder dbCommandBuilder = GetDbCommandBuilder();
+            dbCommandBuilder.BuildCommands(xmlSchema);
 
-			DataSet dsSchema = dbCommandBuilder.GetSchema();
+            DataSet dsSchema = dbCommandBuilder.GetSchema();
 
-			_ds = dsSchema.Clone();
+            _ds = dsSchema.Clone();
 
-			_initialized = true;
-		}
+            _initialized = true;
+        }
 
         public void ReadXmlSchema(string xmlSchemaFile)
         {
@@ -117,8 +117,8 @@ namespace NDbUnit.Core
                 _xmlSchemaFile = xmlSchemaFile;
             }
 
-			_initialized = true;
-		}
+            _initialized = true;
+        }
 
         private bool XmlSchemaFileHasNotYetBeenRead(string xmlSchemaFile)
         {
@@ -133,7 +133,7 @@ namespace NDbUnit.Core
 
         public void ReadXml(Stream xml)
         {
-            if(_ds == null)
+            if (_ds == null)
             {
                 throw new InvalidOperationException("You must first call ReadXmlSchema before reading in xml data.");
             }
@@ -178,7 +178,6 @@ namespace NDbUnit.Core
         }
 
         //Todo: remove method at some point
-        [Obsolete("Method deprecated")]
         public DataSet CopyDataSet()
         {
             checkInitialized();
@@ -186,24 +185,23 @@ namespace NDbUnit.Core
         }
 
         //Todo: remove method at some point  
-        [Obsolete("Method deprecated")]    
         public DataSet CopySchema()
         {
             checkInitialized();
             return _ds.Clone();
         }
 
-		public void PerformDbOperation(DbOperationFlag dbOperationFlag)
-		{
-			checkInitialized();
+        public void PerformDbOperation(DbOperationFlag dbOperationFlag)
+        {
+            checkInitialized();
 
-			if (dbOperationFlag == DbOperationFlag.None)
-			{
-				return;
-			}
+            if (dbOperationFlag == DbOperationFlag.None)
+            {
+                return;
+            }
 
-			IDbCommandBuilder dbCommandBuilder = GetDbCommandBuilder();
-			IDbOperation dbOperation = GetDbOperation();
+            IDbCommandBuilder dbCommandBuilder = GetDbCommandBuilder();
+            IDbOperation dbOperation = GetDbOperation();
 
             IDbTransaction dbTransaction = null;
             IDbConnection dbConnection = dbCommandBuilder.Connection;
@@ -213,13 +211,13 @@ namespace NDbUnit.Core
                 dbConnection.Open();
                 dbTransaction = dbConnection.BeginTransaction();
 
-				OperationEventArgs args = new OperationEventArgs();
-				args.DbTransaction = dbTransaction;
+                OperationEventArgs args = new OperationEventArgs();
+                args.DbTransaction = dbTransaction;
 
-				if (null != PreOperation)
-				{
-					PreOperation(this, args);
-				}
+                if (null != PreOperation)
+                {
+                    PreOperation(this, args);
+                }
 
                 switch (dbOperationFlag)
                 {
@@ -268,74 +266,74 @@ namespace NDbUnit.Core
                         }
                 }
 
-				if (null != PostOperation)
-				{
-					PostOperation(this, args);
-				}
+                if (null != PostOperation)
+                {
+                    PostOperation(this, args);
+                }
 
-				dbTransaction.Commit();
-			}
-			catch(Exception e)
-			{
-				if (dbTransaction != null)
-				{
-					dbTransaction.Rollback();
-				}
+                dbTransaction.Commit();
+            }
+            catch (Exception e)
+            {
+                if (dbTransaction != null)
+                {
+                    dbTransaction.Rollback();
+                }
 
-				throw(e);
-			}
-			finally
-			{
-				if (ConnectionState.Open == dbConnection.State)
-				{
-					dbConnection.Close();
-				}
-			}
-		}
-		
-		public DataSet GetDataSetFromDb()
-		{
-			return GetDataSetFromDb(null);
-		}
+                throw (e);
+            }
+            finally
+            {
+                if (ConnectionState.Open == dbConnection.State)
+                {
+                    dbConnection.Close();
+                }
+            }
+        }
 
-		public DataSet GetDataSetFromDb(StringCollection tableNames)
-		{
-			checkInitialized();
+        public DataSet GetDataSetFromDb()
+        {
+            return GetDataSetFromDb(null);
+        }
 
-			IDbCommandBuilder dbCommandBuilder = GetDbCommandBuilder();
-			if (null == tableNames)
-			{
-				tableNames = new StringCollection();
-				foreach(DataTable dt in _ds.Tables)
-				{
-					tableNames.Add(dt.TableName);
-				}
-			}
+        public DataSet GetDataSetFromDb(StringCollection tableNames)
+        {
+            checkInitialized();
 
-			IDbConnection dbConnection = dbCommandBuilder.Connection;
-			try
-			{
-				dbConnection.Open();
-				DataSet dsToFill = _ds.Clone();
-				foreach(string tableName in tableNames)
-				{
-					OnGetDataSetFromDb(tableName, ref dsToFill, dbConnection);
-				}
+            IDbCommandBuilder dbCommandBuilder = GetDbCommandBuilder();
+            if (null == tableNames)
+            {
+                tableNames = new StringCollection();
+                foreach (DataTable dt in _ds.Tables)
+                {
+                    tableNames.Add(dt.TableName);
+                }
+            }
 
-				return dsToFill;
-			}
-			catch(Exception e)
-			{
-				throw(e);
-			}
-			finally
-			{
-				if (ConnectionState.Open == dbConnection.State)
-				{
-					dbConnection.Close();
-				}
-			}
-		}
+            IDbConnection dbConnection = dbCommandBuilder.Connection;
+            try
+            {
+                dbConnection.Open();
+                DataSet dsToFill = _ds.Clone();
+                foreach (string tableName in tableNames)
+                {
+                    OnGetDataSetFromDb(tableName, ref dsToFill, dbConnection);
+                }
+
+                return dsToFill;
+            }
+            catch (Exception e)
+            {
+                throw (e);
+            }
+            finally
+            {
+                if (ConnectionState.Open == dbConnection.State)
+                {
+                    dbConnection.Close();
+                }
+            }
+        }
 
         #endregion
 

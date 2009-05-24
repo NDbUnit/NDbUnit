@@ -25,35 +25,30 @@ namespace NDbUnit.Test
 {
     public class DbConnection
     {
-
-        public static string SqlNorthwindConnectionString
+        public static string MySqlConnectionString
         {
-            get { return ConfigurationManager.ConnectionStrings["SqlNorthwindConnectionString"].ConnectionString; }
-        }
-
-        public static string SqlConnectionString
-        {
-            get { return ConfigurationManager.ConnectionStrings["SqlConnectionString"].ConnectionString; }            
+            get { return ConfigurationManager.ConnectionStrings["MysqlConnectionString"].ConnectionString; }
         }
 
         public static string OleDbConnectionString
         {
-            get { return ConfigurationManager.ConnectionStrings["OleDbConnectionString"].ConnectionString; }            
-        }
-
-        public static string SqlLiteConnectionString
-        {
-            get { return ConfigurationManager.ConnectionStrings["SqlLiteConnectionString"].ConnectionString; }            
+            get { return ConfigurationManager.ConnectionStrings["OleDbConnectionString"].ConnectionString; }
         }
 
         public static string SqlCeConnectionString
         {
-            get { return ConfigurationManager.ConnectionStrings["SqlCeConnectionString"].ConnectionString; }            
+            get { return ConfigurationManager.ConnectionStrings["SqlCeConnectionString"].ConnectionString; }
         }
 
-        public static string MysqlConnectionString
+        public static string SqlConnectionString
         {
-            get { return ConfigurationManager.ConnectionStrings["MysqlConnectionString"].ConnectionString; }            
+            get { return ConfigurationManager.ConnectionStrings["SqlConnectionString"].ConnectionString; }
         }
+
+        public static string SqlLiteConnectionString
+        {
+            get { return ConfigurationManager.ConnectionStrings["SqlLiteConnectionString"].ConnectionString; }
+        }
+
     }
 }

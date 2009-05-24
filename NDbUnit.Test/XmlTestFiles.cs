@@ -21,249 +21,150 @@
  */
 
 using System.IO;
+using System;
 
 namespace NDbUnit.Test
 {
     public class XmlTestFiles
     {
 
-        public class MySql
+        public abstract class XmlTestFilesBase
+        {
+            protected const string _defaultXmlFilename = "User.xml";
+            protected const string _defaultXmlModFilename = "UserMod.xml";
+            protected const string _defaultXmlRefreshFilename = "UserRefresh.xml";
+            protected const string _defaultXmlSchemaFilename = "UserDS.xsd";
+        }
+
+        public class MySql : XmlTestFilesBase
         {
             private static string _xmlPath = @"..\..\Xml\MySql\";
 
             public static string XmlFile
             {
-                get
-                {
-                    return Path.Combine(_xmlPath, "User.xml");
-                }
+                get { return Path.Combine(_xmlPath, _defaultXmlFilename); }
             }
 
             public static string XmlModFile
             {
-                get
-                {
-                    return Path.Combine(_xmlPath, "UserMod.xml");
-                }
+                get { return Path.Combine(_xmlPath, _defaultXmlModFilename); }
             }
 
             public static string XmlRefreshFile
             {
-                get
-                {
-                    return Path.Combine(_xmlPath, "UserRefresh.xml");
-                }
+                get { return Path.Combine(_xmlPath, _defaultXmlRefreshFilename); }
             }
 
             public static string XmlSchemaFile
             {
-                get
-                {
-                    return Path.Combine(_xmlPath, "UserDS.xsd");
-                }
+                get { return Path.Combine(_xmlPath, _defaultXmlSchemaFilename); }
             }
 
         }
 
-        public class SqlServer
+        public class SqlServer : XmlTestFilesBase
         {
             private static string _xmlPath = @"..\..\Xml\SqlServer\";
 
             public static string XmlFile
             {
-                get
-                {
-                    return Path.Combine(_xmlPath, "User.xml");
-                }
+                get { return Path.Combine(_xmlPath, _defaultXmlFilename); }
             }
 
             public static string XmlModFile
             {
-                get
-                {
-                    return Path.Combine(_xmlPath, "UserMod.xml");
-                }
+                get { return Path.Combine(_xmlPath, _defaultXmlModFilename); }
             }
 
             public static string XmlRefreshFile
             {
-                get
-                {
-                    return Path.Combine(_xmlPath, "UserRefresh.xml");
-                }
+                get { return Path.Combine(_xmlPath, _defaultXmlRefreshFilename); }
             }
 
             public static string XmlSchemaFile
             {
-                get
-                {
-                    return Path.Combine(_xmlPath, "UserDS.xsd");
-                }
+                get { return Path.Combine(_xmlPath, _defaultXmlSchemaFilename); }
             }
 
         }
 
-        public class SqlServerCe
+        public class SqlServerCe : XmlTestFilesBase
         {
             private static string _xmlPath = @"..\..\Xml\SqlServerCe\";
 
             public static string XmlFile
             {
-                get
-                {
-                    return Path.Combine(_xmlPath, "User.xml");
-                }
+                get { return Path.Combine(_xmlPath, _defaultXmlFilename); }
             }
 
             public static string XmlModFile
             {
-                get
-                {
-                    return Path.Combine(_xmlPath, "UserMod.xml");
-                }
+                get { return Path.Combine(_xmlPath, _defaultXmlModFilename); }
             }
 
             public static string XmlRefreshFile
             {
-                get
-                {
-                    return Path.Combine(_xmlPath, "UserRefresh.xml");
-                }
+                get { return Path.Combine(_xmlPath, _defaultXmlRefreshFilename); }
             }
 
             public static string XmlSchemaFile
             {
-                get
-                {
-                    return Path.Combine(_xmlPath, "UserDS.xsd");
-                }
+                get { return Path.Combine(_xmlPath, _defaultXmlSchemaFilename); }
             }
 
         }
 
-        public class OleDb
+        public class OleDb : XmlTestFilesBase
         {
             private static string _xmlPath = @"..\..\Xml\OleDb\";
 
             public static string XmlFile
             {
-                get
-                {
-                    return Path.Combine(_xmlPath, "User.xml");
-                }
+                get { return Path.Combine(_xmlPath, _defaultXmlFilename); }
             }
 
             public static string XmlModFile
             {
-                get
-                {
-                    return Path.Combine(_xmlPath, "UserMod.xml");
-                }
+                get { return Path.Combine(_xmlPath, _defaultXmlModFilename); }
             }
 
             public static string XmlRefreshFile
             {
-                get
-                {
-                    return Path.Combine(_xmlPath, "UserRefresh.xml");
-                }
+                get { return Path.Combine(_xmlPath, _defaultXmlRefreshFilename); }
             }
 
             public static string XmlSchemaFile
             {
-                get
-                {
-                    return Path.Combine(_xmlPath, "UserDS.xsd");
-                }
+                get { return Path.Combine(_xmlPath, _defaultXmlSchemaFilename); }
             }
 
         }
 
-        public class Sqlite
+        public class Sqlite : XmlTestFilesBase
         {
             private static string _xmlPath = @"..\..\Xml\Sqlite\";
 
             public static string XmlFile
             {
-                get
-                {
-                    return Path.Combine(_xmlPath, "User.xml");
-                }
+                get { return Path.Combine(_xmlPath, _defaultXmlFilename); }
             }
 
             public static string XmlModFile
             {
-                get
-                {
-                    return Path.Combine(_xmlPath, "UserMod.xml");
-                }
+                get { return Path.Combine(_xmlPath, _defaultXmlModFilename); }
             }
 
             public static string XmlRefreshFile
             {
-                get
-                {
-                    return Path.Combine(_xmlPath, "UserRefresh.xml");
-                }
+                get { return Path.Combine(_xmlPath, _defaultXmlRefreshFilename); }
             }
 
             public static string XmlSchemaFile
             {
-                get
-                {
-                    return Path.Combine(_xmlPath, "UserDS.xsd");
-                }
+                get { return Path.Combine(_xmlPath, _defaultXmlSchemaFilename); }
             }
 
         }
 
-        // expect to be run from the bin/Debug or bin/Release directory
-        //	private static string _xmlPath = @"..\..\Xml\";
-
-        //    public static string XmlSchemaFile
-        //	{
-        //		get
-        //		{
-        //			return Path.Combine(_xmlPath, "UserDS.xsd");
-        //		}
-        //	}
-        //       public static string XmlSchemaFileForSqlServerCe
-        //       {
-        //           get
-        //           {
-        //               return Path.Combine(_xmlPath, "SqlServerCeDataSet.xsd");
-        //           }
-        //       }
-        //	public static string xmlSchemaFileForSQLite
-        //	{
-        //		get
-        //		{
-        //			return Path.Combine(_xmlPath, "UserDS4SQLite.xsd");
-        //		}
-        //	}
-
-        //	public static string XmlFile
-        //	{
-        //		get
-        //		{
-        //			return Path.Combine(_xmlPath, "User.xml");
-        //		}
-        //	}
-
-        //	public static string XmlModFile
-        //	{
-        //		get
-        //		{
-        //			return Path.Combine(_xmlPath, "UserMod.xml");
-        //		}
-        //	}
-
-        //	public static string XmlRefreshFile
-        //	{
-        //		get
-        //		{
-        //			return Path.Combine(_xmlPath, "UserRefresh.xml");
-        //		}
-        //	}
     }
 }
