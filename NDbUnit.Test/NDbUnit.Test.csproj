@@ -138,13 +138,13 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="DbUnitTestTestBase.cs" />
-    <Compile Include="SqlLite\SqlLiteDbUnitTestTest.cs" />
+    <Compile Include="SqlLite\SqlLiteUnitTestTest.cs" />
     <Compile Include="SqlLite\SqlLiteCommandBuilderTest.cs" />
     <Compile Include="SqlServerCe\SqlCeDbCommandBuilderTest.cs" />
-    <Compile Include="SqlServer\SqlDbUnitTestTest.cs" />
-    <Compile Include="SqlServer\SqlDbCommandBuilderTest.cs" />
+    <Compile Include="SqlClient\SqlDbUnitTestTest.cs" />
+    <Compile Include="SqlClient\SqlDbCommandBuilderTest.cs" />
     <Compile Include="SqlLite\SqlLiteDbOperationTest.cs" />
-    <Compile Include="SqlServer\SqlDbOperationTest.cs" />
+    <Compile Include="SqlClient\SqlDbOperationTest.cs" />
     <Compile Include="SqlServerCe\SqlCeDbOperationTest.cs" />
     <Compile Include="TableNameHelperTest.cs" />
     <Compile Include="Mysql\MySqlDbOperationTest.cs" />
