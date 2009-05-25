@@ -173,7 +173,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="SqlLite\test.sqlite.db" />
+    <None Include="SqlLite\test.sqlite.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Xml\MySql\UserDS.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>UserDS.Designer.cs</LastGenOutput>
