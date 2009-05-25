@@ -33,6 +33,16 @@ namespace NDbUnit.Core
     public interface INDbUnitTest
     {
         /// <summary>
+        /// Occurs after DbOperation has completed.
+        /// </summary>
+        event PostOperationEvent PostOperation;
+
+        /// <summary>
+        /// Occurs before DbOperation begins.
+        /// </summary>
+        event PreOperationEvent PreOperation;
+        
+        /// <summary>
         /// Performs a database operation.
         /// </summary>
         /// <param name="dbOperationFlag">The database operation to perform.</param>
@@ -92,7 +102,6 @@ namespace NDbUnit.Core
         /// </summary>
         /// <returns><see cref="DataSet" /></returns>
         /// <exception cref="NDbUnitException" />
-        [Obsolete("Method deprecated")]
         DataSet CopyDataSet();
 
         /// <summary>
@@ -101,7 +110,6 @@ namespace NDbUnit.Core
         /// </summary>
         /// <returns><see cref="DataSet" /></returns>
         /// <exception cref="NDbUnitException" />
-        [Obsolete("Method deprecated")]        
         DataSet CopySchema();
 
         /// <summary>

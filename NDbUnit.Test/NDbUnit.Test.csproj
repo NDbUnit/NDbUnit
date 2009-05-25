@@ -127,31 +127,28 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DbOperationTestBase.cs" />
-    <Compile Include="Mysql\MySqlDbUnitTestTest.cs" />
     <Compile Include="Mysql\MySqlDbCommandBuilderTest.cs" />
+    <Compile Include="Mysql\MySqlDbUnitTestTest.cs" />
     <Compile Include="OleDb\OleDbOperationTest.cs" />
-    <Compile Include="OleDb\OleDbUnitTestTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="OleDb\OleDbCommandBuilderTest.cs" />
+    <Compile Include="OleDb\OleDbUnitTestTest.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="DbUnitTestTestBase.cs" />
+    <Compile Include="SqlLite\SqlLiteDbUnitTestTest.cs" />
     <Compile Include="SqlLite\SqlLiteCommandBuilderTest.cs" />
     <Compile Include="SqlServerCe\SqlCeDbCommandBuilderTest.cs" />
+    <Compile Include="SqlServer\SqlDbUnitTestTest.cs" />
     <Compile Include="SqlServer\SqlDbCommandBuilderTest.cs" />
     <Compile Include="SqlLite\SqlLiteDbOperationTest.cs" />
     <Compile Include="SqlServer\SqlDbOperationTest.cs" />
     <Compile Include="SqlServerCe\SqlCeDbOperationTest.cs" />
-    <Compile Include="SqlServer\SqlDbUnitTestTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="SqlLite\SqlLiteUnitTestTest.cs" />
-    <Compile Include="SqlServerCe\SqlCeDbUnitTestTest.cs" />
     <Compile Include="TableNameHelperTest.cs" />
     <Compile Include="Mysql\MySqlDbOperationTest.cs" />
+    <Compile Include="SqlServerCe\SqlCeDbUnitTestTest.cs" />
     <Compile Include="XmlTestFiles.cs">
       <SubType>Code</SubType>
     </Compile>
