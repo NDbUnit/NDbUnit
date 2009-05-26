@@ -4,6 +4,171 @@
         <name>NDbUnit.Core</name>
     </assembly>
     <members>
+        <member name="M:NDbUnit.Core.SqlLite.SqlLiteDbOperation.OnInsertIdentity(System.Data.DataTable,System.Data.IDbCommand,System.Data.IDbTransaction)">
+            <summary>
+            SQLite doesn't need any changes to insert PK values.
+            </summary>
+            <param name="dataTable"></param>
+            <param name="dbCommand"></param>
+            <param name="dbTransaction"></param>
+        </member>
+        <member name="T:NDbUnit.Core.DbOperationFlag">
+            <summary>
+            The database operation to perform.
+            </summary>
+        </member>
+        <member name="F:NDbUnit.Core.DbOperationFlag.None">
+            <summary>No operation.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.DbOperationFlag.Insert">
+            <summary>Insert rows into a set of database tables.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.DbOperationFlag.InsertIdentity">
+            <summary>Insert rows into a set of database tables.  Allow identity 
+            inserts to occur.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.DbOperationFlag.Delete">
+            <summary>Delete rows from a set of database tables.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.DbOperationFlag.DeleteAll">
+            <summary>Delete all rows from a set of database tables.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.DbOperationFlag.Update">
+            <summary>Update rows in a set of database tables.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.DbOperationFlag.Refresh">
+            <summary>Refresh rows in a set of database tables.  Rows that exist 
+            in the database are updated.  Rows that don't exist are inserted.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.DbOperationFlag.CleanInsert">
+            <summary>Composite operation of DeleteAll and Insert.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.DbOperationFlag.CleanInsertIdentity">
+            <summary>Composite operation of DeleteAll and InsertIdentity.</summary>
+        </member>
+        <member name="T:NDbUnit.Core.OleDb.OleDbType">
+            <summary>
+            An enumeration specifying the OLE database type.
+            </summary>
+        </member>
+        <member name="F:NDbUnit.Core.OleDb.OleDbType.NoDb">
+            <summary>No database.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.OleDb.OleDbType.SqlServer">
+            <summary>Sql server.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.OleDb.OleDbType.Oracle">
+            <summary>Oracle.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.OleDb.OleDbType.DB2">
+            <summary>DB2.</summary>
+        </member>
+        <member name="M:NDbUnit.Core.SqlLite.SqlLiteDbCommandBuilder.IsAutoIncrementing(System.Data.DataRow)">
+            <summary>
+            Since SQLite keys are auto incremented by default we need to check to see if the column
+            is a key as well, since not all columns will be marked with AUTOINCREMENT
+            </summary>
+            <param name="row"></param>
+            <returns></returns>
+        </member>
+        <member name="T:NDbUnit.Core.DataSetTableIterator">
+            <summary>
+            Class that builds an iterator for tables.  The order of the tables returned by the iterator
+            is determined by the foreign keys between tables.
+            </summary>
+        </member>
+        <member name="M:NDbUnit.Core.DataSetTableIterator.#ctor(System.Data.DataSet)">
+            <summary>
+            Constructor that takes in a dataset to build iterator for the tables.
+            </summary>
+            <param name="dataSet">DataSet containing tables.</param>
+        </member>
+        <member name="M:NDbUnit.Core.DataSetTableIterator.BuildTableList(System.Data.DataSet)">
+            <summary>
+            Builds the table list.
+            </summary>
+            <param name="dataSet">The data set.</param>
+        </member>
+        <member name="M:NDbUnit.Core.DataSetTableIterator.ReverseListIfNeeded">
+            <summary>
+            Reverses the list if needed.
+            </summary>
+        </member>
+        <member name="M:NDbUnit.Core.DataSetTableIterator.#ctor(System.Data.DataSet,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NDbUnit.Core.DataSetTableIterator"/> class.
+            </summary>
+            <param name="dataSet">The data set.</param>
+            <param name="iterateInReverse">if set to <c>true</c> [iterate in reverse].</param>
+        </member>
+        <member name="M:NDbUnit.Core.DataSetTableIterator.AddTablesToList(System.Data.DataTableCollection)">
+            <summary>
+            Iterate over tables in dataset and at them to the internal list.
+            </summary>
+            <param name="tables">Collection of tables.</param>
+        </member>
+        <member name="M:NDbUnit.Core.DataSetTableIterator.ShouldAddToList(System.Data.DataTable)">
+            <summary>
+            Adds a table to the list if
+                - It hasn't already been added
+                - It has no relations to parent tables where the parent table isn't in the list.
+            </summary>
+            <param name="table">DataTable to check if it meets conditions to add to list.</param>
+            <returns>True if should add, otherwise false.</returns>
+        </member>
+        <member name="M:NDbUnit.Core.DataSetTableIterator.System#Collections#Generic#IEnumerable{System#Data#DataTable}#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the collection.
+            </summary>
+            <returns>
+            An IEnumerator that can be used to iterate through the collection.
+            </returns>
+            <filterpriority>1</filterpriority>
+        </member>
+        <member name="M:NDbUnit.Core.DataSetTableIterator.MoveNext">
+            <summary>
+            Advances the enumerator to the next element of the collection.
+            </summary>
+            <returns>
+            true if the enumerator was successfully advanced to the next element; false if the enumerator has passed the end of the collection.
+            </returns>
+            <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="M:NDbUnit.Core.DataSetTableIterator.Reset">
+            <summary>
+            Sets the enumerator to its initial position, which is before the first element in the collection.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="P:NDbUnit.Core.DataSetTableIterator.System#Collections#IEnumerator#Current">
+            <summary>
+            Gets the current element in the collection.
+            </summary>
+            <returns>
+            The current element in the collection.
+            </returns>
+            <exception cref="T:System.InvalidOperationException">The enumerator is positioned before the first element of the collection or after the last element. </exception>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="T:NDbUnit.Core.SqlClient.SqlDbUnitTest">
+            <summary>
+            The Sql Server unit test data adapter.
+            </summary>
+            <example>
+            <code>
+            string connectionString = "Persist Security Info=False;Integrated Security=SSPI;database=testdb;server=V-AL-DIMEOLA\NETSDK";
+            SqlDbUnitTest sqlDbUnitTest = new SqlDbUnitTest(connectionString);
+            string xmlSchemaFile = "User.xsd";
+            string xmlFile = "User.xml";
+            sqlDbUnitTest.ReadXmlSchema(xmlSchemaFile);
+            sqlDbUnitTest.ReadXml(xmlFile);
+            sqlDbUnitTest.PerformDbOperation(DbOperation.CleanInsertIdentity);
+            </code>
+            <seealso cref="T:NDbUnit.Core.INDbUnitTest"/>
+            </example>
+        </member>
         <member name="T:NDbUnit.Core.NDbUnitTest">
             <summary>
             The base class implementation of all NDbUnit unit test data adapters.
@@ -110,138 +275,6 @@
             Occurs before DbOperation begins.
             </summary>
         </member>
-        <member name="T:NDbUnit.Core.DataSetTableIterator">
-            <summary>
-            Class that builds an iterator for tables.  The order of the tables returned by the iterator
-            is determined by the foreign keys between tables.
-            </summary>
-        </member>
-        <member name="M:NDbUnit.Core.DataSetTableIterator.#ctor(System.Data.DataSet)">
-            <summary>
-            Constructor that takes in a dataset to build iterator for the tables.
-            </summary>
-            <param name="dataSet">DataSet containing tables.</param>
-        </member>
-        <member name="M:NDbUnit.Core.DataSetTableIterator.BuildTableList(System.Data.DataSet)">
-            <summary>
-            Builds the table list.
-            </summary>
-            <param name="dataSet">The data set.</param>
-        </member>
-        <member name="M:NDbUnit.Core.DataSetTableIterator.ReverseListIfNeeded">
-            <summary>
-            Reverses the list if needed.
-            </summary>
-        </member>
-        <member name="M:NDbUnit.Core.DataSetTableIterator.#ctor(System.Data.DataSet,System.Boolean)">
-            <summary>
-            Initializes a new instance of the <see cref="T:NDbUnit.Core.DataSetTableIterator"/> class.
-            </summary>
-            <param name="dataSet">The data set.</param>
-            <param name="iterateInReverse">if set to <c>true</c> [iterate in reverse].</param>
-        </member>
-        <member name="M:NDbUnit.Core.DataSetTableIterator.AddTablesToList(System.Data.DataTableCollection)">
-            <summary>
-            Iterate over tables in dataset and at them to the internal list.
-            </summary>
-            <param name="tables">Collection of tables.</param>
-        </member>
-        <member name="M:NDbUnit.Core.DataSetTableIterator.ShouldAddToList(System.Data.DataTable)">
-            <summary>
-            Adds a table to the list if
-                - It hasn't already been added
-                - It has no relations to parent tables where the parent table isn't in the list.
-            </summary>
-            <param name="table">DataTable to check if it meets conditions to add to list.</param>
-            <returns>True if should add, otherwise false.</returns>
-        </member>
-        <member name="M:NDbUnit.Core.DataSetTableIterator.System#Collections#Generic#IEnumerable{System#Data#DataTable}#GetEnumerator">
-            <summary>
-            Returns an enumerator that iterates through the collection.
-            </summary>
-            <returns>
-            An IEnumerator that can be used to iterate through the collection.
-            </returns>
-            <filterpriority>1</filterpriority>
-        </member>
-        <member name="M:NDbUnit.Core.DataSetTableIterator.MoveNext">
-            <summary>
-            Advances the enumerator to the next element of the collection.
-            </summary>
-            <returns>
-            true if the enumerator was successfully advanced to the next element; false if the enumerator has passed the end of the collection.
-            </returns>
-            <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
-            <filterpriority>2</filterpriority>
-        </member>
-        <member name="M:NDbUnit.Core.DataSetTableIterator.Reset">
-            <summary>
-            Sets the enumerator to its initial position, which is before the first element in the collection.
-            </summary>
-            <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
-            <filterpriority>2</filterpriority>
-        </member>
-        <member name="P:NDbUnit.Core.DataSetTableIterator.System#Collections#IEnumerator#Current">
-            <summary>
-            Gets the current element in the collection.
-            </summary>
-            <returns>
-            The current element in the collection.
-            </returns>
-            <exception cref="T:System.InvalidOperationException">The enumerator is positioned before the first element of the collection or after the last element. </exception>
-            <filterpriority>2</filterpriority>
-        </member>
-        <member name="T:NDbUnit.Core.DbOperationFlag">
-            <summary>
-            The database operation to perform.
-            </summary>
-        </member>
-        <member name="F:NDbUnit.Core.DbOperationFlag.None">
-            <summary>No operation.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.DbOperationFlag.Insert">
-            <summary>Insert rows into a set of database tables.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.DbOperationFlag.InsertIdentity">
-            <summary>Insert rows into a set of database tables.  Allow identity 
-            inserts to occur.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.DbOperationFlag.Delete">
-            <summary>Delete rows from a set of database tables.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.DbOperationFlag.DeleteAll">
-            <summary>Delete all rows from a set of database tables.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.DbOperationFlag.Update">
-            <summary>Update rows in a set of database tables.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.DbOperationFlag.Refresh">
-            <summary>Refresh rows in a set of database tables.  Rows that exist 
-            in the database are updated.  Rows that don't exist are inserted.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.DbOperationFlag.CleanInsert">
-            <summary>Composite operation of DeleteAll and Insert.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.DbOperationFlag.CleanInsertIdentity">
-            <summary>Composite operation of DeleteAll and InsertIdentity.</summary>
-        </member>
-        <member name="T:NDbUnit.Core.OleDb.OleDbType">
-            <summary>
-            An enumeration specifying the OLE database type.
-            </summary>
-        </member>
-        <member name="F:NDbUnit.Core.OleDb.OleDbType.NoDb">
-            <summary>No database.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.OleDb.OleDbType.SqlServer">
-            <summary>Sql server.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.OleDb.OleDbType.Oracle">
-            <summary>Oracle.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.OleDb.OleDbType.DB2">
-            <summary>DB2.</summary>
-        </member>
         <member name="T:NDbUnit.Core.NDbUnitException">
             <summary>
             The base class exception of all exceptions thrown by objects
@@ -277,48 +310,6 @@
             <param name="message"></param>
             <param name="innerException"></param>
         </member>
-        <member name="T:NDbUnit.Core.MySqlClient.MySqlDbUnitTest">
-            <summary>
-            The MySql unit test data adapter.
-            </summary>
-            <example>
-            <code>
-            string connectionString = "Persist Security Info=False;Integrated Security=SSPI;database=testdb;server=V-AL-DIMEOLA\NETSDK";
-            MySqlDbUnitTest sqlDbUnitTest = new SqlDbUnitTest(connectionString);
-            string xmlSchemaFile = "User.xsd";
-            string xmlFile = "User.xml";
-            sqlDbUnitTest.ReadXmlSchema(xmlSchemaFile);
-            sqlDbUnitTest.ReadXml(xmlFile);
-            sqlDbUnitTest.PerformDbOperation(DbOperation.CleanInsertIdentity);
-            </code>
-            <seealso cref="T:NDbUnit.Core.INDbUnitTest"/>
-            </example>
-        </member>
-        <member name="M:NDbUnit.Core.SqlLite.SqlLiteDbOperation.OnInsertIdentity(System.Data.DataTable,System.Data.IDbCommand,System.Data.IDbTransaction)">
-            <summary>
-            SQLite doesn't need any changes to insert PK values.
-            </summary>
-            <param name="dataTable"></param>
-            <param name="dbCommand"></param>
-            <param name="dbTransaction"></param>
-        </member>
-        <member name="T:NDbUnit.Core.SqlClient.SqlDbUnitTest">
-            <summary>
-            The Sql Server unit test data adapter.
-            </summary>
-            <example>
-            <code>
-            string connectionString = "Persist Security Info=False;Integrated Security=SSPI;database=testdb;server=V-AL-DIMEOLA\NETSDK";
-            SqlDbUnitTest sqlDbUnitTest = new SqlDbUnitTest(connectionString);
-            string xmlSchemaFile = "User.xsd";
-            string xmlFile = "User.xml";
-            sqlDbUnitTest.ReadXmlSchema(xmlSchemaFile);
-            sqlDbUnitTest.ReadXml(xmlFile);
-            sqlDbUnitTest.PerformDbOperation(DbOperation.CleanInsertIdentity);
-            </code>
-            <seealso cref="T:NDbUnit.Core.INDbUnitTest"/>
-            </example>
-        </member>
         <member name="T:NDbUnit.Core.OleDb.OleDbUnitTest">
             <summary>
             The OleDb unit test data adapter.
@@ -350,13 +341,22 @@
             instance of an object is <see cref="F:NDbUnit.Core.OleDb.OleDbType.NoDb"/>.
             </summary>
         </member>
-        <member name="M:NDbUnit.Core.SqlLite.SqlLiteDbCommandBuilder.IsAutoIncrementing(System.Data.DataRow)">
+        <member name="T:NDbUnit.Core.MySqlClient.MySqlDbUnitTest">
             <summary>
-            Since SQLite keys are auto incremented by default we need to check to see if the column
-            is a key as well, since not all columns will be marked with AUTOINCREMENT
+            The MySql unit test data adapter.
             </summary>
-            <param name="row"></param>
-            <returns></returns>
+            <example>
+            <code>
+            string connectionString = "Persist Security Info=False;Integrated Security=SSPI;database=testdb;server=V-AL-DIMEOLA\NETSDK";
+            MySqlDbUnitTest sqlDbUnitTest = new SqlDbUnitTest(connectionString);
+            string xmlSchemaFile = "User.xsd";
+            string xmlFile = "User.xml";
+            sqlDbUnitTest.ReadXmlSchema(xmlSchemaFile);
+            sqlDbUnitTest.ReadXml(xmlFile);
+            sqlDbUnitTest.PerformDbOperation(DbOperation.CleanInsertIdentity);
+            </code>
+            <seealso cref="T:NDbUnit.Core.INDbUnitTest"/>
+            </example>
         </member>
     </members>
 </doc>
