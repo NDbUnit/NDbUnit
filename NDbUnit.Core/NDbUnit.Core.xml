@@ -4,14 +4,6 @@
         <name>NDbUnit.Core</name>
     </assembly>
     <members>
-        <member name="M:NDbUnit.Core.SqlLite.SqlLiteDbOperation.OnInsertIdentity(System.Data.DataTable,System.Data.IDbCommand,System.Data.IDbTransaction)">
-            <summary>
-            SQLite doesn't need any changes to insert PK values.
-            </summary>
-            <param name="dataTable"></param>
-            <param name="dbCommand"></param>
-            <param name="dbTransaction"></param>
-        </member>
         <member name="T:NDbUnit.Core.DbOperationFlag">
             <summary>
             The database operation to perform.
@@ -45,31 +37,6 @@
         </member>
         <member name="F:NDbUnit.Core.DbOperationFlag.CleanInsertIdentity">
             <summary>Composite operation of DeleteAll and InsertIdentity.</summary>
-        </member>
-        <member name="T:NDbUnit.Core.OleDb.OleDbType">
-            <summary>
-            An enumeration specifying the OLE database type.
-            </summary>
-        </member>
-        <member name="F:NDbUnit.Core.OleDb.OleDbType.NoDb">
-            <summary>No database.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.OleDb.OleDbType.SqlServer">
-            <summary>Sql server.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.OleDb.OleDbType.Oracle">
-            <summary>Oracle.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.OleDb.OleDbType.DB2">
-            <summary>DB2.</summary>
-        </member>
-        <member name="M:NDbUnit.Core.SqlLite.SqlLiteDbCommandBuilder.IsAutoIncrementing(System.Data.DataRow)">
-            <summary>
-            Since SQLite keys are auto incremented by default we need to check to see if the column
-            is a key as well, since not all columns will be marked with AUTOINCREMENT
-            </summary>
-            <param name="row"></param>
-            <returns></returns>
         </member>
         <member name="T:NDbUnit.Core.DataSetTableIterator">
             <summary>
@@ -151,23 +118,6 @@
             </returns>
             <exception cref="T:System.InvalidOperationException">The enumerator is positioned before the first element of the collection or after the last element. </exception>
             <filterpriority>2</filterpriority>
-        </member>
-        <member name="T:NDbUnit.Core.SqlClient.SqlDbUnitTest">
-            <summary>
-            The Sql Server unit test data adapter.
-            </summary>
-            <example>
-            <code>
-            string connectionString = "Persist Security Info=False;Integrated Security=SSPI;database=testdb;server=V-AL-DIMEOLA\NETSDK";
-            SqlDbUnitTest sqlDbUnitTest = new SqlDbUnitTest(connectionString);
-            string xmlSchemaFile = "User.xsd";
-            string xmlFile = "User.xml";
-            sqlDbUnitTest.ReadXmlSchema(xmlSchemaFile);
-            sqlDbUnitTest.ReadXml(xmlFile);
-            sqlDbUnitTest.PerformDbOperation(DbOperation.CleanInsertIdentity);
-            </code>
-            <seealso cref="T:NDbUnit.Core.INDbUnitTest"/>
-            </example>
         </member>
         <member name="T:NDbUnit.Core.NDbUnitTest">
             <summary>
@@ -309,54 +259,6 @@
             </summary>
             <param name="message"></param>
             <param name="innerException"></param>
-        </member>
-        <member name="T:NDbUnit.Core.OleDb.OleDbUnitTest">
-            <summary>
-            The OleDb unit test data adapter.
-            </summary>
-            <example>
-            <code>
-            string connectionString = "Provider=SQLOLEDB;Data Source=V-AL-DIMEOLA\NETSDK;Initial Catalog=testdb;Integrated Security=SSPI;";
-            OleDbUnitTest oleDbUnitTest = new OleDbUnitTest(connectionString);
-            string xmlSchemaFile = "User.xsd";
-            string xmlFile = "User.xml";
-            oleDbUnitTest.ReadXmlSchema(xmlSchemaFile);
-            oleDbUnitTest.ReadXml(xmlFile);
-            oleDbUnitTest.PerformDbOperation(DbOperation.CleanInsertIdentity);
-            </code>
-            <seealso cref="T:NDbUnit.Core.INDbUnitTest"/>
-            </example>
-        </member>
-        <member name="M:NDbUnit.Core.OleDb.OleDbUnitTest.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:NDbUnit.Core.OleDb.OleDbUnitTest"/> class.
-            </summary>
-            <param name="connectionString">The connection string 
-            used to open the database.
-            <seealso cref="T:System.Data.IDbConnection"/></param>
-        </member>
-        <member name="P:NDbUnit.Core.OleDb.OleDbUnitTest.OleOleDbType">
-            <summary>
-            Gets or sets the OLE database type.  The default value for an 
-            instance of an object is <see cref="F:NDbUnit.Core.OleDb.OleDbType.NoDb"/>.
-            </summary>
-        </member>
-        <member name="T:NDbUnit.Core.MySqlClient.MySqlDbUnitTest">
-            <summary>
-            The MySql unit test data adapter.
-            </summary>
-            <example>
-            <code>
-            string connectionString = "Persist Security Info=False;Integrated Security=SSPI;database=testdb;server=V-AL-DIMEOLA\NETSDK";
-            MySqlDbUnitTest sqlDbUnitTest = new SqlDbUnitTest(connectionString);
-            string xmlSchemaFile = "User.xsd";
-            string xmlFile = "User.xml";
-            sqlDbUnitTest.ReadXmlSchema(xmlSchemaFile);
-            sqlDbUnitTest.ReadXml(xmlFile);
-            sqlDbUnitTest.PerformDbOperation(DbOperation.CleanInsertIdentity);
-            </code>
-            <seealso cref="T:NDbUnit.Core.INDbUnitTest"/>
-            </example>
         </member>
     </members>
 </doc>

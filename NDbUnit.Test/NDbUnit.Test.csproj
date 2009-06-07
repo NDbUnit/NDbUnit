@@ -268,6 +268,26 @@
       <Project>{093E77F8-2F55-4823-B118-3D33F376F1A8}</Project>
       <Name>NDbUnit.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NDbUnit.MySql\NDbUnit.MySql.csproj">
+      <Project>{7C797012-5848-4AC5-A45E-776BCEAC52D1}</Project>
+      <Name>NDbUnit.MySql</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NDbUnit.OleDb\NDbUnit.OleDb.csproj">
+      <Project>{1F40909A-ABDD-484C-AA52-14464A5B677A}</Project>
+      <Name>NDbUnit.OleDb</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NDbUnit.SqlClient\NDbUnit.SqlClient.csproj">
+      <Project>{89F1342D-0FF8-492E-BD74-175D1AAC9FE8}</Project>
+      <Name>NDbUnit.SqlClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NDbUnit.SqlLite\NDbUnit.SqlLite.csproj">
+      <Project>{E9B111D5-F5C0-417D-8F9B-B6BE0B1AC7F4}</Project>
+      <Name>NDbUnit.SqlLite</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NDbUnit.SqlServerCe\NDbUnit.SqlServerCe.csproj">
+      <Project>{DA3F4EE1-CD15-4929-88F5-ABE52A7887D0}</Project>
+      <Name>NDbUnit.SqlServerCe</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
