@@ -354,9 +354,9 @@ namespace NDbUnit.Core
 
                 ((DbDataAdapter)sqlDataAdapter).Update(dataTable);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw (e);
+                throw;
             }
             finally
             {

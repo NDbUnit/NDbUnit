@@ -273,14 +273,14 @@ namespace NDbUnit.Core
 
                 dbTransaction.Commit();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 if (dbTransaction != null)
                 {
                     dbTransaction.Rollback();
                 }
 
-                throw (e);
+                throw;
             }
             finally
             {
@@ -322,9 +322,9 @@ namespace NDbUnit.Core
 
                 return dsToFill;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw (e);
+                throw;
             }
             finally
             {

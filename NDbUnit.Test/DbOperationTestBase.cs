@@ -53,9 +53,9 @@ namespace NDbUnit.Test.Common
             {
                 _commandBuilder.BuildCommands(xmlSchemaFile);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw (e);
+                throw;
             }
 
             DataSet dsSchema = _commandBuilder.GetSchema();
@@ -87,14 +87,14 @@ namespace NDbUnit.Test.Common
                 _dbOperation.Delete(_dsData, _commandBuilder, sqlTransaction);
                 sqlTransaction.Commit();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 if (sqlTransaction != null)
                 {
                     sqlTransaction.Rollback();
                 }
 
-                throw (e);
+                throw;
             }
             Assert.IsTrue(true);
         }
@@ -109,14 +109,14 @@ namespace NDbUnit.Test.Common
                 _dbOperation.DeleteAll(_commandBuilder, sqlTransaction);
                 sqlTransaction.Commit();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 if (sqlTransaction != null)
                 {
                     sqlTransaction.Rollback();
                 }
 
-                throw (e);
+                throw;
             }
             Assert.IsTrue(true);
         }
@@ -135,14 +135,14 @@ namespace NDbUnit.Test.Common
                 _dbOperation.Insert(_dsData, _commandBuilder, sqlTransaction);
                 sqlTransaction.Commit();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 if (sqlTransaction != null)
                 {
                     sqlTransaction.Rollback();
                 }
 
-                throw (e);
+                throw;
             }
             Assert.IsTrue(true);
         }
@@ -159,14 +159,14 @@ namespace NDbUnit.Test.Common
                 _dbOperation.InsertIdentity(_dsData, _commandBuilder, sqlTransaction);
                 sqlTransaction.Commit();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 if (sqlTransaction != null)
                 {
                     sqlTransaction.Rollback();
                 }
 
-                throw (e);
+                throw;
             }
             Assert.IsTrue(true);
         }
@@ -189,14 +189,14 @@ namespace NDbUnit.Test.Common
                 _dbOperation.Refresh(ds, _commandBuilder, sqlTransaction);
                 sqlTransaction.Commit();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 if (sqlTransaction != null)
                 {
                     sqlTransaction.Rollback();
                 }
 
-                throw (e);
+                throw;
             }
             Assert.IsTrue(true);
         }
@@ -219,14 +219,14 @@ namespace NDbUnit.Test.Common
                 _dbOperation.Update(ds, _commandBuilder, sqlTransaction);
                 sqlTransaction.Commit();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 if (sqlTransaction != null)
                 {
                     sqlTransaction.Rollback();
                 }
 
-                throw (e);
+                throw;
             }
             Assert.IsTrue(true);
         }
@@ -267,14 +267,14 @@ namespace NDbUnit.Test.Common
                 }
                 sqlTransaction.Commit();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 if (sqlTransaction != null)
                 {
                     sqlTransaction.Rollback();
                 }
 
-                throw (e);
+                throw;
             }
         }
 
