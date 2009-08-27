@@ -44,26 +44,16 @@ namespace NDbUnit.Core.MySqlClient
             get { return ""; }
         }
 
-        protected override IDbConnection GetConnection(string connectionString)
-        {
-            return new MySqlConnection(connectionString);
-        }
-
         protected override IDbCommand CreateDbCommand()
         {
-            return new MySqlCommand();
+
+            MySqlCommand command = new MySqlCommand();
+            if (CommandTimeOutSeconds != 0)
+                command.CommandTimeout = CommandTimeOutSeconds;
+            return command;
+
         }
 
-        protected override IDataParameter CreateNewSqlParameter(int index, DataRow dataRow)
-        {
-            return new MySqlParameter("?p" + index, (MySqlDbType) dataRow["ProviderType"],
-                                    (int) dataRow["ColumnSize"], (string) dataRow["ColumnName"]);
-        }
-
-        protected override string GetParameterDesignator(int count)
-        {
-            return "?p" + count;
-        }
         protected override IDbCommand CreateInsertCommand(IDbCommand selectCommand, string tableName)
         {
             int count = 1;
@@ -75,23 +65,23 @@ namespace NDbUnit.Core.MySqlClient
             IDbCommand sqlInsertCommand = CreateDbCommand();
             foreach (DataRow dataRow in _dataTableSchema.Rows)
             {
-                
-                    if (notFirstColumn)
-                    {
-                        sb.Append(", ");
-                        sbParam.Append(", ");
-                    }
 
-                    notFirstColumn = true;
+                if (notFirstColumn)
+                {
+                    sb.Append(", ");
+                    sbParam.Append(", ");
+                }
 
-                    sb.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
-                    sbParam.Append(GetParameterDesignator(count));
+                notFirstColumn = true;
 
-                    sqlParameter = CreateNewSqlParameter(count, dataRow);
-                    sqlInsertCommand.Parameters.Add(sqlParameter);
+                sb.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
+                sbParam.Append(GetParameterDesignator(count));
 
-                    ++count;
-                
+                sqlParameter = CreateNewSqlParameter(count, dataRow);
+                sqlInsertCommand.Parameters.Add(sqlParameter);
+
+                ++count;
+
             }
 
             sb.Append(") VALUES(" + sbParam + ")");
@@ -99,6 +89,22 @@ namespace NDbUnit.Core.MySqlClient
             sqlInsertCommand.CommandText = sb.ToString();
 
             return sqlInsertCommand;
+        }
+
+        protected override IDataParameter CreateNewSqlParameter(int index, DataRow dataRow)
+        {
+            return new MySqlParameter("?p" + index, (MySqlDbType)dataRow["ProviderType"],
+                                    (int)dataRow["ColumnSize"], (string)dataRow["ColumnName"]);
+        }
+
+        protected override IDbConnection GetConnection(string connectionString)
+        {
+            return new MySqlConnection(connectionString);
+        }
+
+        protected override string GetParameterDesignator(int count)
+        {
+            return "?p" + count;
         }
 
     }

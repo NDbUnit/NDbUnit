@@ -32,7 +32,8 @@ namespace NDbUnit.Core.OleDb
     {
         private OleDbConnection _oleDbConnection;
 
-        public OleDbCommandBuilder(string connectionString) : base(connectionString)
+        public OleDbCommandBuilder(string connectionString)
+            : base(connectionString)
         {
             _oleDbConnection = new OleDbConnection(connectionString);
         }
@@ -60,7 +61,12 @@ namespace NDbUnit.Core.OleDb
 
         protected override IDbCommand CreateDbCommand()
         {
-            return new OleDbCommand();
+            OleDbCommand command = new OleDbCommand();
+
+            if (CommandTimeOutSeconds != 0)
+                command.CommandTimeout = CommandTimeOutSeconds;
+
+            return command;
         }
 
         protected override string GetParameterDesignator(int count)
@@ -78,7 +84,7 @@ namespace NDbUnit.Core.OleDb
             StringBuilder sb = new StringBuilder();
             sb.Append("UPDATE " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + " SET ");
 
-			OleDbCommand oleDbUpdateCommand = new OleDbCommand();
+            OleDbCommand oleDbUpdateCommand = CreateDbCommand() as OleDbCommand;
 
             int count = 1;
             bool notFirstKey = false;
@@ -90,7 +96,7 @@ namespace NDbUnit.Core.OleDb
             bool containsAllPrimaryKeys = true;
             foreach (DataRow dataRow in _dataTableSchema.Rows)
             {
-                if (!(bool) dataRow["IsKey"])
+                if (!(bool)dataRow["IsKey"])
                 {
                     containsAllPrimaryKeys = false;
                     break;
@@ -100,14 +106,14 @@ namespace NDbUnit.Core.OleDb
             foreach (DataRow dataRow in _dataTableSchema.Rows)
             {
                 // A key column.
-                if ((bool) dataRow["IsKey"])
+                if ((bool)dataRow["IsKey"])
                 {
                     if (notFirstKey)
                     {
                         sbPrimaryKey.Append(" AND ");
                     }
 
-					notFirstKey = true;
+                    notFirstKey = true;
 
                     sbPrimaryKey.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
                     sbPrimaryKey.Append("=?");
@@ -115,17 +121,17 @@ namespace NDbUnit.Core.OleDb
                     oleDbParameter = (OleDbParameter)CreateNewSqlParameter(count, dataRow);
                     keyParameters.Add(oleDbParameter);
 
-					++count;
-				}
+                    ++count;
+                }
 
-				if (containsAllPrimaryKeys || !(bool)dataRow["IsKey"])
-				{
-					if (notFirstColumn)
-					{
-						sb.Append(", ");
-					}
+                if (containsAllPrimaryKeys || !(bool)dataRow["IsKey"])
+                {
+                    if (notFirstColumn)
+                    {
+                        sb.Append(", ");
+                    }
 
-					notFirstColumn = true;
+                    notFirstColumn = true;
 
                     sb.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
                     sb.Append("=?");
@@ -137,23 +143,23 @@ namespace NDbUnit.Core.OleDb
                 }
             }
 
-			// Add key parameters last since ordering is important.
-			for (int i = 0; i < keyParameters.Count; ++i)
-			{
-				oleDbUpdateCommand.Parameters.Add((OleDbParameter)keyParameters[i]);
-			}
+            // Add key parameters last since ordering is important.
+            for (int i = 0; i < keyParameters.Count; ++i)
+            {
+                oleDbUpdateCommand.Parameters.Add((OleDbParameter)keyParameters[i]);
+            }
 
             sb.Append(" WHERE " + sbPrimaryKey);
 
-			oleDbUpdateCommand.CommandText = sb.ToString();
+            oleDbUpdateCommand.CommandText = sb.ToString();
 
-			return oleDbUpdateCommand;
-		}
+            return oleDbUpdateCommand;
+        }
 
         protected override IDataParameter CreateNewSqlParameter(int index, DataRow dataRow)
         {
-            return new OleDbParameter("@p" + index, (System.Data.OleDb.OleDbType) dataRow["ProviderType"],
-                                      (int) dataRow["ColumnSize"], (string) dataRow["ColumnName"]);
+            return new OleDbParameter("@p" + index, (System.Data.OleDb.OleDbType)dataRow["ProviderType"],
+                                      (int)dataRow["ColumnSize"], (string)dataRow["ColumnName"]);
         }
     }
 }

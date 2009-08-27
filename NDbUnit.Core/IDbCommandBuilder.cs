@@ -27,6 +27,7 @@ namespace NDbUnit.Core
 {
     public interface IDbCommandBuilder
     {
+        int CommandTimeOutSeconds { get; set; }
         string QuotePrefix
         {
             get;

@@ -44,14 +44,16 @@ namespace NDbUnit.Core.SqlClient
 	public class SqlDbUnitTest : NDbUnitTest
 	{
 
-		public SqlDbUnitTest(string connectionString) : base(connectionString)
+        public SqlDbUnitTest(string connectionString) : base(connectionString)
 		{
 		}
-        
-	    protected override IDbCommandBuilder CreateDbCommandBuilder(string connectionString)
-	    {
-	        return new SqlDbCommandBuilder(connectionString);
-	    }
+
+        protected override IDbCommandBuilder CreateDbCommandBuilder(string connectionString)
+        {
+            SqlDbCommandBuilder commandBuilder = new SqlDbCommandBuilder(connectionString);
+            commandBuilder.CommandTimeOutSeconds = this.CommandTimeOut;
+            return commandBuilder;
+        }
 
 	    protected override IDbOperation CreateDbOperation()
 	    {
@@ -62,5 +64,6 @@ namespace NDbUnit.Core.SqlClient
 	    {
 	        return new SqlDataAdapter((SqlCommand) command);
 	    }
+
 	}
 }

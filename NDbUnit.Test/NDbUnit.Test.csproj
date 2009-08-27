@@ -159,6 +159,11 @@
     <Compile Include="XmlTestFiles.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Xml\MySql\UserDS.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UserDS.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Xml\OleDb\UserDS.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

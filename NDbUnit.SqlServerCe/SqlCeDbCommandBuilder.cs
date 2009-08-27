@@ -49,7 +49,12 @@ namespace NDbUnit.Core.SqlServerCe
 
         protected override IDbCommand CreateDbCommand()
         {
-            return new SqlCeCommand();
+            SqlCeCommand command = new SqlCeCommand();
+
+            if (CommandTimeOutSeconds != 0)
+                command.CommandTimeout = CommandTimeOutSeconds;
+
+            return command;
         }
 
         protected override IDataParameter CreateNewSqlParameter(int index, DataRow dataRow)

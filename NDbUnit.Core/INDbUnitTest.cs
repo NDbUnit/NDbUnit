@@ -41,7 +41,7 @@ namespace NDbUnit.Core
         /// Occurs before DbOperation begins.
         /// </summary>
         event PreOperationEvent PreOperation;
-        
+
         /// <summary>
         /// Performs a database operation.
         /// </summary>
@@ -127,6 +127,9 @@ namespace NDbUnit.Core
         /// schema will be exported.</param>
         /// <exception cref="NDbUnitException" />
         DataSet GetDataSetFromDb(StringCollection tableNames);
+
+
+        int CommandTimeOut { get; set; }
 
     }
 }

@@ -74,7 +74,7 @@ namespace NDbUnit.Core.SqlLite
 
         protected override IDbCommand CreateSelectCommand(DataSet ds, string tableName)
         {
-            SQLiteCommand sqlSelectCommand = new SQLiteCommand();
+            SQLiteCommand sqlSelectCommand = CreateDbCommand() as SQLiteCommand;
 
             bool notFirstColumn = false;
             StringBuilder sb = new StringBuilder("SELECT ");
@@ -115,7 +115,12 @@ namespace NDbUnit.Core.SqlLite
 
         protected override IDbCommand CreateDbCommand()
         {
-            throw new System.NotImplementedException();
+            var command = new SQLiteCommand();
+
+            if (CommandTimeOutSeconds != 0)
+                command.CommandTimeout = CommandTimeOutSeconds;
+
+            return command;
         }
 
         /// <summary>
@@ -137,7 +142,7 @@ namespace NDbUnit.Core.SqlLite
             sb.Append("INSERT INTO " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + "(");
             StringBuilder sbParam = new StringBuilder();
             DbParameter sqlParameter = null;
-            SQLiteCommand sqlInsertCommand = new SQLiteCommand();
+            SQLiteCommand sqlInsertCommand = CreateDbCommand() as SQLiteCommand;
             foreach (DataRow dataRow in _dataTableSchema.Rows)
             {
                 // Not an identity column.
@@ -176,7 +181,7 @@ namespace NDbUnit.Core.SqlLite
             sb.Append("INSERT INTO " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + "(");
             StringBuilder sbParam = new StringBuilder();
             DbParameter sqlParameter = null;
-            SQLiteCommand sqlInsertIdentityCommand = new SQLiteCommand();
+            SQLiteCommand sqlInsertIdentityCommand = CreateDbCommand() as SQLiteCommand;
             foreach (DataRow dataRow in _dataTableSchema.Rows)
             {
                 if (notFirstColumn)
@@ -208,7 +213,7 @@ namespace NDbUnit.Core.SqlLite
             StringBuilder sb = new StringBuilder();
             sb.Append("DELETE FROM " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + " WHERE ");
 
-            SQLiteCommand sqlDeleteCommand = new SQLiteCommand();
+            SQLiteCommand sqlDeleteCommand = CreateDbCommand() as SQLiteCommand;
 
             int count = 1;
             DbParameter sqlParameter;
@@ -248,7 +253,7 @@ namespace NDbUnit.Core.SqlLite
             StringBuilder sb = new StringBuilder();
             sb.Append("UPDATE " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + " SET ");
 
-            SQLiteCommand sqlUpdateCommand = new SQLiteCommand();
+            SQLiteCommand sqlUpdateCommand = CreateDbCommand() as SQLiteCommand;
 
             int count = 1;
             bool notFirstKey = false;

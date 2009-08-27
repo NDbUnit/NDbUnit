@@ -37,144 +37,39 @@ namespace NDbUnit.Core
 
     public delegate void PostOperationEvent(object sender, OperationEventArgs args);
 
-
     /// <summary>
     /// The base class implementation of all NDbUnit unit test data adapters.
     /// </summary>
     public abstract class NDbUnitTest : INDbUnitTest
     {
+        private IDbCommandBuilder _dbCommandBuilder;
+
+        private readonly IDbOperation _dbOperation;
+
         private DataSet _ds;
-        private string _xmlSchemaFile = "";
-        private string _xmlFile = "";
+
         private bool _initialized;
 
-        public event PreOperationEvent PreOperation;
+        private string _xmlFile = "";
+
+        private string _connectionString;
+        private string _xmlSchemaFile = "";
+
         public event PostOperationEvent PostOperation;
 
-        private readonly IDbCommandBuilder _dbCommandBuilder;
-        private readonly IDbOperation _dbOperation;
+        public event PreOperationEvent PreOperation;
+
+        protected NDbUnitTest(string connectionString)
+        {
+            _connectionString = connectionString;
+            _dbOperation = CreateDbOperation();
+
+        }
+        public int CommandTimeOut { get; set; }
 
         protected virtual DataSet DS
         {
             get { return _ds; }
-        }
-
-        protected NDbUnitTest(string connectionString)
-        {
-            _dbOperation = CreateDbOperation();
-            _dbCommandBuilder = CreateDbCommandBuilder(connectionString);
-        }
-
-        protected abstract IDbCommandBuilder CreateDbCommandBuilder(string connectionString);
-        protected abstract IDbOperation CreateDbOperation();
-
-        protected IDbCommandBuilder GetDbCommandBuilder()
-        {
-            return _dbCommandBuilder;
-        }
-
-        protected IDbOperation GetDbOperation()
-        {
-            return _dbOperation;
-        }
-
-        #region Public Interface Implementation
-
-        public void ReadXmlSchema(Stream xmlSchema)
-        {
-            IDbCommandBuilder dbCommandBuilder = GetDbCommandBuilder();
-            dbCommandBuilder.BuildCommands(xmlSchema);
-
-            DataSet dsSchema = dbCommandBuilder.GetSchema();
-
-            _ds = dsSchema.Clone();
-
-            _initialized = true;
-        }
-
-        public void ReadXmlSchema(string xmlSchemaFile)
-        {
-            if (string.IsNullOrEmpty(xmlSchemaFile))
-            {
-                throw new ArgumentException("Schema file cannot be null or empty", "xmlSchemaFile");
-            }
-
-            if (XmlSchemaFileHasNotYetBeenRead(xmlSchemaFile))
-            {
-                Stream stream = null;
-                try
-                {
-                    stream = GetXmlSchemaFileStream(xmlSchemaFile);
-                    ReadXmlSchema(stream);
-                }
-                finally
-                {
-                    if (stream != null)
-                    {
-                        stream.Close();
-                    }
-                }
-                _xmlSchemaFile = xmlSchemaFile;
-            }
-
-            _initialized = true;
-        }
-
-        private bool XmlSchemaFileHasNotYetBeenRead(string xmlSchemaFile)
-        {
-            return _xmlSchemaFile.ToLower() != xmlSchemaFile.ToLower();
-        }
-
-        protected virtual FileStream GetXmlSchemaFileStream(string xmlSchemaFile)
-        {
-            return new FileStream(xmlSchemaFile, FileMode.Open,
-                                  FileAccess.Read, FileShare.Read);
-        }
-
-        public void ReadXml(Stream xml)
-        {
-            if (_ds == null)
-            {
-                throw new InvalidOperationException("You must first call ReadXmlSchema before reading in xml data.");
-            }
-            _ds.Clear();
-            _ds.ReadXml(xml);
-        }
-
-        public void ReadXml(string xmlFile)
-        {
-            if (string.IsNullOrEmpty(xmlFile))
-            {
-                throw new ArgumentException("Xml file cannot be null or empty", "xmlFile");
-            }
-
-            if (XmlDataFileHasNotYetBeenRead(xmlFile))
-            {
-                Stream stream = null;
-                try
-                {
-                    stream = GetXmlDataFileStream(xmlFile);
-                    ReadXml(stream);
-                }
-                finally
-                {
-                    if (stream != null)
-                    {
-                        stream.Close();
-                    }
-                }
-                _xmlFile = xmlFile;
-            }
-        }
-
-        private bool XmlDataFileHasNotYetBeenRead(string xmlFile)
-        {
-            return _xmlFile.ToLower() != xmlFile.ToLower();
-        }
-
-        protected virtual FileStream GetXmlDataFileStream(string xmlFile)
-        {
-            return new FileStream(xmlFile, FileMode.Open);
         }
 
         //Todo: remove method at some point
@@ -189,6 +84,50 @@ namespace NDbUnit.Core
         {
             checkInitialized();
             return _ds.Clone();
+        }
+
+        public DataSet GetDataSetFromDb(StringCollection tableNames)
+        {
+            checkInitialized();
+
+            IDbCommandBuilder dbCommandBuilder = GetDbCommandBuilder();
+            if (null == tableNames)
+            {
+                tableNames = new StringCollection();
+                foreach (DataTable dt in _ds.Tables)
+                {
+                    tableNames.Add(dt.TableName);
+                }
+            }
+
+            IDbConnection dbConnection = dbCommandBuilder.Connection;
+            try
+            {
+                dbConnection.Open();
+                DataSet dsToFill = _ds.Clone();
+                foreach (string tableName in tableNames)
+                {
+                    OnGetDataSetFromDb(tableName, ref dsToFill, dbConnection);
+                }
+
+                return dsToFill;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                if (ConnectionState.Open == dbConnection.State)
+                {
+                    dbConnection.Close();
+                }
+            }
+        }
+
+        public DataSet GetDataSetFromDb()
+        {
+            return GetDataSetFromDb(null);
         }
 
         public void PerformDbOperation(DbOperationFlag dbOperationFlag)
@@ -291,51 +230,119 @@ namespace NDbUnit.Core
             }
         }
 
-        public DataSet GetDataSetFromDb()
+        public void ReadXml(string xmlFile)
         {
-            return GetDataSetFromDb(null);
+            if (string.IsNullOrEmpty(xmlFile))
+            {
+                throw new ArgumentException("Xml file cannot be null or empty", "xmlFile");
+            }
+
+            if (XmlDataFileHasNotYetBeenRead(xmlFile))
+            {
+                Stream stream = null;
+                try
+                {
+                    stream = GetXmlDataFileStream(xmlFile);
+                    ReadXml(stream);
+                }
+                finally
+                {
+                    if (stream != null)
+                    {
+                        stream.Close();
+                    }
+                }
+                _xmlFile = xmlFile;
+            }
         }
 
-        public DataSet GetDataSetFromDb(StringCollection tableNames)
+        public void ReadXml(Stream xml)
         {
-            checkInitialized();
+            if (_ds == null)
+            {
+                throw new InvalidOperationException("You must first call ReadXmlSchema before reading in xml data.");
+            }
+            _ds.Clear();
+            _ds.ReadXml(xml);
+        }
 
+        public void ReadXmlSchema(Stream xmlSchema)
+        {
             IDbCommandBuilder dbCommandBuilder = GetDbCommandBuilder();
-            if (null == tableNames)
-            {
-                tableNames = new StringCollection();
-                foreach (DataTable dt in _ds.Tables)
-                {
-                    tableNames.Add(dt.TableName);
-                }
-            }
+            dbCommandBuilder.BuildCommands(xmlSchema);
 
-            IDbConnection dbConnection = dbCommandBuilder.Connection;
-            try
-            {
-                dbConnection.Open();
-                DataSet dsToFill = _ds.Clone();
-                foreach (string tableName in tableNames)
-                {
-                    OnGetDataSetFromDb(tableName, ref dsToFill, dbConnection);
-                }
+            DataSet dsSchema = dbCommandBuilder.GetSchema();
 
-                return dsToFill;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                if (ConnectionState.Open == dbConnection.State)
-                {
-                    dbConnection.Close();
-                }
-            }
+            _ds = dsSchema.Clone();
+
+            _initialized = true;
         }
 
-        #endregion
+        public void ReadXmlSchema(string xmlSchemaFile)
+        {
+            if (string.IsNullOrEmpty(xmlSchemaFile))
+            {
+                throw new ArgumentException("Schema file cannot be null or empty", "xmlSchemaFile");
+            }
+
+            if (XmlSchemaFileHasNotYetBeenRead(xmlSchemaFile))
+            {
+                Stream stream = null;
+                try
+                {
+                    stream = GetXmlSchemaFileStream(xmlSchemaFile);
+                    ReadXmlSchema(stream);
+                }
+                finally
+                {
+                    if (stream != null)
+                    {
+                        stream.Close();
+                    }
+                }
+                _xmlSchemaFile = xmlSchemaFile;
+            }
+
+            _initialized = true;
+        }
+
+        protected abstract IDbDataAdapter CreateDataAdapter(IDbCommand command);
+
+        protected abstract IDbCommandBuilder CreateDbCommandBuilder(string connectionString);
+
+        protected abstract IDbOperation CreateDbOperation();
+
+        protected IDbCommandBuilder GetDbCommandBuilder()
+        {
+            if (_dbCommandBuilder == null)
+                _dbCommandBuilder = CreateDbCommandBuilder(_connectionString);
+
+            return _dbCommandBuilder;
+        }
+
+        protected IDbOperation GetDbOperation()
+        {
+            return _dbOperation;
+        }
+
+        protected virtual FileStream GetXmlDataFileStream(string xmlFile)
+        {
+            return new FileStream(xmlFile, FileMode.Open);
+        }
+
+        protected virtual FileStream GetXmlSchemaFileStream(string xmlSchemaFile)
+        {
+            return new FileStream(xmlSchemaFile, FileMode.Open,
+                                  FileAccess.Read, FileShare.Read);
+        }
+
+        protected virtual void OnGetDataSetFromDb(string tableName, ref DataSet dsToFill, IDbConnection dbConnection)
+        {
+            IDbCommand selectCommand = GetDbCommandBuilder().GetSelectCommand(tableName);
+            selectCommand.Connection = dbConnection;
+            IDbDataAdapter adapter = CreateDataAdapter(selectCommand);
+            ((DbDataAdapter)adapter).Fill(dsToFill, tableName);
+        }
 
         private void checkInitialized()
         {
@@ -347,14 +354,15 @@ namespace NDbUnit.Core
             }
         }
 
-        protected virtual void OnGetDataSetFromDb(string tableName, ref DataSet dsToFill, IDbConnection dbConnection)
+        private bool XmlDataFileHasNotYetBeenRead(string xmlFile)
         {
-            IDbCommand selectCommand = _dbCommandBuilder.GetSelectCommand(tableName);
-            selectCommand.Connection = dbConnection;
-            IDbDataAdapter adapter = CreateDataAdapter(selectCommand);
-            ((DbDataAdapter)adapter).Fill(dsToFill, tableName);
+            return _xmlFile.ToLower() != xmlFile.ToLower();
         }
 
-        protected abstract IDbDataAdapter CreateDataAdapter(IDbCommand command);
+        private bool XmlSchemaFileHasNotYetBeenRead(string xmlSchemaFile)
+        {
+            return _xmlSchemaFile.ToLower() != xmlSchemaFile.ToLower();
+        }
+
     }
 }

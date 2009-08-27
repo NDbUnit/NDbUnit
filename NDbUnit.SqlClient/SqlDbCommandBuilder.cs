@@ -23,12 +23,14 @@
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System;
 
 namespace NDbUnit.Core.SqlClient
 {
     public class SqlDbCommandBuilder : DbCommandBuilder
     {
-        public SqlDbCommandBuilder(string connectionString) : base(connectionString)
+        public SqlDbCommandBuilder(string connectionString)
+            : base(connectionString)
         {
         }
 
@@ -49,13 +51,17 @@ namespace NDbUnit.Core.SqlClient
 
         protected override IDbCommand CreateDbCommand()
         {
-            return new SqlCommand();
+            SqlCommand command = new SqlCommand();
+            if (CommandTimeOutSeconds != 0)
+                command.CommandTimeout = CommandTimeOutSeconds;
+
+            return command;
         }
 
         protected override IDataParameter CreateNewSqlParameter(int index, DataRow dataRow)
         {
-            return new SqlParameter("@p" + index, (SqlDbType) dataRow["ProviderType"],
-                                    (int) dataRow["ColumnSize"], (string) dataRow["ColumnName"]);
+            return new SqlParameter("@p" + index, (SqlDbType)dataRow["ProviderType"],
+                                    (int)dataRow["ColumnSize"], (string)dataRow["ColumnName"]);
         }
     }
 }
