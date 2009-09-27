@@ -406,7 +406,7 @@ namespace NDbUnit.Core
 
         private DataTable GetSchemaTable(IDbCommand sqlSelectCommand)
         {
-            DataTable dataTableSchema;
+            DataTable dataTableSchema = new DataTable();
             bool isClosed = ConnectionState.Closed == _sqlConnection.State;
 
             try
@@ -420,6 +420,10 @@ namespace NDbUnit.Core
                 dataTableSchema = sqlDataReader.GetSchemaTable();
                 sqlSelectCommand.Cancel();
                 sqlDataReader.Close();
+            }
+            catch (NotSupportedException)
+            { 
+                //swallow this since .Close() op isn't supported on all DB targets (e.g., SQLCE)
             }
             finally
             {
