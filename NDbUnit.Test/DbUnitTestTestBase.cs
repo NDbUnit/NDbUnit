@@ -127,7 +127,7 @@ namespace NDbUnit.Test.Common
             dummyDS.ReadXmlSchema(GetXmlSchemaFilename());
             SetupResult.For(_mockDbCommandBuilder.GetSchema()).Return(dummyDS);
             SetupResult.For(_mockDbCommandBuilder.Connection).Return(_mockConnection);
-            _mockConnection.Open();
+            //_mockConnection.Open();
             SetupResult.For(_mockConnection.BeginTransaction()).Return(_mockTransaction);
             _mockDbOperation.Update(dummyDS, _mockDbCommandBuilder, _mockTransaction);
             LastCall.IgnoreArguments().Constraints(Is.TypeOf<DataSet>(), Is.Equal(_mockDbCommandBuilder),

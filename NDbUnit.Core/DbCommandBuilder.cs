@@ -38,11 +38,19 @@ namespace NDbUnit.Core
 
         private bool _initialized;
 
+        private bool _passedconnection;
+
         protected IDbConnection _sqlConnection;
 
         private XmlDataDocument _xdd = new XmlDataDocument();
 
         private string _xmlSchemaFile = "";
+
+        protected DbCommandBuilder(IDbConnection connection)
+        {
+            _passedconnection = true;
+            _sqlConnection = connection;
+        }
 
         protected DbCommandBuilder(string connectionString)
         {
@@ -69,25 +77,6 @@ namespace NDbUnit.Core
         public string XmlSchemaFile
         {
             get { return _xmlSchemaFile; }
-        }
-
-        public void BuildCommands(string xmlSchemaFile)
-        {
-            Stream stream = null;
-            try
-            {
-                stream = new FileStream(xmlSchemaFile, FileMode.Open);
-                BuildCommands(stream);
-            }
-            finally
-            {
-                if (stream != null)
-                {
-                    stream.Close();
-                }
-            }
-            _xmlSchemaFile = xmlSchemaFile;
-            _initialized = true;
         }
 
         public void BuildCommands(Stream xmlSchema)
@@ -118,6 +107,25 @@ namespace NDbUnit.Core
 
             _xdd = xdd;
             _dbCommandColl = ht;
+            _initialized = true;
+        }
+
+        public void BuildCommands(string xmlSchemaFile)
+        {
+            Stream stream = null;
+            try
+            {
+                stream = new FileStream(xmlSchemaFile, FileMode.Open);
+                BuildCommands(stream);
+            }
+            finally
+            {
+                if (stream != null)
+                {
+                    stream.Close();
+                }
+            }
+            _xmlSchemaFile = xmlSchemaFile;
             _initialized = true;
         }
 
@@ -168,14 +176,14 @@ namespace NDbUnit.Core
         protected virtual IDbCommand CreateDeleteAllCommand(string tableName)
         {
             IDbCommand command = CreateDbCommand();
-            command.CommandText = "DELETE FROM " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix);
+            command.CommandText = String.Format("DELETE FROM {0}", TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix));
             return command;
         }
 
         protected virtual IDbCommand CreateDeleteCommand(IDbCommand selectCommand, string tableName)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("DELETE FROM " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + " WHERE ");
+            sb.Append(String.Format("DELETE FROM {0} WHERE ", TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix)));
 
             IDbCommand sqlDeleteCommand = CreateDbCommand();
 
@@ -191,7 +199,7 @@ namespace NDbUnit.Core
                     }
 
                     sb.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
-                    sb.Append("=" + GetParameterDesignator(count));
+                    sb.Append(String.Format("={0}", GetParameterDesignator(count)));
 
                     IDataParameter sqlParameter = CreateNewSqlParameter(count, dataRow);
                     sqlDeleteCommand.Parameters.Add(sqlParameter);
@@ -210,7 +218,7 @@ namespace NDbUnit.Core
             int count = 1;
             bool notFirstColumn = false;
             StringBuilder sb = new StringBuilder();
-            sb.Append("INSERT INTO " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + "(");
+            sb.Append(String.Format("INSERT INTO {0}(", TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix)));
             StringBuilder sbParam = new StringBuilder();
             IDataParameter sqlParameter;
             IDbCommand sqlInsertCommand = CreateDbCommand();
@@ -237,7 +245,7 @@ namespace NDbUnit.Core
                 }
             }
 
-            sb.Append(") VALUES(" + sbParam + ")");
+            sb.Append(String.Format(") VALUES({0})", sbParam));
 
             sqlInsertCommand.CommandText = sb.ToString();
 
@@ -249,7 +257,7 @@ namespace NDbUnit.Core
             int count = 1;
             bool notFirstColumn = false;
             StringBuilder sb = new StringBuilder();
-            sb.Append("INSERT INTO " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + "(");
+            sb.Append(String.Format("INSERT INTO {0}(", TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix)));
             StringBuilder sbParam = new StringBuilder();
             IDataParameter sqlParameter;
             IDbCommand sqlInsertIdentityCommand = CreateDbCommand();
@@ -272,7 +280,7 @@ namespace NDbUnit.Core
                 ++count;
             }
 
-            sb.Append(") VALUES(" + sbParam + ")");
+            sb.Append(String.Format(") VALUES({0})", sbParam));
 
             sqlInsertIdentityCommand.CommandText = sb.ToString();
 
@@ -325,7 +333,7 @@ namespace NDbUnit.Core
         protected virtual IDbCommand CreateUpdateCommand(IDbCommand selectCommand, string tableName)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("UPDATE " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + " SET ");
+            sb.Append(String.Format("UPDATE {0} SET ", TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix)));
 
             IDbCommand sqlUpdateCommand = CreateDbCommand();
 
@@ -358,7 +366,7 @@ namespace NDbUnit.Core
                     notFirstKey = true;
 
                     sbPrimaryKey.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
-                    sbPrimaryKey.Append("=" + GetParameterDesignator(count));
+                    sbPrimaryKey.Append(String.Format("={0}", GetParameterDesignator(count)));
 
                     sqlParameter = CreateNewSqlParameter(count, dataRow);
                     sqlUpdateCommand.Parameters.Add(sqlParameter);
@@ -376,7 +384,7 @@ namespace NDbUnit.Core
                     notFirstColumn = true;
 
                     sb.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
-                    sb.Append("=" + GetParameterDesignator(count));
+                    sb.Append(String.Format("={0}", GetParameterDesignator(count)));
 
                     sqlParameter = CreateNewSqlParameter(count, dataRow);
                     sqlUpdateCommand.Parameters.Add(sqlParameter);
@@ -385,7 +393,7 @@ namespace NDbUnit.Core
                 }
             }
 
-            sb.Append(" WHERE " + sbPrimaryKey);
+            sb.Append(String.Format(" WHERE {0}", sbPrimaryKey));
 
             sqlUpdateCommand.CommandText = sb.ToString();
 
@@ -401,10 +409,11 @@ namespace NDbUnit.Core
 
         protected virtual string GetParameterDesignator(int count)
         {
-            return "@p" + count;
+            return String.Format("@p{0}", count);
         }
 
-        private DataTable GetSchemaTable(IDbCommand sqlSelectCommand)
+        //private DataTable GetSchemaTable(IDbCommand sqlSelectCommand)
+        protected virtual DataTable GetSchemaTable(IDbCommand sqlSelectCommand)
         {
             DataTable dataTableSchema = new DataTable();
             bool isClosed = ConnectionState.Closed == _sqlConnection.State;
@@ -422,14 +431,18 @@ namespace NDbUnit.Core
                 sqlDataReader.Close();
             }
             catch (NotSupportedException)
-            { 
+            {
                 //swallow this since .Close() op isn't supported on all DB targets (e.g., SQLCE)
             }
             finally
             {
-                if (isClosed)
+                //Only close connection if connection was not passed to constructor
+                if (!_passedconnection)
                 {
-                    _sqlConnection.Close();
+                    if (_sqlConnection.State != ConnectionState.Closed)
+                    {
+                        _sqlConnection.Close();
+                    }
                 }
             }
 

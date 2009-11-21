@@ -28,8 +28,24 @@ namespace NDbUnit.Core.SqlLite
 {
     public class SqlLiteUnitTest : NDbUnitTest
     {
-        public SqlLiteUnitTest(string connectionString) : base(connectionString)
+        public SqlLiteUnitTest(string connectionString)
+            : base(connectionString)
         {
+        }
+
+        public SqlLiteUnitTest(IDbConnection connection)
+            : base(connection)
+        {
+        }
+
+        protected override IDbDataAdapter CreateDataAdapter(IDbCommand command)
+        {
+            return new SQLiteDataAdapter((SQLiteCommand)command);
+        }
+
+        protected override IDbCommandBuilder CreateDbCommandBuilder(IDbConnection connection)
+        {
+            return new SqlLiteDbCommandBuilder(connection);
         }
 
         protected override IDbCommandBuilder CreateDbCommandBuilder(string connectionString)
@@ -42,9 +58,5 @@ namespace NDbUnit.Core.SqlLite
             return new SqlLiteDbOperation();
         }
 
-        protected override IDbDataAdapter CreateDataAdapter(IDbCommand command)
-        {
-            return new SQLiteDataAdapter((SQLiteCommand) command);
-        }
     }
 }

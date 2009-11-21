@@ -42,6 +42,10 @@ namespace NDbUnit.Core
     /// </summary>
     public abstract class NDbUnitTest : INDbUnitTest
     {
+        private IDbConnection _connection;
+
+        private string _connectionString;
+
         private IDbCommandBuilder _dbCommandBuilder;
 
         private readonly IDbOperation _dbOperation;
@@ -50,14 +54,24 @@ namespace NDbUnit.Core
 
         private bool _initialized;
 
+        private bool _passedconnection;
+
         private string _xmlFile = "";
 
-        private string _connectionString;
         private string _xmlSchemaFile = "";
 
         public event PostOperationEvent PostOperation;
 
         public event PreOperationEvent PreOperation;
+
+        protected NDbUnitTest(IDbConnection connection)
+        {
+            _passedconnection = true;
+            _connection = connection;
+            _connectionString = connection.ConnectionString;
+            _dbOperation = CreateDbOperation();
+
+        }
 
         protected NDbUnitTest(string connectionString)
         {
@@ -65,6 +79,7 @@ namespace NDbUnit.Core
             _dbOperation = CreateDbOperation();
 
         }
+
         public int CommandTimeOut { get; set; }
 
         protected virtual DataSet DS
@@ -147,7 +162,10 @@ namespace NDbUnit.Core
 
             try
             {
-                dbConnection.Open();
+                if (dbConnection.State != ConnectionState.Open)
+                {
+                    dbConnection.Open();
+                }
                 dbTransaction = dbConnection.BeginTransaction();
 
                 OperationEventArgs args = new OperationEventArgs();
@@ -223,9 +241,12 @@ namespace NDbUnit.Core
             }
             finally
             {
-                if (ConnectionState.Open == dbConnection.State)
+                if (!_passedconnection)
                 {
-                    dbConnection.Close();
+                    if (ConnectionState.Open == dbConnection.State)
+                    {
+                        dbConnection.Close();
+                    }
                 }
             }
         }
@@ -266,18 +287,6 @@ namespace NDbUnit.Core
             _ds.ReadXml(xml);
         }
 
-        public void ReadXmlSchema(Stream xmlSchema)
-        {
-            IDbCommandBuilder dbCommandBuilder = GetDbCommandBuilder();
-            dbCommandBuilder.BuildCommands(xmlSchema);
-
-            DataSet dsSchema = dbCommandBuilder.GetSchema();
-
-            _ds = dsSchema.Clone();
-
-            _initialized = true;
-        }
-
         public void ReadXmlSchema(string xmlSchemaFile)
         {
             if (string.IsNullOrEmpty(xmlSchemaFile))
@@ -306,7 +315,21 @@ namespace NDbUnit.Core
             _initialized = true;
         }
 
+        public void ReadXmlSchema(Stream xmlSchema)
+        {
+            IDbCommandBuilder dbCommandBuilder = GetDbCommandBuilder();
+            dbCommandBuilder.BuildCommands(xmlSchema);
+
+            DataSet dsSchema = dbCommandBuilder.GetSchema();
+
+            _ds = dsSchema.Clone();
+
+            _initialized = true;
+        }
+
         protected abstract IDbDataAdapter CreateDataAdapter(IDbCommand command);
+
+        protected abstract IDbCommandBuilder CreateDbCommandBuilder(IDbConnection connection);
 
         protected abstract IDbCommandBuilder CreateDbCommandBuilder(string connectionString);
 
@@ -315,7 +338,15 @@ namespace NDbUnit.Core
         protected IDbCommandBuilder GetDbCommandBuilder()
         {
             if (_dbCommandBuilder == null)
-                _dbCommandBuilder = CreateDbCommandBuilder(_connectionString);
+
+                if (_connection == null)
+                {
+                    _dbCommandBuilder = CreateDbCommandBuilder(_connectionString);
+                }
+                else
+                {
+                    _dbCommandBuilder = CreateDbCommandBuilder(_connection);
+                }
 
             return _dbCommandBuilder;
         }

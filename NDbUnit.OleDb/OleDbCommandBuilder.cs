@@ -32,10 +32,21 @@ namespace NDbUnit.Core.OleDb
     {
         private OleDbConnection _oleDbConnection;
 
+        public OleDbCommandBuilder(IDbConnection connection)
+            : base(connection)
+        {
+            _oleDbConnection = (OleDbConnection)connection;
+        }
+
         public OleDbCommandBuilder(string connectionString)
             : base(connectionString)
         {
             _oleDbConnection = new OleDbConnection(connectionString);
+        }
+
+        public new OleDbConnection Connection
+        {
+            get { return _oleDbConnection; }
         }
 
         public override string QuotePrefix
@@ -48,17 +59,6 @@ namespace NDbUnit.Core.OleDb
             get { return "]"; }
         }
 
-        public new OleDbConnection Connection
-        {
-            get { return _oleDbConnection; }
-        }
-
-
-        protected override IDbConnection GetConnection(string connectionString)
-        {
-            return new OleDbConnection(connectionString);
-        }
-
         protected override IDbCommand CreateDbCommand()
         {
             OleDbCommand command = new OleDbCommand();
@@ -69,14 +69,10 @@ namespace NDbUnit.Core.OleDb
             return command;
         }
 
-        protected override string GetParameterDesignator(int count)
+        protected override IDataParameter CreateNewSqlParameter(int index, DataRow dataRow)
         {
-            return "?";
-        }
-
-        protected override string GetIdentityColumnDesignator()
-        {
-            return "IsAutoIncrement";
+            return new OleDbParameter("@p" + index, (System.Data.OleDb.OleDbType)dataRow["ProviderType"],
+                                      (int)dataRow["ColumnSize"], (string)dataRow["ColumnName"]);
         }
 
         protected override IDbCommand CreateUpdateCommand(IDbCommand selectCommand, string tableName)
@@ -156,10 +152,20 @@ namespace NDbUnit.Core.OleDb
             return oleDbUpdateCommand;
         }
 
-        protected override IDataParameter CreateNewSqlParameter(int index, DataRow dataRow)
+        protected override IDbConnection GetConnection(string connectionString)
         {
-            return new OleDbParameter("@p" + index, (System.Data.OleDb.OleDbType)dataRow["ProviderType"],
-                                      (int)dataRow["ColumnSize"], (string)dataRow["ColumnName"]);
+            return new OleDbConnection(connectionString);
         }
+
+        protected override string GetIdentityColumnDesignator()
+        {
+            return "IsAutoIncrement";
+        }
+
+        protected override string GetParameterDesignator(int count)
+        {
+            return "?";
+        }
+
     }
 }

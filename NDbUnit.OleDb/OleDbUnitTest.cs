@@ -49,7 +49,14 @@ namespace NDbUnit.Core.OleDb
         /// <param name="connectionString">The connection string 
         /// used to open the database.
         /// <seealso cref="System.Data.IDbConnection"/></param>
-        public OleDbUnitTest(string connectionString) : base(connectionString)
+
+        public OleDbUnitTest(IDbConnection connection)
+            : base(connection)
+        {
+        }
+
+        public OleDbUnitTest(string connectionString)
+            : base(connectionString)
         {
         }
 
@@ -69,6 +76,17 @@ namespace NDbUnit.Core.OleDb
                 ((OleDbOperation)GetDbOperation()).OleOleDbType = value;
             }
         }
+
+        protected override IDbDataAdapter CreateDataAdapter(IDbCommand command)
+        {
+            return new OleDbDataAdapter((OleDbCommand)command);
+        }
+
+        protected override IDbCommandBuilder CreateDbCommandBuilder(IDbConnection connection)
+        {
+            return new OleDbCommandBuilder(connection);
+        }
+
         protected override IDbCommandBuilder CreateDbCommandBuilder(string connectionString)
         {
             return new OleDbCommandBuilder(connectionString);
@@ -81,15 +99,11 @@ namespace NDbUnit.Core.OleDb
 
         protected override void OnGetDataSetFromDb(string tableName, ref DataSet dsToFill, IDbConnection dbConnection)
         {
-            OleDbCommand selectCommand = (OleDbCommand) GetDbCommandBuilder().GetSelectCommand(tableName);
+            OleDbCommand selectCommand = (OleDbCommand)GetDbCommandBuilder().GetSelectCommand(tableName);
             selectCommand.Connection = dbConnection as OleDbConnection;
             OleDbDataAdapter adapter = new OleDbDataAdapter(selectCommand);
             adapter.Fill(dsToFill, tableName);
         }
 
-        protected override IDbDataAdapter CreateDataAdapter(IDbCommand command)
-        {
-            return new OleDbDataAdapter((OleDbCommand) command);
-        }
     }
 }

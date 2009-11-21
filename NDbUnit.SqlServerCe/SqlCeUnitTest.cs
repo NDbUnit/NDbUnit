@@ -28,8 +28,19 @@ namespace NDbUnit.Core.SqlServerCe
 {
     public class SqlCeUnitTest : NDbUnitTest
     {
-        public SqlCeUnitTest(string connectionString) : base(connectionString)
+        public SqlCeUnitTest(IDbConnection connection)
+            : base(connection)
         {
+        }
+
+        public SqlCeUnitTest(string connectionString)
+            : base(connectionString)
+        {
+        }
+
+        protected override IDbDataAdapter CreateDataAdapter(IDbCommand command)
+        {
+            return new SqlCeDataAdapter((SqlCeCommand)command);
         }
 
         protected override IDbCommandBuilder CreateDbCommandBuilder(string connectionString)
@@ -37,14 +48,15 @@ namespace NDbUnit.Core.SqlServerCe
             return new SqlCeDbCommandBuilder(connectionString);
         }
 
+        protected override IDbCommandBuilder CreateDbCommandBuilder(IDbConnection connection)
+        {
+            return new SqlCeDbCommandBuilder(connection);
+        }
+
         protected override IDbOperation CreateDbOperation()
         {
             return new SqlCeDbOperation();
         }
 
-        protected override IDbDataAdapter CreateDataAdapter(IDbCommand command)
-        {
-            return new SqlCeDataAdapter((SqlCeCommand) command);
-        }
     }
 }

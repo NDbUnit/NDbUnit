@@ -50,5 +50,11 @@ namespace NDbUnit.Test
             get { return ConfigurationManager.ConnectionStrings["SqlLiteConnectionString"].ConnectionString; }
         }
 
+        public static string SqlLiteInMemConnectionString
+        {
+            get { return ConfigurationManager.ConnectionStrings["SqlLiteInMemConnectionString"].ConnectionString; }
+        }
+
+
     }
 }

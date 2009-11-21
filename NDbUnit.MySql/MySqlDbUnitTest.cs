@@ -27,44 +27,53 @@ using System.Data;
 
 namespace NDbUnit.Core.MySqlClient
 {
-	/// <summary>
-	/// The MySql unit test data adapter.
-	/// </summary>
-	/// <example>
-	/// <code>
-	/// string connectionString = "Persist Security Info=False;Integrated Security=SSPI;database=testdb;server=V-AL-DIMEOLA\NETSDK";
-	/// MySqlDbUnitTest sqlDbUnitTest = new SqlDbUnitTest(connectionString);
-	/// string xmlSchemaFile = "User.xsd";
-	/// string xmlFile = "User.xml";
-	/// sqlDbUnitTest.ReadXmlSchema(xmlSchemaFile);
-	/// sqlDbUnitTest.ReadXml(xmlFile);
-	/// sqlDbUnitTest.PerformDbOperation(DbOperation.CleanInsertIdentity);
-	/// </code>
-	/// <seealso cref="INDbUnitTest"/>
-	/// </example>
+    /// <summary>
+    /// The MySql unit test data adapter.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// string connectionString = "Persist Security Info=False;Integrated Security=SSPI;database=testdb;server=V-AL-DIMEOLA\NETSDK";
+    /// MySqlDbUnitTest sqlDbUnitTest = new SqlDbUnitTest(connectionString);
+    /// string xmlSchemaFile = "User.xsd";
+    /// string xmlFile = "User.xml";
+    /// sqlDbUnitTest.ReadXmlSchema(xmlSchemaFile);
+    /// sqlDbUnitTest.ReadXml(xmlFile);
+    /// sqlDbUnitTest.PerformDbOperation(DbOperation.CleanInsertIdentity);
+    /// </code>
+    /// <seealso cref="INDbUnitTest"/>
+    /// </example>
     public class MySqlDbUnitTest : NDbUnitTest
-	{
-
+    {
         public MySqlDbUnitTest(string connectionString)
             : base(connectionString)
-		{
-		}
-        
-	    protected override IDbCommandBuilder CreateDbCommandBuilder(string connectionString)
-	    {
-	        return new MySqlDbCommandBuilder(connectionString);
-	    }
+        {
+        }
 
-	    protected override IDbOperation CreateDbOperation()
-	    {
-	        return new MySqlDbOperation();
-	    }
+        public MySqlDbUnitTest(IDbConnection connection)
+            : base(connection)
+        {
+        }
 
-	    protected override IDbDataAdapter CreateDataAdapter(IDbCommand command)
-	    {
+        protected override IDbDataAdapter CreateDataAdapter(IDbCommand command)
+        {
             return null;
             //return new MySqlDataAdapter((MySqlCommand) command);
-	    }
+        }
+
+        protected override IDbCommandBuilder CreateDbCommandBuilder(IDbConnection connection)
+        {
+            return new MySqlDbCommandBuilder(connection);
+        }
+
+        protected override IDbCommandBuilder CreateDbCommandBuilder(string connectionString)
+        {
+            return new MySqlDbCommandBuilder(connectionString);
+        }
+
+        protected override IDbOperation CreateDbOperation()
+        {
+            return new MySqlDbOperation();
+        }
 
         protected override void OnGetDataSetFromDb(string tableName, ref DataSet dsToFill, IDbConnection dbConnection)
         {
@@ -74,6 +83,5 @@ namespace NDbUnit.Core.MySqlClient
             adapter.Fill(dsToFill, tableName);
         }
 
-        
-	}
+    }
 }

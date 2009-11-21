@@ -34,7 +34,7 @@ namespace NDbUnit.Test.Common
     {
         private const int EXPECTED_COUNT_OF_COMMANDS = 3;
 
-        private IDbCommandBuilder _commandBuilder;
+        protected IDbCommandBuilder _commandBuilder;
 
         public abstract IList<string> ExpectedDataSetTableNames { get; }
 
@@ -54,6 +54,7 @@ namespace NDbUnit.Test.Common
         public void _SetUp()
         {
             _commandBuilder = GetDbCommandBuilder();
+            ExecuteSchemaCreationScript();
             _commandBuilder.BuildCommands(GetXmlSchemaFilename());
 
         }
@@ -216,6 +217,11 @@ namespace NDbUnit.Test.Common
         protected abstract IDbCommandBuilder GetDbCommandBuilder();
 
         protected abstract string GetXmlSchemaFilename();
+
+        protected virtual void ExecuteSchemaCreationScript()
+        {
+            //default behavior performs no action, override in derived class as needed
+        }
 
     }
 }

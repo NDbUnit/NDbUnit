@@ -26,27 +26,37 @@ using System.Data;
 
 namespace NDbUnit.Core.SqlClient
 {
-	/// <summary>
-	/// The Sql Server unit test data adapter.
-	/// </summary>
-	/// <example>
-	/// <code>
-	/// string connectionString = "Persist Security Info=False;Integrated Security=SSPI;database=testdb;server=V-AL-DIMEOLA\NETSDK";
-	/// SqlDbUnitTest sqlDbUnitTest = new SqlDbUnitTest(connectionString);
-	/// string xmlSchemaFile = "User.xsd";
-	/// string xmlFile = "User.xml";
-	/// sqlDbUnitTest.ReadXmlSchema(xmlSchemaFile);
-	/// sqlDbUnitTest.ReadXml(xmlFile);
-	/// sqlDbUnitTest.PerformDbOperation(DbOperation.CleanInsertIdentity);
-	/// </code>
-	/// <seealso cref="INDbUnitTest"/>
-	/// </example>
-	public class SqlDbUnitTest : NDbUnitTest
-	{
+    /// <summary>
+    /// The Sql Server unit test data adapter.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// string connectionString = "Persist Security Info=False;Integrated Security=SSPI;database=testdb;server=V-AL-DIMEOLA\NETSDK";
+    /// SqlDbUnitTest sqlDbUnitTest = new SqlDbUnitTest(connectionString);
+    /// string xmlSchemaFile = "User.xsd";
+    /// string xmlFile = "User.xml";
+    /// sqlDbUnitTest.ReadXmlSchema(xmlSchemaFile);
+    /// sqlDbUnitTest.ReadXml(xmlFile);
+    /// sqlDbUnitTest.PerformDbOperation(DbOperation.CleanInsertIdentity);
+    /// </code>
+    /// <seealso cref="INDbUnitTest"/>
+    /// </example>
+    public class SqlDbUnitTest : NDbUnitTest
+    {
+        public SqlDbUnitTest(IDbConnection connection)
+            : base(connection)
+        {
+        }
 
-        public SqlDbUnitTest(string connectionString) : base(connectionString)
-		{
-		}
+        public SqlDbUnitTest(string connectionString)
+            : base(connectionString)
+        {
+        }
+
+        protected override IDbDataAdapter CreateDataAdapter(IDbCommand command)
+        {
+            return new SqlDataAdapter((SqlCommand)command);
+        }
 
         protected override IDbCommandBuilder CreateDbCommandBuilder(string connectionString)
         {
@@ -55,15 +65,17 @@ namespace NDbUnit.Core.SqlClient
             return commandBuilder;
         }
 
-	    protected override IDbOperation CreateDbOperation()
-	    {
-	        return new SqlDbOperation();
-	    }
+        protected override IDbCommandBuilder CreateDbCommandBuilder(IDbConnection connection)
+        {
+            SqlDbCommandBuilder commandBuilder = new SqlDbCommandBuilder(connection);
+            commandBuilder.CommandTimeOutSeconds = this.CommandTimeOut;
+            return commandBuilder;
+        }
 
-	    protected override IDbDataAdapter CreateDataAdapter(IDbCommand command)
-	    {
-	        return new SqlDataAdapter((SqlCommand) command);
-	    }
+        protected override IDbOperation CreateDbOperation()
+        {
+            return new SqlDbOperation();
+        }
 
-	}
+    }
 }

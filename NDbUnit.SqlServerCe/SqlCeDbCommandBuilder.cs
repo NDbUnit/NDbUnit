@@ -28,7 +28,13 @@ namespace NDbUnit.Core.SqlServerCe
 {
     public class SqlCeDbCommandBuilder : DbCommandBuilder
     {
-        public SqlCeDbCommandBuilder(string connectionString) : base(connectionString)
+        public SqlCeDbCommandBuilder(string connectionString)
+            : base(connectionString)
+        {
+        }
+
+        public SqlCeDbCommandBuilder(IDbConnection connection)
+            : base(connection)
         {
         }
 
@@ -40,11 +46,6 @@ namespace NDbUnit.Core.SqlServerCe
         public override string QuoteSuffix
         {
             get { return "]"; }
-        }
-
-        protected override IDbConnection GetConnection(string connectionString)
-        {
-            return new SqlCeConnection(connectionString);
         }
 
         protected override IDbCommand CreateDbCommand()
@@ -59,8 +60,14 @@ namespace NDbUnit.Core.SqlServerCe
 
         protected override IDataParameter CreateNewSqlParameter(int index, DataRow dataRow)
         {
-            return new SqlCeParameter("@p" + index, ((SqlCeType) dataRow["ProviderType"]).SqlDbType,
-                                      (int) dataRow["ColumnSize"], (string) dataRow["ColumnName"]);
+            return new SqlCeParameter("@p" + index, ((SqlCeType)dataRow["ProviderType"]).SqlDbType,
+                                      (int)dataRow["ColumnSize"], (string)dataRow["ColumnName"]);
         }
+
+        protected override IDbConnection GetConnection(string connectionString)
+        {
+            return new SqlCeConnection(connectionString);
+        }
+
     }
 }

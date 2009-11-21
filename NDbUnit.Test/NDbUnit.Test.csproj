@@ -90,14 +90,8 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Gallio, Version=3.0.5.546, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Lib\Gallio.dll</HintPath>
-    </Reference>
-    <Reference Include="MbUnit, Version=3.0.5.546, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Lib\MbUnit.dll</HintPath>
-    </Reference>
+    <Reference Include="Gallio, Version=3.1.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL" />
+    <Reference Include="MbUnit, Version=3.1.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL" />
     <Reference Include="MySql.Data, Version=1.0.10.1, Culture=neutral, PublicKeyToken=c5687fc88969c44d">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\NDbUnit.Core\Lib\MySql.Data.dll</HintPath>
@@ -145,6 +139,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="DbUnitTestTestBase.cs" />
+    <Compile Include="SqlLite-InMemory\SQLliteInMemoryIntegrationTest.cs" />
     <Compile Include="SqlLite\SqlLiteUnitTestTest.cs" />
     <Compile Include="SqlLite\SqlLiteCommandBuilderTest.cs" />
     <Compile Include="SqlServerCe\SqlCeDbCommandBuilderTest.cs" />
@@ -159,9 +154,7 @@
     <Compile Include="XmlTestFiles.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Xml\MySql\UserDS.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
+    <Compile Include="Xml\MySql\UserDS.cs">
       <DependentUpon>UserDS.xsd</DependentUpon>
     </Compile>
     <Compile Include="Xml\OleDb\UserDS.Designer.cs">
@@ -188,6 +181,9 @@
     <None Include="SqlLite\test.sqlite.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Xml\MySql\UserDS.xsc">
+      <DependentUpon>UserDS.xsd</DependentUpon>
+    </None>
     <None Include="Xml\MySql\UserDS.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>UserDS.Designer.cs</LastGenOutput>
@@ -198,6 +194,9 @@
       <LastGenOutput>UserDS.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </Content>
+    <None Include="Xml\MySql\UserDS.xss">
+      <DependentUpon>UserDS.xsd</DependentUpon>
+    </None>
     <None Include="Xml\OleDb\UserDS.xsc">
       <DependentUpon>UserDS.xsd</DependentUpon>
     </None>

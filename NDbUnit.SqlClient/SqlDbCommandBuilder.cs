@@ -29,6 +29,11 @@ namespace NDbUnit.Core.SqlClient
 {
     public class SqlDbCommandBuilder : DbCommandBuilder
     {
+        public SqlDbCommandBuilder(IDbConnection connection)
+            : base(connection)
+        {
+        }
+
         public SqlDbCommandBuilder(string connectionString)
             : base(connectionString)
         {
@@ -42,11 +47,6 @@ namespace NDbUnit.Core.SqlClient
         public override string QuoteSuffix
         {
             get { return "]"; }
-        }
-
-        protected override IDbConnection GetConnection(string connectionString)
-        {
-            return new SqlConnection(connectionString);
         }
 
         protected override IDbCommand CreateDbCommand()
@@ -63,5 +63,11 @@ namespace NDbUnit.Core.SqlClient
             return new SqlParameter("@p" + index, (SqlDbType)dataRow["ProviderType"],
                                     (int)dataRow["ColumnSize"], (string)dataRow["ColumnName"]);
         }
+
+        protected override IDbConnection GetConnection(string connectionString)
+        {
+            return new SqlConnection(connectionString);
+        }
+
     }
 }

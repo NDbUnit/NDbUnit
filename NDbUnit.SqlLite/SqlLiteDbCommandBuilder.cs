@@ -30,30 +30,17 @@ namespace NDbUnit.Core.SqlLite
 {
     public class SqlLiteDbCommandBuilder : DbCommandBuilder
     {
-        private class SchemaColumns
-        {
-            public const string ColumnName = "ColumnName";
-            public const string ColumnOrdinal = "ColumnOrdinal";
-            public const string ColumnSize = "ColumnSize";
-            public const string NumericalPrecision = "NumericalPrecision";
-            public const string NumericalScale = "NumericalScale";
-            public const string IsUnique = "IsUnique";
-            public const string IsKey = "IsKey";
-            public const string BaseServerName = "BaseServerName";
-            public const string BaseCatalogName = "BaseCatalogName";
-            public const string BaseColumnName = "BaseColumnName";
-            public const string BaseSchemaName = "";
-            public const string IsAutoIncrement = "IsAutoIncrement";
-            public const string ProviderType = "ProviderType";
-            
-        }
-
         private new DataTable _dataTableSchema;
-        
-        public SqlLiteDbCommandBuilder(string connectionString) : base(connectionString)
+
+        public SqlLiteDbCommandBuilder(string connectionString)
+            : base(connectionString)
         {
         }
 
+        public SqlLiteDbCommandBuilder(IDbConnection connection)
+            : base(connection)
+        {
+        }
 
         public override string QuotePrefix
         {
@@ -63,54 +50,6 @@ namespace NDbUnit.Core.SqlLite
         public override string QuoteSuffix
         {
             get { return "]"; }
-        }
-
-        protected override IDbConnection GetConnection(string connectionString)
-        {
-            return new SQLiteConnection(connectionString);
-        }
-
-        #region Protected Overrides
-
-        protected override IDbCommand CreateSelectCommand(DataSet ds, string tableName)
-        {
-            SQLiteCommand sqlSelectCommand = CreateDbCommand() as SQLiteCommand;
-
-            bool notFirstColumn = false;
-            StringBuilder sb = new StringBuilder("SELECT ");
-            DataTable dataTable = ds.Tables[tableName];
-            foreach (DataColumn dataColumn in dataTable.Columns)
-            {
-                if (notFirstColumn)
-                {
-                    sb.Append(", ");
-                }
-
-                notFirstColumn = true;
-
-                sb.Append(base.QuotePrefix + dataColumn.ColumnName + base.QuoteSuffix);
-            }
-
-            sb.Append(" FROM ");
-            sb.Append(TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix));
-
-            sqlSelectCommand.CommandText = sb.ToString();
-            sqlSelectCommand.Connection = (SQLiteConnection) _sqlConnection;
-
-            try
-            {
-                _dataTableSchema = getSchemaTable(sqlSelectCommand);
-            }
-            catch (Exception e)
-            {
-                string message =
-                    String.Format(
-                        "SqlDbCommandBuilder.CreateSelectCommand(DataSet, string) failed for tableName = '{0}'",
-                        tableName);
-                throw new NDbUnitException(message, e);
-            }
-
-            return sqlSelectCommand;
         }
 
         protected override IDbCommand CreateDbCommand()
@@ -123,15 +62,44 @@ namespace NDbUnit.Core.SqlLite
             return command;
         }
 
-        /// <summary>
-        /// Since SQLite keys are auto incremented by default we need to check to see if the column
-        /// is a key as well, since not all columns will be marked with AUTOINCREMENT
-        /// </summary>
-        /// <param name="row"></param>
-        /// <returns></returns>
-        private bool IsAutoIncrementing(DataRow row)
+        protected override IDbCommand CreateDeleteAllCommand(string tableName)
         {
-            return (bool) row[SchemaColumns.IsAutoIncrement];
+            return
+                new SQLiteCommand("DELETE FROM " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix));
+        }
+
+        protected override IDbCommand CreateDeleteCommand(IDbCommand selectCommand, string tableName)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("DELETE FROM " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + " WHERE ");
+
+            SQLiteCommand sqlDeleteCommand = CreateDbCommand() as SQLiteCommand;
+
+            int count = 1;
+            DbParameter sqlParameter;
+            foreach (DataRow dataRow in _dataTableSchema.Rows)
+            {
+                // A key column.
+                if ((bool)dataRow[SchemaColumns.IsKey])
+                {
+                    if (count != 1)
+                    {
+                        sb.Append(" AND ");
+                    }
+
+                    sb.Append(QuotePrefix + dataRow[SchemaColumns.ColumnName] + QuoteSuffix);
+                    sb.Append("=@p" + count);
+
+                    sqlParameter = (SQLiteParameter)CreateNewSqlParameter(count, dataRow);
+                    sqlDeleteCommand.Parameters.Add(sqlParameter);
+
+                    ++count;
+                }
+            }
+
+            sqlDeleteCommand.CommandText = sb.ToString();
+
+            return sqlDeleteCommand;
         }
 
         protected override IDbCommand CreateInsertCommand(IDbCommand selectCommand, string tableName)
@@ -146,7 +114,7 @@ namespace NDbUnit.Core.SqlLite
             foreach (DataRow dataRow in _dataTableSchema.Rows)
             {
                 // Not an identity column.
-                if (! IsAutoIncrementing(dataRow))
+                if (!IsAutoIncrementing(dataRow))
                 {
                     if (notFirstColumn)
                     {
@@ -208,44 +176,79 @@ namespace NDbUnit.Core.SqlLite
             return sqlInsertIdentityCommand;
         }
 
-        protected override IDbCommand CreateDeleteCommand(IDbCommand selectCommand, string tableName)
+        //private DataTable getSchemaTable(SQLiteCommand sqlSelectCommand)
+        //{
+        //    DataTable dataTableSchema = null;
+        //    bool isClosed = ConnectionState.Closed == _sqlConnection.State;
+
+        //    try
+        //    {
+        //        if (isClosed)
+        //        {
+        //            _sqlConnection.Open();
+        //        }
+
+        //        SQLiteDataReader sqlDataReader = sqlSelectCommand.ExecuteReader(CommandBehavior.KeyInfo);
+        //        dataTableSchema = sqlDataReader.GetSchemaTable();
+        //        sqlDataReader.Close();
+        //    }
+        //    finally
+        //    {
+        //        if (isClosed)
+        //        {
+        //            _sqlConnection.Close();
+        //        }
+        //    }
+
+        //    return dataTableSchema;
+        //}
+
+        protected override IDataParameter CreateNewSqlParameter(int index, DataRow dataRow)
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("DELETE FROM " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix) + " WHERE ");
-
-            SQLiteCommand sqlDeleteCommand = CreateDbCommand() as SQLiteCommand;
-
-            int count = 1;
-            DbParameter sqlParameter;
-            foreach (DataRow dataRow in _dataTableSchema.Rows)
-            {
-                // A key column.
-                if ((bool)dataRow[SchemaColumns.IsKey])
-                {
-                    if (count != 1)
-                    {
-                        sb.Append(" AND ");
-                    }
-
-                    sb.Append(QuotePrefix + dataRow[SchemaColumns.ColumnName] + QuoteSuffix);
-                    sb.Append("=@p" + count);
-
-                    sqlParameter = (SQLiteParameter)CreateNewSqlParameter(count, dataRow);
-                    sqlDeleteCommand.Parameters.Add(sqlParameter);
-
-                    ++count;
-                }
-            }
-
-            sqlDeleteCommand.CommandText = sb.ToString();
-
-            return sqlDeleteCommand;
+            return new SQLiteParameter("@p" + index, (DbType)dataRow[SchemaColumns.ProviderType],
+                                       (int)dataRow[SchemaColumns.ColumnSize],
+                                       (string)dataRow[SchemaColumns.ColumnName]);
         }
 
-        protected override IDbCommand CreateDeleteAllCommand(string tableName)
+        protected override IDbCommand CreateSelectCommand(DataSet ds, string tableName)
         {
-            return
-                new SQLiteCommand("DELETE FROM " + TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix));
+            SQLiteCommand sqlSelectCommand = CreateDbCommand() as SQLiteCommand;
+
+            bool notFirstColumn = false;
+            StringBuilder sb = new StringBuilder("SELECT ");
+            DataTable dataTable = ds.Tables[tableName];
+            foreach (DataColumn dataColumn in dataTable.Columns)
+            {
+                if (notFirstColumn)
+                {
+                    sb.Append(", ");
+                }
+
+                notFirstColumn = true;
+
+                sb.Append(base.QuotePrefix + dataColumn.ColumnName + base.QuoteSuffix);
+            }
+
+            sb.Append(" FROM ");
+            sb.Append(TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix));
+
+            sqlSelectCommand.CommandText = sb.ToString();
+            sqlSelectCommand.Connection = (SQLiteConnection)_sqlConnection;
+
+            try
+            {
+                _dataTableSchema = GetSchemaTable(sqlSelectCommand);
+            }
+            catch (Exception e)
+            {
+                string message =
+                    String.Format(
+                        "SqlDbCommandBuilder.CreateSelectCommand(DataSet, string) failed for tableName = '{0}'",
+                        tableName);
+                throw new NDbUnitException(message, e);
+            }
+
+            return sqlSelectCommand;
         }
 
         protected override IDbCommand CreateUpdateCommand(IDbCommand selectCommand, string tableName)
@@ -318,44 +321,39 @@ namespace NDbUnit.Core.SqlLite
             return sqlUpdateCommand;
         }
 
-        #endregion
-
-        #region Private Methods
-
-        private DataTable getSchemaTable(SQLiteCommand sqlSelectCommand)
+        protected override IDbConnection GetConnection(string connectionString)
         {
-            DataTable dataTableSchema = null;
-            bool isClosed = ConnectionState.Closed == _sqlConnection.State;
-
-            try
-            {
-                if (isClosed)
-                {
-                    _sqlConnection.Open();
-                }
-
-                SQLiteDataReader sqlDataReader = sqlSelectCommand.ExecuteReader(CommandBehavior.KeyInfo);
-                dataTableSchema = sqlDataReader.GetSchemaTable();
-                sqlDataReader.Close();
-            }
-            finally
-            {
-                if (isClosed)
-                {
-                    _sqlConnection.Close();
-                }
-            }
-
-            return dataTableSchema;
+            return new SQLiteConnection(connectionString);
         }
 
-        protected override IDataParameter CreateNewSqlParameter(int index, DataRow dataRow)
+        /// <summary>
+        /// Since SQLite keys are auto incremented by default we need to check to see if the column
+        /// is a key as well, since not all columns will be marked with AUTOINCREMENT
+        /// </summary>
+        /// <param name="row"></param>
+        /// <returns></returns>
+        private bool IsAutoIncrementing(DataRow row)
         {
-            return new SQLiteParameter("@p" + index, (DbType) dataRow[SchemaColumns.ProviderType],
-                                       (int) dataRow[SchemaColumns.ColumnSize],
-                                       (string) dataRow[SchemaColumns.ColumnName]);
+            return (bool)row[SchemaColumns.IsAutoIncrement];
         }
 
-        #endregion
+        private class SchemaColumns
+        {
+            public const string ColumnName = "ColumnName";
+            public const string ColumnOrdinal = "ColumnOrdinal";
+            public const string ColumnSize = "ColumnSize";
+            public const string NumericalPrecision = "NumericalPrecision";
+            public const string NumericalScale = "NumericalScale";
+            public const string IsUnique = "IsUnique";
+            public const string IsKey = "IsKey";
+            public const string BaseServerName = "BaseServerName";
+            public const string BaseCatalogName = "BaseCatalogName";
+            public const string BaseColumnName = "BaseColumnName";
+            public const string BaseSchemaName = "";
+            public const string IsAutoIncrement = "IsAutoIncrement";
+            public const string ProviderType = "ProviderType";
+
+        }
+
     }
 }

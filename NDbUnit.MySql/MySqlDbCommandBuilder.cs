@@ -29,6 +29,11 @@ namespace NDbUnit.Core.MySqlClient
 {
     public class MySqlDbCommandBuilder : DbCommandBuilder
     {
+        public MySqlDbCommandBuilder(IDbConnection connection)
+            : base(connection)
+        {
+        }
+
         public MySqlDbCommandBuilder(string connectionString)
             : base(connectionString)
         {
