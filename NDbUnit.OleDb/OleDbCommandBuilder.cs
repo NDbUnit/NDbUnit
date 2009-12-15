@@ -101,41 +101,45 @@ namespace NDbUnit.Core.OleDb
 
             foreach (DataRow dataRow in _dataTableSchema.Rows)
             {
-                // A key column.
-                if ((bool)dataRow["IsKey"])
+                if (ColumnOKToInclude(dataRow))
                 {
-                    if (notFirstKey)
+                    // A key column.
+                    if ((bool)dataRow["IsKey"])
                     {
-                        sbPrimaryKey.Append(" AND ");
+                        if (notFirstKey)
+                        {
+                            sbPrimaryKey.Append(" AND ");
+                        }
+
+                        notFirstKey = true;
+
+                        sbPrimaryKey.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
+                        sbPrimaryKey.Append("=?");
+
+                        oleDbParameter = (OleDbParameter)CreateNewSqlParameter(count, dataRow);
+                        keyParameters.Add(oleDbParameter);
+
+                        ++count;
                     }
 
-                    notFirstKey = true;
 
-                    sbPrimaryKey.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
-                    sbPrimaryKey.Append("=?");
-
-                    oleDbParameter = (OleDbParameter)CreateNewSqlParameter(count, dataRow);
-                    keyParameters.Add(oleDbParameter);
-
-                    ++count;
-                }
-
-                if (containsAllPrimaryKeys || !(bool)dataRow["IsKey"])
-                {
-                    if (notFirstColumn)
+                    if (containsAllPrimaryKeys || !(bool)dataRow["IsKey"])
                     {
-                        sb.Append(", ");
+                        if (notFirstColumn)
+                        {
+                            sb.Append(", ");
+                        }
+
+                        notFirstColumn = true;
+
+                        sb.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
+                        sb.Append("=?");
+
+                        oleDbParameter = (OleDbParameter)CreateNewSqlParameter(count, dataRow);
+                        oleDbUpdateCommand.Parameters.Add(oleDbParameter);
+
+                        ++count;
                     }
-
-                    notFirstColumn = true;
-
-                    sb.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
-                    sb.Append("=?");
-
-                    oleDbParameter = (OleDbParameter)CreateNewSqlParameter(count, dataRow);
-                    oleDbUpdateCommand.Parameters.Add(oleDbParameter);
-
-                    ++count;
                 }
             }
 

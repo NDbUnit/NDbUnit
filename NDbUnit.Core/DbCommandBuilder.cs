@@ -21,12 +21,14 @@
  */
 
 using System;
-using System.Data.Common;
 using System.IO;
 using System.Text;
 using System.Xml;
 using System.Data;
 using System.Collections;
+
+
+
 
 namespace NDbUnit.Core
 {
@@ -81,21 +83,21 @@ namespace NDbUnit.Core
 
         public void BuildCommands(Stream xmlSchema)
         {
-            XmlDataDocument xdd = new XmlDataDocument();
+            //XmlDataDocument xdd = new XmlDataDocument();
 
-            xdd.DataSet.ReadXmlSchema(xmlSchema);
+            _xdd.DataSet.ReadXmlSchema(xmlSchema);
             // DataSet table rows RowState property is set to Added
             // when read in from an xml file.
-            xdd.DataSet.AcceptChanges();
+            _xdd.DataSet.AcceptChanges();
 
             Hashtable ht = new Hashtable();
 
             Commands commands;
-            foreach (DataTable dataTable in xdd.DataSet.Tables)
+            foreach (DataTable dataTable in _xdd.DataSet.Tables)
             {
                 // Virtual overrides.
                 commands = new Commands();
-                commands.SelectCommand = CreateSelectCommand(xdd.DataSet, dataTable.TableName);
+                commands.SelectCommand = CreateSelectCommand(_xdd.DataSet, dataTable.TableName);
                 commands.InsertCommand = CreateInsertCommand(commands.SelectCommand, dataTable.TableName);
                 commands.InsertIdentityCommand = CreateInsertIdentityCommand(commands.SelectCommand, dataTable.TableName);
                 commands.DeleteCommand = CreateDeleteCommand(commands.SelectCommand, dataTable.TableName);
@@ -105,7 +107,7 @@ namespace NDbUnit.Core
                 ht[dataTable.TableName] = commands;
             }
 
-            _xdd = xdd;
+            //_xdd = xdd;
             _dbCommandColl = ht;
             _initialized = true;
         }
@@ -213,6 +215,31 @@ namespace NDbUnit.Core
             return sqlDeleteCommand;
         }
 
+
+        protected virtual bool ColumnOKToInclude(DataRow dataRow)
+        {
+            try
+            {
+                string columnName = (string)dataRow["ColumnName"];
+
+                bool found = false;
+
+                foreach (DataTable table in _xdd.DataSet.Tables)
+                {
+                    found = table.Columns.Contains(columnName);
+                    if (found == true)
+                        break;
+                }
+
+                return found && !(bool)dataRow["IsHidden"] && dataRow["DataTypeName"] != "timestamp";
+            }
+            catch (Exception)
+            {
+                //if we cannot determine a reason NOT to include the column, we have to assume its OK to do so
+                return true;
+            }
+        }
+
         protected virtual IDbCommand CreateInsertCommand(IDbCommand selectCommand, string tableName)
         {
             int count = 1;
@@ -224,24 +251,27 @@ namespace NDbUnit.Core
             IDbCommand sqlInsertCommand = CreateDbCommand();
             foreach (DataRow dataRow in _dataTableSchema.Rows)
             {
-                // Not an identity column.
-                if (!((bool)dataRow[GetIdentityColumnDesignator()]))
+                if (ColumnOKToInclude(dataRow))
                 {
-                    if (notFirstColumn)
+                    // Not an identity column.
+                    if (!((bool)dataRow[GetIdentityColumnDesignator()]))
                     {
-                        sb.Append(", ");
-                        sbParam.Append(", ");
+                        if (notFirstColumn)
+                        {
+                            sb.Append(", ");
+                            sbParam.Append(", ");
+                        }
+
+                        notFirstColumn = true;
+
+                        sb.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
+                        sbParam.Append(GetParameterDesignator(count));
+
+                        sqlParameter = CreateNewSqlParameter(count, dataRow);
+                        sqlInsertCommand.Parameters.Add(sqlParameter);
+
+                        ++count;
                     }
-
-                    notFirstColumn = true;
-
-                    sb.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
-                    sbParam.Append(GetParameterDesignator(count));
-
-                    sqlParameter = CreateNewSqlParameter(count, dataRow);
-                    sqlInsertCommand.Parameters.Add(sqlParameter);
-
-                    ++count;
                 }
             }
 
@@ -263,21 +293,25 @@ namespace NDbUnit.Core
             IDbCommand sqlInsertIdentityCommand = CreateDbCommand();
             foreach (DataRow dataRow in _dataTableSchema.Rows)
             {
-                if (notFirstColumn)
+                if (ColumnOKToInclude(dataRow))
                 {
-                    sb.Append(", ");
-                    sbParam.Append(", ");
+
+                    if (notFirstColumn)
+                    {
+                        sb.Append(", ");
+                        sbParam.Append(", ");
+                    }
+
+                    notFirstColumn = true;
+
+                    sb.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
+                    sbParam.Append(GetParameterDesignator(count));
+
+                    sqlParameter = CreateNewSqlParameter(count, dataRow);
+                    sqlInsertIdentityCommand.Parameters.Add(sqlParameter);
+
+                    ++count;
                 }
-
-                notFirstColumn = true;
-
-                sb.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
-                sbParam.Append(GetParameterDesignator(count));
-
-                sqlParameter = CreateNewSqlParameter(count, dataRow);
-                sqlInsertIdentityCommand.Parameters.Add(sqlParameter);
-
-                ++count;
             }
 
             sb.Append(String.Format(") VALUES({0})", sbParam));
@@ -354,42 +388,46 @@ namespace NDbUnit.Core
 
             foreach (DataRow dataRow in _dataTableSchema.Rows)
             {
-                // A key column.
-                IDataParameter sqlParameter;
-                if ((bool)dataRow["IsKey"])
+                if (ColumnOKToInclude(dataRow))
                 {
-                    if (notFirstKey)
+
+                    // A key column.
+                    IDataParameter sqlParameter;
+                    if ((bool)dataRow["IsKey"])
                     {
-                        sbPrimaryKey.Append(" AND ");
+                        if (notFirstKey)
+                        {
+                            sbPrimaryKey.Append(" AND ");
+                        }
+
+                        notFirstKey = true;
+
+                        sbPrimaryKey.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
+                        sbPrimaryKey.Append(String.Format("={0}", GetParameterDesignator(count)));
+
+                        sqlParameter = CreateNewSqlParameter(count, dataRow);
+                        sqlUpdateCommand.Parameters.Add(sqlParameter);
+
+                        ++count;
                     }
 
-                    notFirstKey = true;
-
-                    sbPrimaryKey.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
-                    sbPrimaryKey.Append(String.Format("={0}", GetParameterDesignator(count)));
-
-                    sqlParameter = CreateNewSqlParameter(count, dataRow);
-                    sqlUpdateCommand.Parameters.Add(sqlParameter);
-
-                    ++count;
-                }
-
-                if (containsAllPrimaryKeys || !(bool)dataRow["IsKey"])
-                {
-                    if (notFirstColumn)
+                    if (containsAllPrimaryKeys || !(bool)dataRow["IsKey"])
                     {
-                        sb.Append(", ");
+                        if (notFirstColumn)
+                        {
+                            sb.Append(", ");
+                        }
+
+                        notFirstColumn = true;
+
+                        sb.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
+                        sb.Append(String.Format("={0}", GetParameterDesignator(count)));
+
+                        sqlParameter = CreateNewSqlParameter(count, dataRow);
+                        sqlUpdateCommand.Parameters.Add(sqlParameter);
+
+                        ++count;
                     }
-
-                    notFirstColumn = true;
-
-                    sb.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
-                    sb.Append(String.Format("={0}", GetParameterDesignator(count)));
-
-                    sqlParameter = CreateNewSqlParameter(count, dataRow);
-                    sqlUpdateCommand.Parameters.Add(sqlParameter);
-
-                    ++count;
                 }
             }
 

@@ -70,22 +70,24 @@ namespace NDbUnit.Core.MySqlClient
             IDbCommand sqlInsertCommand = CreateDbCommand();
             foreach (DataRow dataRow in _dataTableSchema.Rows)
             {
-
-                if (notFirstColumn)
+                if (ColumnOKToInclude(dataRow))
                 {
-                    sb.Append(", ");
-                    sbParam.Append(", ");
+                    if (notFirstColumn)
+                    {
+                        sb.Append(", ");
+                        sbParam.Append(", ");
+                    }
+
+                    notFirstColumn = true;
+
+                    sb.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
+                    sbParam.Append(GetParameterDesignator(count));
+
+                    sqlParameter = CreateNewSqlParameter(count, dataRow);
+                    sqlInsertCommand.Parameters.Add(sqlParameter);
+
+                    ++count;
                 }
-
-                notFirstColumn = true;
-
-                sb.Append(QuotePrefix + dataRow["ColumnName"] + QuoteSuffix);
-                sbParam.Append(GetParameterDesignator(count));
-
-                sqlParameter = CreateNewSqlParameter(count, dataRow);
-                sqlInsertCommand.Parameters.Add(sqlParameter);
-
-                ++count;
 
             }
 

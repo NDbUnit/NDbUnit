@@ -79,21 +79,24 @@ namespace NDbUnit.Core.SqlLite
             DbParameter sqlParameter;
             foreach (DataRow dataRow in _dataTableSchema.Rows)
             {
-                // A key column.
-                if ((bool)dataRow[SchemaColumns.IsKey])
+                if (ColumnOKToInclude(dataRow))
                 {
-                    if (count != 1)
+                    // A key column.
+                    if ((bool)dataRow[SchemaColumns.IsKey])
                     {
-                        sb.Append(" AND ");
+                        if (count != 1)
+                        {
+                            sb.Append(" AND ");
+                        }
+
+                        sb.Append(QuotePrefix + dataRow[SchemaColumns.ColumnName] + QuoteSuffix);
+                        sb.Append("=@p" + count);
+
+                        sqlParameter = (SQLiteParameter)CreateNewSqlParameter(count, dataRow);
+                        sqlDeleteCommand.Parameters.Add(sqlParameter);
+
+                        ++count;
                     }
-
-                    sb.Append(QuotePrefix + dataRow[SchemaColumns.ColumnName] + QuoteSuffix);
-                    sb.Append("=@p" + count);
-
-                    sqlParameter = (SQLiteParameter)CreateNewSqlParameter(count, dataRow);
-                    sqlDeleteCommand.Parameters.Add(sqlParameter);
-
-                    ++count;
                 }
             }
 
@@ -113,24 +116,27 @@ namespace NDbUnit.Core.SqlLite
             SQLiteCommand sqlInsertCommand = CreateDbCommand() as SQLiteCommand;
             foreach (DataRow dataRow in _dataTableSchema.Rows)
             {
-                // Not an identity column.
-                if (!IsAutoIncrementing(dataRow))
+                if (ColumnOKToInclude(dataRow))
                 {
-                    if (notFirstColumn)
+                    // Not an identity column.
+                    if (!IsAutoIncrementing(dataRow))
                     {
-                        sb.Append(", ");
-                        sbParam.Append(", ");
+                        if (notFirstColumn)
+                        {
+                            sb.Append(", ");
+                            sbParam.Append(", ");
+                        }
+
+                        notFirstColumn = true;
+
+                        sb.Append(base.QuotePrefix + dataRow[SchemaColumns.ColumnName] + base.QuoteSuffix);
+                        sbParam.Append("@p" + count);
+
+                        sqlParameter = (SQLiteParameter)CreateNewSqlParameter(count, dataRow);
+                        sqlInsertCommand.Parameters.Add(sqlParameter);
+
+                        ++count;
                     }
-
-                    notFirstColumn = true;
-
-                    sb.Append(base.QuotePrefix + dataRow[SchemaColumns.ColumnName] + base.QuoteSuffix);
-                    sbParam.Append("@p" + count);
-
-                    sqlParameter = (SQLiteParameter)CreateNewSqlParameter(count, dataRow);
-                    sqlInsertCommand.Parameters.Add(sqlParameter);
-
-                    ++count;
                 }
             }
 
@@ -152,21 +158,24 @@ namespace NDbUnit.Core.SqlLite
             SQLiteCommand sqlInsertIdentityCommand = CreateDbCommand() as SQLiteCommand;
             foreach (DataRow dataRow in _dataTableSchema.Rows)
             {
-                if (notFirstColumn)
+                if (ColumnOKToInclude(dataRow))
                 {
-                    sb.Append(", ");
-                    sbParam.Append(", ");
+                    if (notFirstColumn)
+                    {
+                        sb.Append(", ");
+                        sbParam.Append(", ");
+                    }
+
+                    notFirstColumn = true;
+
+                    sb.Append(base.QuotePrefix + dataRow[SchemaColumns.ColumnName] + base.QuoteSuffix);
+                    sbParam.Append("@p" + count);
+
+                    sqlParameter = (SQLiteParameter)CreateNewSqlParameter(count, dataRow);
+                    sqlInsertIdentityCommand.Parameters.Add(sqlParameter);
+
+                    ++count;
                 }
-
-                notFirstColumn = true;
-
-                sb.Append(base.QuotePrefix + dataRow[SchemaColumns.ColumnName] + base.QuoteSuffix);
-                sbParam.Append("@p" + count);
-
-                sqlParameter = (SQLiteParameter)CreateNewSqlParameter(count, dataRow);
-                sqlInsertIdentityCommand.Parameters.Add(sqlParameter);
-
-                ++count;
             }
 
             sb.Append(") VALUES(" + sbParam + ")");
@@ -176,32 +185,6 @@ namespace NDbUnit.Core.SqlLite
             return sqlInsertIdentityCommand;
         }
 
-        //private DataTable getSchemaTable(SQLiteCommand sqlSelectCommand)
-        //{
-        //    DataTable dataTableSchema = null;
-        //    bool isClosed = ConnectionState.Closed == _sqlConnection.State;
-
-        //    try
-        //    {
-        //        if (isClosed)
-        //        {
-        //            _sqlConnection.Open();
-        //        }
-
-        //        SQLiteDataReader sqlDataReader = sqlSelectCommand.ExecuteReader(CommandBehavior.KeyInfo);
-        //        dataTableSchema = sqlDataReader.GetSchemaTable();
-        //        sqlDataReader.Close();
-        //    }
-        //    finally
-        //    {
-        //        if (isClosed)
-        //        {
-        //            _sqlConnection.Close();
-        //        }
-        //    }
-
-        //    return dataTableSchema;
-        //}
 
         protected override IDataParameter CreateNewSqlParameter(int index, DataRow dataRow)
         {
@@ -276,41 +259,45 @@ namespace NDbUnit.Core.SqlLite
 
             foreach (DataRow dataRow in _dataTableSchema.Rows)
             {
-                // A key column.
-                if ((bool)dataRow[SchemaColumns.IsKey])
+                if (ColumnOKToInclude(dataRow))
                 {
-                    if (notFirstKey)
+                    // A key column.
+                    if ((bool)dataRow[SchemaColumns.IsKey])
                     {
-                        sbPrimaryKey.Append(" AND ");
+                        if (notFirstKey)
+                        {
+                            sbPrimaryKey.Append(" AND ");
+                        }
+
+                        notFirstKey = true;
+
+                        sbPrimaryKey.Append(base.QuotePrefix + dataRow[SchemaColumns.ColumnName] + base.QuoteSuffix);
+                        sbPrimaryKey.Append("=@p" + count);
+
+                        sqlParameter = (SQLiteParameter)CreateNewSqlParameter(count, dataRow);
+                        sqlUpdateCommand.Parameters.Add(sqlParameter);
+
+                        ++count;
                     }
 
-                    notFirstKey = true;
 
-                    sbPrimaryKey.Append(base.QuotePrefix + dataRow[SchemaColumns.ColumnName] + base.QuoteSuffix);
-                    sbPrimaryKey.Append("=@p" + count);
-
-                    sqlParameter = (SQLiteParameter)CreateNewSqlParameter(count, dataRow);
-                    sqlUpdateCommand.Parameters.Add(sqlParameter);
-
-                    ++count;
-                }
-
-                if (containsAllPrimaryKeys || !(bool)dataRow[SchemaColumns.IsKey])
-                {
-                    if (notFirstColumn)
+                    if (containsAllPrimaryKeys || !(bool)dataRow[SchemaColumns.IsKey])
                     {
-                        sb.Append(", ");
+                        if (notFirstColumn)
+                        {
+                            sb.Append(", ");
+                        }
+
+                        notFirstColumn = true;
+
+                        sb.Append(base.QuotePrefix + dataRow[SchemaColumns.ColumnName] + base.QuoteSuffix);
+                        sb.Append("=@p" + count);
+
+                        sqlParameter = (SQLiteParameter)CreateNewSqlParameter(count, dataRow);
+                        sqlUpdateCommand.Parameters.Add(sqlParameter);
+
+                        ++count;
                     }
-
-                    notFirstColumn = true;
-
-                    sb.Append(base.QuotePrefix + dataRow[SchemaColumns.ColumnName] + base.QuoteSuffix);
-                    sb.Append("=@p" + count);
-
-                    sqlParameter = (SQLiteParameter)CreateNewSqlParameter(count, dataRow);
-                    sqlUpdateCommand.Parameters.Add(sqlParameter);
-
-                    ++count;
                 }
             }
 
