@@ -148,7 +148,7 @@ namespace NDbUnit.Test.Common
         }
 
         [Test]
-        public void InsertIdentity_Executes_Without_Exception()
+        public virtual void InsertIdentity_Executes_Without_Exception()
         {
             DeleteAll_Executes_Without_Exception();
 

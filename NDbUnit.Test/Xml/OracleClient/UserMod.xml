@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<UserDS xmlns="http://tempuri.org/UserDS.xsd">
+	<ROLE>
+		<ID>1</ID>
+		<NAME>AdminMod</NAME>
+		<DESCRIPTION>Serves as an administrator</DESCRIPTION>
+	</ROLE>
+	<ROLE>
+		<ID>2</ID>
+		<NAME>UserTBMod</NAME>
+		<DESCRIPTION>UserTB with limited security</DESCRIPTION>
+	</ROLE>
+	<USERTB>
+    <ID>1</ID>		
+    <FIRSTNAME>HammadModified</FIRSTNAME>
+		<LASTNAME>Awan</LASTNAME>
+		<AGE>30</AGE>
+	</USERTB>
+	<USERTB>
+    <ID>2</ID>
+    <FIRSTNAME>JohnModified</FIRSTNAME>
+		<LASTNAME>Williams</LASTNAME>
+		<AGE>38</AGE>
+	</USERTB>
+	<USERROLE>
+		<USERTBID>1</USERTBID>
+		<ROLEID>1</ROLEID>
+	</USERROLE>
+	<USERROLE>
+		<USERTBID>2</USERTBID>
+		<ROLEID>1</ROLEID>
+	</USERROLE>
+	<USERROLE>
+		<USERTBID>1</USERTBID>
+		<ROLEID>2</ROLEID>
+	</USERROLE>	
+</UserDS>

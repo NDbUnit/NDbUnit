@@ -55,6 +55,9 @@ namespace NDbUnit.Test
             get { return ConfigurationManager.ConnectionStrings["SqlLiteInMemConnectionString"].ConnectionString; }
         }
 
-
+        public static string OracleClientConnectionString
+        {
+            get { return ConfigurationManager.ConnectionStrings["OracleClientConnectionString"].ConnectionString; }
+        }
     }
 }

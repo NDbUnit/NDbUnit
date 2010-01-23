@@ -90,8 +90,14 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Gallio, Version=3.1.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL" />
-    <Reference Include="MbUnit, Version=3.1.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL" />
+    <Reference Include="Gallio, Version=3.1.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\Gallio.dll</HintPath>
+    </Reference>
+    <Reference Include="MbUnit, Version=3.1.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\MbUnit.dll</HintPath>
+    </Reference>
     <Reference Include="MySql.Data, Version=1.0.10.1, Culture=neutral, PublicKeyToken=c5687fc88969c44d">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\NDbUnit.Core\Lib\MySql.Data.dll</HintPath>
@@ -107,6 +113,7 @@
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
+    <Reference Include="System.Data.OracleClient" />
     <Reference Include="System.Data.SQLite, Version=1.0.60.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\NDbUnit.Core\Lib\System.Data.SQLite.DLL</HintPath>
@@ -133,6 +140,9 @@
     <Compile Include="OleDb\OleDbOperationTest.cs" />
     <Compile Include="OleDb\OleDbCommandBuilderTest.cs" />
     <Compile Include="OleDb\OleDbUnitTestTest.cs" />
+    <Compile Include="OracleClient\OracleClientDbCommandBuilderTest.cs" />
+    <Compile Include="OracleClient\OracleClientDbOperationTest.cs" />
+    <Compile Include="OracleClient\OracleClientDbUnitTestTest.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -178,6 +188,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Content Include="Scripts\oracle-testdb-create.sql" />
     <None Include="SqlLite\test.sqlite.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -203,6 +214,11 @@
     <None Include="Xml\OleDb\UserDS.xss">
       <DependentUpon>UserDS.xsd</DependentUpon>
     </None>
+    <None Include="Xml\OracleClient\UserDS.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>UserDS1.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Xml\SqlServerCe\UserDS.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>UserDS.Designer.cs</LastGenOutput>
@@ -211,6 +227,9 @@
     <Content Include="Xml\OleDb\User.xml" />
     <Content Include="Xml\OleDb\UserMod.xml" />
     <Content Include="Xml\OleDb\UserRefresh.xml" />
+    <Content Include="Xml\OracleClient\User.xml" />
+    <Content Include="Xml\OracleClient\UserMod.xml" />
+    <Content Include="Xml\OracleClient\UserRefresh.xml" />
     <Content Include="Xml\SqlServer\User.xml" />
     <Content Include="Xml\SqlServer\UserDS.xsd">
       <Generator>MSDataSetGenerator</Generator>
@@ -285,6 +304,10 @@
     <ProjectReference Include="..\NDbUnit.OleDb\NDbUnit.OleDb.csproj">
       <Project>{1F40909A-ABDD-484C-AA52-14464A5B677A}</Project>
       <Name>NDbUnit.OleDb</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NDbUnit.OracleClient\NDbUnit.OracleClient.csproj">
+      <Project>{0B83B341-1D0D-4284-B4E5-7DE97052F950}</Project>
+      <Name>NDbUnit.OracleClient</Name>
     </ProjectReference>
     <ProjectReference Include="..\NDbUnit.SqlClient\NDbUnit.SqlClient.csproj">
       <Project>{89F1342D-0FF8-492E-BD74-175D1AAC9FE8}</Project>

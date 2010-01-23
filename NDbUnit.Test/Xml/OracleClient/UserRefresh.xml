@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<UserDS xmlns="http://tempuri.org/UserDS.xsd">
+  <ROLE>
+    <ID>1</ID>
+    <NAME>AdminRefresh</NAME>
+    <DESCRIPTION>Serves as an administrator</DESCRIPTION>
+  </ROLE>
+  <ROLE>
+    <ID>2</ID>
+    <NAME>UserRefresh</NAME>
+    <DESCRIPTION>UserTB with limited security</DESCRIPTION>
+  </ROLE>
+  <USERTB>
+    <ID>1</ID>
+    <FIRSTNAME>HammadRefresh</FIRSTNAME>
+    <LASTNAME>AwanRefresh</LASTNAME>
+    <AGE>29</AGE>
+  </USERTB>
+  <USERTB>
+    <ID>2</ID>
+    <FIRSTNAME>JohnRefresh</FIRSTNAME>
+    <LASTNAME>WilliamsRefresh</LASTNAME>
+    <AGE>30</AGE>
+    <SUPERVISORID>1</SUPERVISORID>
+  </USERTB>
+  <USERROLE>
+    <USERTBID>1</USERTBID>
+    <ROLEID>1</ROLEID>
+  </USERROLE>
+  <USERROLE>
+    <USERTBID>2</USERTBID>
+    <ROLEID>1</ROLEID>
+  </USERROLE>
+  <USERROLE>
+    <USERTBID>1</USERTBID>
+    <ROLEID>2</ROLEID>
+  </USERROLE>
+</UserDS>
+
+
+<!--<?xml version="1.0" encoding="utf-8" ?> 
+<UserDS xmlns="http://tempuri.org/UserDS.xsd">
+	<ROLE>
+		<ID>1</ID>
+		<NAME>AdminRefresh</NAME>
+		<DESCRIPTION>Serves as an administrator</DESCRIPTION>
+	</ROLE>
+	<ROLE>
+		<ID>2</ID>
+		<NAME>UserRefresh</NAME>
+		<DESCRIPTION>UserTB with limited security</DESCRIPTION>
+	</ROLE>
+	<USERTB>
+    <ID>1</ID>
+    <FIRSTNAME>HammadRefresh</FIRSTNAME>
+		<LASTNAME>Awan</LASTNAME>
+		<AGE>32</AGE>
+	</USERTB>
+	<USERTB>
+    <ID>2</ID>
+    <FIRSTNAME>JohnRefresh</FIRSTNAME>
+		<LASTNAME>Williams</LASTNAME>
+		<AGE>40</AGE>
+	</USERTB>
+	<USERTB>
+    <ID>3</ID>
+    <FIRSTNAME>NewRefresh</FIRSTNAME>
+		<LASTNAME>Bland</LASTNAME>
+		<AGE>12</AGE>
+	</USERTB>
+	<USERROLE>
+		<USERTBID>1</USERTBID>
+		<ROLEID>1</ROLEID>
+	</USERROLE>
+	<USERROLE>
+		<USERTBID>2</USERTBID>
+		<ROLEID>1</ROLEID>
+	</USERROLE>
+	<USERROLE>
+		<USERTBID>1</USERTBID>
+		<ROLEID>2</ROLEID>
+	</USERROLE>	
+	<USERROLE>
+		<USERTBID>3</USERTBID>
+		<ROLEID>2</ROLEID>
+	</USERROLE>
+</UserDS>-->

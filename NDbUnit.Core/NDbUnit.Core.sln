@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NDbUnit.SqlLite", "..\NDbUn
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NDbUnit.SqlServerCe", "..\NDbUnit.SqlServerCe\NDbUnit.SqlServerCe.csproj", "{DA3F4EE1-CD15-4929-88F5-ABE52A7887D0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NDbUnit.OracleClient", "..\NDbUnit.OracleClient\NDbUnit.OracleClient.csproj", "{0B83B341-1D0D-4284-B4E5-7DE97052F950}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -55,6 +57,10 @@ Global
 		{DA3F4EE1-CD15-4929-88F5-ABE52A7887D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA3F4EE1-CD15-4929-88F5-ABE52A7887D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA3F4EE1-CD15-4929-88F5-ABE52A7887D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B83B341-1D0D-4284-B4E5-7DE97052F950}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B83B341-1D0D-4284-B4E5-7DE97052F950}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B83B341-1D0D-4284-B4E5-7DE97052F950}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B83B341-1D0D-4284-B4E5-7DE97052F950}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
