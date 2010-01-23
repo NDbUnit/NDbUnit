@@ -30,11 +30,16 @@ using System.Data.Common;
 
 namespace NDbUnit.OracleClient
 {
-    public class OracleClientDbOperation: DbOperation
+    public class OracleClientDbOperation : DbOperation
     {
-        protected override IDbDataAdapter CreateDbDataAdapter()
+        public override string QuotePrefix
         {
-            return new OracleDataAdapter();
+            get { return "\""; }
+        }
+
+        public override string QuoteSuffix
+        {
+            get { return QuotePrefix; }
         }
 
         protected override IDbCommand CreateDbCommand(string cmdText)
@@ -42,9 +47,14 @@ namespace NDbUnit.OracleClient
             return new OracleCommand(cmdText);
         }
 
-        protected override void OnInsertIdentity(DataTable dataTable, IDbCommand dbCommand, IDbTransaction dbTransaction)
+        protected override IDbDataAdapter CreateDbDataAdapter()
         {
-            throw new NotSupportedException("OnInsertIdentity not supported!");
+            return new OracleDataAdapter();
+        }
+
+        protected override void DisableTableConstraints(DataTable dataTable, IDbTransaction dbTransaction)
+        {
+            this.enableDisableTableConstraints("DISABLE", dataTable, dbTransaction);
         }
 
         protected override void EnableTableConstraints(DataTable dataTable, IDbTransaction dbTransaction)
@@ -52,9 +62,9 @@ namespace NDbUnit.OracleClient
             this.enableDisableTableConstraints("ENABLE", dataTable, dbTransaction);
         }
 
-        protected override void DisableTableConstraints(DataTable dataTable, IDbTransaction dbTransaction)
+        protected override void OnInsertIdentity(DataTable dataTable, IDbCommand dbCommand, IDbTransaction dbTransaction)
         {
-            this.enableDisableTableConstraints("DISABLE", dataTable, dbTransaction);
+            throw new NotSupportedException("OnInsertIdentity not supported!");
         }
 
         private void enableDisableTableConstraints(String enableDisable, DataTable dataTable, IDbTransaction dbTransaction)
@@ -92,14 +102,18 @@ namespace NDbUnit.OracleClient
 
             dbReader.Close();
 
-            foreach (String alterCommand in altersList)
+            foreach (String returnedCommand in altersList)
             {
+
+                var escapedCommand = returnedCommand.Replace(" " + dataTable.TableName + " ", TableNameHelper.FormatTableName(dataTable.TableName, QuotePrefix, QuoteSuffix));
+
                 dbCommand = new OracleCommand();
-                dbCommand.CommandText = alterCommand;
+                dbCommand.CommandText = escapedCommand;
                 dbCommand.Connection = (DbConnection)dbTransaction.Connection;
                 dbCommand.Transaction = (DbTransaction)dbTransaction;
                 dbCommand.ExecuteNonQuery();
             }
         }
+
     }
 }

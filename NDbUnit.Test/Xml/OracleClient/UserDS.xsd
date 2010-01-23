@@ -15,7 +15,7 @@
   <xs:element name="UserDS" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_UserDSName="UserDS" msprop:Generator_DataSetName="UserDS">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="USERTB" msprop:Generator_UserTableName="USERTB" msprop:Generator_RowDeletedName="USERTBRowDeleted" msprop:Generator_RowChangedName="USERTBRowChanged" msprop:Generator_RowClassName="USERTBRow" msprop:Generator_RowChangingName="USERTBRowChanging" msprop:Generator_RowEvArgName="USERTBRowChangeEvent" msprop:Generator_RowEvHandlerName="USERTBRowChangeEventHandler" msprop:Generator_TableClassName="USERTBDataTable" msprop:Generator_TableVarName="tableUSERTB" msprop:Generator_RowDeletingName="USERTBRowDeleting" msprop:Generator_TablePropName="USERTB">
+        <xs:element name="USER" msprop:Generator_UserTableName="USER" msprop:Generator_RowDeletedName="USERRowDeleted" msprop:Generator_RowChangedName="USERRowChanged" msprop:Generator_RowClassName="USERRow" msprop:Generator_RowChangingName="USERRowChanging" msprop:Generator_RowEvArgName="USERRowChangeEvent" msprop:Generator_RowEvHandlerName="USERRowChangeEventHandler" msprop:Generator_TableClassName="USERDataTable" msprop:Generator_TableVarName="tableUSER" msprop:Generator_RowDeletingName="USERRowDeleting" msprop:Generator_TablePropName="USER">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="ID" msprop:Generator_UserColumnName="ID" msprop:Generator_ColumnVarNameInTable="columnID" msprop:Generator_ColumnPropNameInRow="ID" msprop:Generator_ColumnPropNameInTable="IDColumn" type="xs:decimal" />
@@ -41,7 +41,7 @@
         <xs:element name="USERROLE" msprop:Generator_UserTableName="USERROLE" msprop:Generator_RowDeletedName="USERROLERowDeleted" msprop:Generator_RowChangedName="USERROLERowChanged" msprop:Generator_RowClassName="USERROLERow" msprop:Generator_RowChangingName="USERROLERowChanging" msprop:Generator_RowEvArgName="USERROLERowChangeEvent" msprop:Generator_RowEvHandlerName="USERROLERowChangeEventHandler" msprop:Generator_TableClassName="USERROLEDataTable" msprop:Generator_TableVarName="tableUSERROLE" msprop:Generator_RowDeletingName="USERROLERowDeleting" msprop:Generator_TablePropName="USERROLE">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="USERTBID" msprop:Generator_UserColumnName="USERTBID" msprop:Generator_ColumnVarNameInTable="columnUSERTBID" msprop:Generator_ColumnPropNameInRow="USERTBID" msprop:Generator_ColumnPropNameInTable="USERTBIDColumn" type="xs:decimal" />
+              <xs:element name="USERID" msprop:Generator_UserColumnName="USERID" msprop:Generator_ColumnVarNameInTable="columnUSERID" msprop:Generator_ColumnPropNameInRow="USERID" msprop:Generator_ColumnPropNameInTable="USERIDColumn" type="xs:decimal" />
               <xs:element name="ROLEID" msprop:Generator_UserColumnName="ROLEID" msprop:Generator_ColumnVarNameInTable="columnROLEID" msprop:Generator_ColumnPropNameInRow="ROLEID" msprop:Generator_ColumnPropNameInTable="ROLEIDColumn" type="xs:decimal" />
             </xs:sequence>
           </xs:complexType>
@@ -70,12 +70,12 @@
       </xs:choice>
     </xs:complexType>
     <xs:unique name="Constraint1" msdata:PrimaryKey="true">
-      <xs:selector xpath=".//mstns:USERTB" />
+      <xs:selector xpath=".//mstns:USER" />
       <xs:field xpath="mstns:ID" />
     </xs:unique>
     <xs:unique name="USERROLE_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
       <xs:selector xpath=".//mstns:USERROLE" />
-      <xs:field xpath="mstns:USERTBID" />
+      <xs:field xpath="mstns:USERID" />
       <xs:field xpath="mstns:ROLEID" />
     </xs:unique>
     <xs:unique name="ROLE_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
@@ -85,9 +85,9 @@
   </xs:element>
   <xs:annotation>
     <xs:appinfo>
-      <msdata:Relationship name="USERTB_SUPERVISORID_FK" msdata:parent="USERTB" msdata:child="USERTB" msdata:parentkey="ID" msdata:childkey="SUPERVISORID" msprop:Generator_UserRelationName="USERTB_SUPERVISORID_FK" msprop:Generator_RelationVarName="relationUSERTB_SUPERVISORID_FK" msprop:Generator_UserChildTable="USERTB" msprop:Generator_UserParentTable="USERTB" msprop:Generator_ParentPropName="USERTBRowParent" msprop:Generator_ChildPropName="GetUSERTBRows" />
+      <msdata:Relationship name="USER_SUPERVISORID_FK" msdata:parent="USER" msdata:child="USER" msdata:parentkey="ID" msdata:childkey="SUPERVISORID" msprop:Generator_UserRelationName="USER_SUPERVISORID_FK" msprop:Generator_RelationVarName="relationUSER_SUPERVISORID_FK" msprop:Generator_UserChildTable="USER" msprop:Generator_UserParentTable="USER" msprop:Generator_ParentPropName="USERRowParent" msprop:Generator_ChildPropName="GetUSERRows" />
       <msdata:Relationship name="USERROLE_ROLE_FK" msdata:parent="ROLE" msdata:child="USERROLE" msdata:parentkey="ID" msdata:childkey="ROLEID" msprop:Generator_UserRelationName="USERROLE_ROLE_FK" msprop:Generator_RelationVarName="relationUSERROLE_ROLE_FK" msprop:Generator_UserChildTable="USERROLE" msprop:Generator_UserParentTable="ROLE" msprop:Generator_ParentPropName="ROLERow" msprop:Generator_ChildPropName="GetUSERROLERows" />
-      <msdata:Relationship name="USERROLE_USERTB_FK" msdata:parent="USERTB" msdata:child="USERROLE" msdata:parentkey="ID" msdata:childkey="USERTBID" msprop:Generator_UserRelationName="USERROLE_USERTB_FK" msprop:Generator_RelationVarName="relationUSERROLE_USERTB_FK" msprop:Generator_UserChildTable="USERROLE" msprop:Generator_UserParentTable="USERTB" msprop:Generator_ParentPropName="USERTBRow" msprop:Generator_ChildPropName="GetUSERROLERows" />
+      <msdata:Relationship name="USERROLE_USER_FK" msdata:parent="USER" msdata:child="USERROLE" msdata:parentkey="ID" msdata:childkey="USERID" msprop:Generator_UserRelationName="USERROLE_USER_FK" msprop:Generator_RelationVarName="relationUSERROLE_USER_FK" msprop:Generator_UserChildTable="USERROLE" msprop:Generator_UserParentTable="USER" msprop:Generator_ParentPropName="USERRow" msprop:Generator_ChildPropName="GetUSERROLERows" />
     </xs:appinfo>
   </xs:annotation>
 </xs:schema>

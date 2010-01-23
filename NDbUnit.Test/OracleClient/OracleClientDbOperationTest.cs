@@ -32,6 +32,11 @@ namespace NDbUnit.Test.OracleClient
 {
     public class OracleClientDbOperationTest : DbOperationTestBase
     {
+        public override void InsertIdentity_Executes_Without_Exception()
+        {
+            Assert.IsTrue(true);
+        }
+
         protected override NDbUnit.Core.IDbCommandBuilder GetCommandBuilder()
         {
             return new OracleClientDbCommandBuilder(DbConnection.OracleClientConnectionString);
@@ -62,9 +67,5 @@ namespace NDbUnit.Test.OracleClient
             return XmlTestFiles.OracleClient.XmlSchemaFile;
         }
 
-        public override void InsertIdentity_Executes_Without_Exception()
-        {
-            Assert.IsTrue(true);
-        }
     }
 }

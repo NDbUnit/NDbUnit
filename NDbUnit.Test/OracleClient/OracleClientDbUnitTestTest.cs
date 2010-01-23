@@ -54,7 +54,7 @@ namespace NDbUnit.Test.OracleClient
             {
                 return new List<string>()
                 {
-                    "USERTB", "USERROLE", "ROLE"
+                    "USER", "USERROLE", "ROLE"
                 };
             }
         }

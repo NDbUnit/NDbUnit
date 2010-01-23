@@ -35,16 +35,16 @@ namespace NDbUnit.OracleClient
     {
         private OracleConnection _oraDbConnection;
 
-        public OracleClientDbCommandBuilder(IDbConnection connection)
-            : base(connection)
-        {
-            _oraDbConnection = (OracleConnection)connection;
-        }
-
         public OracleClientDbCommandBuilder(string connectionString)
             : base(connectionString)
         {
             _oraDbConnection = new OracleConnection(connectionString);
+        }
+
+        public OracleClientDbCommandBuilder(IDbConnection connection)
+            : base(connection)
+        {
+            _oraDbConnection = (OracleConnection)connection;
         }
 
         public new OracleConnection Connection
@@ -52,31 +52,20 @@ namespace NDbUnit.OracleClient
             get { return _oraDbConnection; }
         }
 
+        public override string QuotePrefix
+        {
+            get { return "\""; }
+        }
+
+        public override string QuoteSuffix
+        {
+            get { return QuotePrefix; }
+        }
+
         protected override IDbCommand CreateDbCommand()
         {
             OracleCommand command = new OracleCommand();
             return command;
-        }
-
-        protected override IDataParameter CreateNewSqlParameter(int index, DataRow dataRow)
-        {
-            return new OracleParameter("p" + index, (System.Data.OracleClient.OracleType)dataRow["ProviderType"],
-                                      (int)dataRow["ColumnSize"], (string)dataRow["ColumnName"]);
-        }
-
-        protected override IDbConnection GetConnection(string connectionString)
-        {
-            return new OracleConnection(connectionString);
-        }
-
-        protected override string GetIdentityColumnDesignator()
-        {
-            return "IsAutoIncrement";
-        }
-
-        protected override string GetParameterDesignator(int count)
-        {
-            return ":p" + count;
         }
 
         protected override IDbCommand CreateInsertCommand(IDbCommand selectCommand, string tableName)
@@ -113,5 +102,27 @@ namespace NDbUnit.OracleClient
 
             return sqlInsertCommand;
         }
+
+        protected override IDataParameter CreateNewSqlParameter(int index, DataRow dataRow)
+        {
+            return new OracleParameter("p" + index, (System.Data.OracleClient.OracleType)dataRow["ProviderType"],
+                                      (int)dataRow["ColumnSize"], (string)dataRow["ColumnName"]);
+        }
+
+        protected override IDbConnection GetConnection(string connectionString)
+        {
+            return new OracleConnection(connectionString);
+        }
+
+        protected override string GetIdentityColumnDesignator()
+        {
+            return "IsAutoIncrement";
+        }
+
+        protected override string GetParameterDesignator(int count)
+        {
+            return ":p" + count;
+        }
+
     }
 }

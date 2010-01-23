@@ -38,7 +38,7 @@ namespace NDbUnit.Test.OracleClient
             {
                 return new List<string>()
                 {
-                    "USERTB", "USERROLE", "ROLE"
+                    "USER", "USERROLE", "ROLE"
                 };
             }
         }
@@ -49,9 +49,9 @@ namespace NDbUnit.Test.OracleClient
             {
                 return new List<string>()
                 {
-                    "DELETE FROM USERTB",
-                    "DELETE FROM USERROLE", 
-                    "DELETE FROM ROLE"
+                    "DELETE FROM \"USER\"",
+                    "DELETE FROM \"USERROLE\"", 
+                    "DELETE FROM \"ROLE\""
                 };
             }
         }
@@ -62,9 +62,9 @@ namespace NDbUnit.Test.OracleClient
             {
                 return new List<string>()
                 {
-                    "DELETE FROM USERTB WHERE ID=:p1",
-                    "DELETE FROM USERROLE WHERE USERTBID=:p1 AND ROLEID=:p2",
-                    "DELETE FROM ROLE WHERE ID=:p1"
+                    "DELETE FROM \"USER\" WHERE \"ID\"=:p1",
+                    "DELETE FROM \"USERROLE\" WHERE \"USERID\"=:p1 AND \"ROLEID\"=:p2",
+                    "DELETE FROM \"ROLE\" WHERE \"ID\"=:p1"
                 };
             }
         }
@@ -75,9 +75,9 @@ namespace NDbUnit.Test.OracleClient
             {
                 return new List<string>()
                 {
-                    "INSERT INTO USERTB(ID, FIRSTNAME, LASTNAME, AGE, SUPERVISORID) VALUES(:p1, :p2, :p3, :p4, :p5)", 
-                    "INSERT INTO USERROLE(USERTBID, ROLEID) VALUES(:p1, :p2)", 
-                    "INSERT INTO ROLE(ID, NAME, DESCRIPTION) VALUES(:p1, :p2, :p3)"
+                    "INSERT INTO \"USER\"(\"ID\", \"FIRSTNAME\", \"LASTNAME\", \"AGE\", \"SUPERVISORID\") VALUES(:p1, :p2, :p3, :p4, :p5)", 
+                    "INSERT INTO \"USERROLE\"(\"USERID\", \"ROLEID\") VALUES(:p1, :p2)", 
+                    "INSERT INTO \"ROLE\"(\"ID\", \"NAME\", \"DESCRIPTION\") VALUES(:p1, :p2, :p3)"
                 };
 
             }
@@ -89,9 +89,9 @@ namespace NDbUnit.Test.OracleClient
             {
                 return new List<string>()
                 {
-                    "INSERT INTO USERTB(ID, FIRSTNAME, LASTNAME, AGE, SUPERVISORID) VALUES(:p1, :p2, :p3, :p4, :p5)", 
-                    "INSERT INTO USERROLE(USERTBID, ROLEID) VALUES(:p1, :p2)", 
-                    "INSERT INTO ROLE(ID, NAME, DESCRIPTION) VALUES(:p1, :p2, :p3)"
+                    "INSERT INTO \"USER\"(\"ID\", \"FIRSTNAME\", \"LASTNAME\", \"AGE\", \"SUPERVISORID\") VALUES(:p1, :p2, :p3, :p4, :p5)", 
+                    "INSERT INTO \"USERROLE\"(\"USERID\", \"ROLEID\") VALUES(:p1, :p2)", 
+                    "INSERT INTO \"ROLE\"(\"ID\", \"NAME\", \"DESCRIPTION\") VALUES(:p1, :p2, :p3)"
                 };
             }
         }
@@ -102,9 +102,9 @@ namespace NDbUnit.Test.OracleClient
             {
                 return new List<string>()
                 {
-                    "SELECT ID, FIRSTNAME, LASTNAME, AGE, SUPERVISORID FROM USERTB", 
-                    "SELECT USERTBID, ROLEID FROM USERROLE", 
-                    "SELECT ID, NAME, DESCRIPTION FROM ROLE"
+                    "SELECT \"ID\", \"FIRSTNAME\", \"LASTNAME\", \"AGE\", \"SUPERVISORID\" FROM \"USER\"", 
+                    "SELECT \"USERID\", \"ROLEID\" FROM \"USERROLE\"", 
+                    "SELECT \"ID\", \"NAME\", \"DESCRIPTION\" FROM \"ROLE\""
                 };
             }
         }
@@ -115,9 +115,9 @@ namespace NDbUnit.Test.OracleClient
             {
                 return new List<string>()
                 { 
-                    "UPDATE USERTB SET FIRSTNAME=:p2, LASTNAME=:p3, AGE=:p4, SUPERVISORID=:p5 WHERE ID=:p1",
-                    "UPDATE USERROLE SET USERTBID=:p2, ROLEID=:p4 WHERE USERTBID=:p1 AND ROLEID=:p3",
-                    "UPDATE ROLE SET NAME=:p2, DESCRIPTION=:p3 WHERE ID=:p1"
+                    "UPDATE \"USER\" SET \"FIRSTNAME\"=:p2, \"LASTNAME\"=:p3, \"AGE\"=:p4, \"SUPERVISORID\"=:p5 WHERE \"ID\"=:p1",
+                    "UPDATE \"USERROLE\" SET \"USERID\"=:p2, \"ROLEID\"=:p4 WHERE \"USERID\"=:p1 AND \"ROLEID\"=:p3",
+                    "UPDATE \"ROLE\" SET \"NAME\"=:p2, \"DESCRIPTION\"=:p3 WHERE \"ID\"=:p1"
                 };
             }
         }
@@ -131,5 +131,6 @@ namespace NDbUnit.Test.OracleClient
         {
             return XmlTestFiles.OracleClient.XmlSchemaFile;
         }
+
     }
 }
