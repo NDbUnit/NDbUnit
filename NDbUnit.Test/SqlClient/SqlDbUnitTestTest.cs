@@ -33,9 +33,20 @@ namespace NDbUnit.Test.SqlServerCe
     [TestFixture]
     public class SqlDbUnitTestTest : NDbUnit.Test.Common.DbUnitTestTestBase
     {
-        protected override string GetXmlSchemaFilename()
+        public override IList<string> ExpectedDataSetTableNames
         {
-            return XmlTestFiles.SqlServer.XmlSchemaFile;
+            get
+            {
+                return new List<string>()
+                {
+                    "Role", "dbo.User", "UserRole" 
+                };
+            }
+        }
+
+        protected override IUnitTestStub GetUnitTestStub()
+        {
+            return new SqlUnitTestStub(DbConnection.SqlConnectionString);
         }
 
         protected override string GetXmlFilename()
@@ -43,9 +54,9 @@ namespace NDbUnit.Test.SqlServerCe
             return XmlTestFiles.SqlServer.XmlFile;
         }
 
-        protected override IUnitTestStub GetUnitTestStub()
+        protected override string GetXmlSchemaFilename()
         {
-            return new SqlUnitTestStub(DbConnection.SqlConnectionString);
+            return XmlTestFiles.SqlServer.XmlSchemaFile;
         }
 
         protected class SqlUnitTestStub : SqlDbUnitTest, IUnitTestStub
@@ -91,18 +102,7 @@ namespace NDbUnit.Test.SqlServerCe
             }
         }
 
-        public override IList<string> ExpectedDataSetTableNames
-        {
-            get
-            {
-                return new List<string>()
-                {
-                    "Role", "dbo.User", "UserRole" 
-                };
-            }
-        }
     }
 
 }
-
 

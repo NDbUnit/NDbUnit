@@ -89,30 +89,14 @@ namespace NDbUnit.Test.Common
         [Test]
         public void CopyDataSet_When_DataSet_Not_Initialized_Throws_Exception()
         {
-            try
-            {
-                _nDbUnitTestStub.CopyDataSet();
-                Assert.Fail("Expected Exception of Type NDbUnitException not Thrown!");
-            }
-            catch (NDbUnitException ex)
-            {
-                Assert.IsNotNull(ex);
-            }
+            Assert.Throws<NDbUnitException>(() => _nDbUnitTestStub.CopyDataSet());
         }
 
         [Test]
 
         public void CopySchema_When_DataSet_Not_Initialized_Throws_Exception()
         {
-            try
-            {
-                _nDbUnitTestStub.CopySchema();
-                Assert.Fail("Expected Exception of Type NDbUnitException not Thrown!");
-            }
-            catch (NDbUnitException ex)
-            {
-                Assert.IsNotNull(ex);
-            }
+            Assert.Throws<NDbUnitException>(() => _nDbUnitTestStub.CopySchema());
         }
 
         [Test]
@@ -150,15 +134,7 @@ namespace NDbUnit.Test.Common
         [Test]
         public void PerformDbOperation_When_Not_Initialized_Throws_Exception()
         {
-            try
-            {
-                _nDbUnitTestStub.PerformDbOperation(DbOperationFlag.Update);
-                Assert.Fail("Expected Exception of type NDbUnitException was not thrown!");
-            }
-            catch (NDbUnitException ex)
-            {
-                Assert.IsNotNull(ex);
-            }
+            Assert.Throws<NDbUnitException>(() => _nDbUnitTestStub.PerformDbOperation(DbOperationFlag.Update));
         }
 
         [Test]
@@ -181,46 +157,24 @@ namespace NDbUnit.Test.Common
             {
                 schemaTables.Add(dataTable.TableName);
 
-                Console.WriteLine("Table '" + dataTable.TableName + "' found in dataset");
+                Console.WriteLine(String.Format("Table '{0}' found in dataset", dataTable.TableName));
             }
 
             Assert.AreEqual(EXPECTED_COUNT_OF_COMMANDS, copyOfDataSet.Tables.Count, string.Format("Should be {0} Tables in dataset", EXPECTED_COUNT_OF_COMMANDS));
             Assert.AreElementsEqual<string>(ExpectedDataSetTableNames, schemaTables);
-
-
-            //Assert.AreEqual(EXPECTED_COUNT_OF_COMMANDS, copyOfDataSet.Tables.Count, string.Format( "Expected {0} tables", EXPECTED_COUNT_OF_COMMANDS));
-            //Assert.AreEqual("Role", copyOfDataSet.Tables[0].TableName, "Wrong table");
-            //Assert.AreEqual("User", copyOfDataSet.Tables[1].TableName, "Wrong table");
-            //Assert.AreEqual("UserRole", copyOfDataSet.Tables[2].TableName, "Wrong table");
         }
 
         [Test]
         public void ReadXml_From_DataSet_File_With_Empty_String_Throws_Exception()
         {
-            try
-            {
-                _nDbUnitTestStub.ReadXml("");
-                Assert.Fail("Expected Exception of Type ArgumentException was not Thrown!");
-            }
-            catch (ArgumentException ex)
-            {
-                Assert.IsNotNull(ex);
-            }
+            Assert.Throws<ArgumentException>(() => _nDbUnitTestStub.ReadXml(""));
         }
 
         [Test]
         public void ReadXml_From_DataSet_File_Without_First_Calling_ReadXmlSchema_Throws_Exception()
         {
             _mocker.ReplayAll();
-            try
-            {
-                _nDbUnitTestStub.ReadXml(GetXmlFilename());
-                Assert.Fail("Expected Exception of Type InvalidOperationException was not Thrown!");
-            }
-            catch (InvalidOperationException ex)
-            {
-                Assert.IsNotNull(ex);
-            }
+            Assert.Throws<InvalidOperationException>(() => _nDbUnitTestStub.ReadXml(GetXmlFilename()));
         }
 
         [Test]
@@ -241,15 +195,7 @@ namespace NDbUnit.Test.Common
         [Test]
         public void ReadXmlSchema_With_Empty_String_Throws_Exception()
         {
-            try
-            {
-                _nDbUnitTestStub.ReadXmlSchema("");
-                Assert.Fail("Expected Exception of Type ArgumentException was not Thrown!");
-            }
-            catch (ArgumentException ex)
-            {
-                Assert.IsNotNull(ex);
-            }
+            Assert.Throws<ArgumentException>(() => _nDbUnitTestStub.ReadXmlSchema(""));
         }
 
         protected abstract IUnitTestStub GetUnitTestStub();

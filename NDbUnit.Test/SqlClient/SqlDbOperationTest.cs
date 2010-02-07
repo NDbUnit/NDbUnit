@@ -43,13 +43,18 @@ namespace NDbUnit.Test.SqlClient
 
         protected override IDbCommand GetResetIdentityColumnsDbCommand(DataTable table, DataColumn column)
         {
-            String sql = "dbcc checkident([" + table.TableName + "], RESEED, 0)";
+            String sql = String.Format("dbcc checkident([{0}], RESEED, 0)", table.TableName);
             return new SqlCommand(sql, (SqlConnection)_commandBuilder.Connection);
         }
 
         protected override string GetXmlFilename()
         {
             return XmlTestFiles.SqlServer.XmlFile;
+        }
+
+        protected override string GetXmlModifyFilename()
+        {
+            return XmlTestFiles.SqlServer.XmlModFile;
         }
 
         protected override string GetXmlRefeshFilename()

@@ -33,21 +33,6 @@ namespace NDbUnit.Test.MySqlDb
     [TestFixture]
     public class MySqlDbUnitTestTest : NDbUnit.Test.Common.DbUnitTestTestBase
     {
-        protected override string GetXmlSchemaFilename()
-        {
-            return XmlTestFiles.MySql.XmlSchemaFile;
-        }
-
-        protected override string GetXmlFilename()
-        {
-            return XmlTestFiles.MySql.XmlFile;
-        }
-
-        protected override IUnitTestStub GetUnitTestStub()
-        {
-            return new MySqlDbUnitTestStub(DbConnection.MySqlConnectionString);
-        }
-
         public override IList<string> ExpectedDataSetTableNames
         {
             get
@@ -57,6 +42,21 @@ namespace NDbUnit.Test.MySqlDb
                     "Role", "User", "UserRole" 
                 };
             }
+        }
+
+        protected override IUnitTestStub GetUnitTestStub()
+        {
+            return new MySqlDbUnitTestStub(DbConnection.MySqlConnectionString);
+        }
+
+        protected override string GetXmlFilename()
+        {
+            return XmlTestFiles.MySql.XmlFile;
+        }
+
+        protected override string GetXmlSchemaFilename()
+        {
+            return XmlTestFiles.MySql.XmlSchemaFile;
         }
 
         protected class MySqlDbUnitTestStub : MySqlDbUnitTest, IUnitTestStub
@@ -104,5 +104,4 @@ namespace NDbUnit.Test.MySqlDb
     }
 
 }
-
 

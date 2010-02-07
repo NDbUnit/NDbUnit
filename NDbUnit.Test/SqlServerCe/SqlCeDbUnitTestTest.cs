@@ -32,23 +32,8 @@ using System.IO;
 namespace NDbUnit.Test.SqlServerCe
 {
     [TestFixture]
-    public class SqlLiteDbUnitTestTest : NDbUnit.Test.Common.DbUnitTestTestBase
+    public class SqlCeDbUnitTestTest : NDbUnit.Test.Common.DbUnitTestTestBase
     {
-        protected override string GetXmlSchemaFilename()
-        {
-            return XmlTestFiles.SqlServerCe.XmlSchemaFile;
-        }
-
-        protected override string GetXmlFilename()
-        {
-            return XmlTestFiles.SqlServerCe.XmlFile;
-        }
-
-        protected override IUnitTestStub GetUnitTestStub()
-        {
-            return new SqliteUnitTestStub(DbConnection.SqlCeConnectionString);
-        }
-
         public override IList<string> ExpectedDataSetTableNames
         {
             get
@@ -60,9 +45,24 @@ namespace NDbUnit.Test.SqlServerCe
             }
         }
 
-        protected class SqliteUnitTestStub : SqlCeUnitTest, IUnitTestStub
+        protected override IUnitTestStub GetUnitTestStub()
         {
-            public SqliteUnitTestStub(string connectionString)
+            return new SqlCeUnitTestStub(DbConnection.SqlCeConnectionString);
+        }
+
+        protected override string GetXmlFilename()
+        {
+            return XmlTestFiles.SqlServerCe.XmlFile;
+        }
+
+        protected override string GetXmlSchemaFilename()
+        {
+            return XmlTestFiles.SqlServerCe.XmlSchemaFile;
+        }
+
+        protected class SqlCeUnitTestStub : SqlCeUnitTest, IUnitTestStub
+        {
+            public SqlCeUnitTestStub(string connectionString)
                 : base(connectionString)
             {
             }
@@ -105,5 +105,4 @@ namespace NDbUnit.Test.SqlServerCe
     }
 
 }
-
 

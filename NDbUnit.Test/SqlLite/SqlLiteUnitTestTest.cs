@@ -33,21 +33,6 @@ namespace NDbUnit.Test.SqlLite
     [TestFixture]
     public class SqlLiteUnitTestTest : NDbUnit.Test.Common.DbUnitTestTestBase
     {
-        protected override string GetXmlSchemaFilename()
-        {
-            return XmlTestFiles.Sqlite.XmlSchemaFile;
-        }
-
-        protected override string GetXmlFilename()
-        {
-            return XmlTestFiles.Sqlite.XmlFile;
-        }
-
-        protected override IUnitTestStub GetUnitTestStub()
-        {
-            return new SqliteUnitTestStub(DbConnection.SqlLiteConnectionString);
-        }
-
         public override IList<string> ExpectedDataSetTableNames
         {
             get
@@ -57,6 +42,21 @@ namespace NDbUnit.Test.SqlLite
                     "Role", "User", "UserRole" 
                 };
             }
+        }
+
+        protected override IUnitTestStub GetUnitTestStub()
+        {
+            return new SqliteUnitTestStub(DbConnection.SqlLiteConnectionString);
+        }
+
+        protected override string GetXmlFilename()
+        {
+            return XmlTestFiles.Sqlite.XmlFile;
+        }
+
+        protected override string GetXmlSchemaFilename()
+        {
+            return XmlTestFiles.Sqlite.XmlSchemaFile;
         }
 
         protected class SqliteUnitTestStub : SqlLiteUnitTest, IUnitTestStub
@@ -104,5 +104,4 @@ namespace NDbUnit.Test.SqlLite
     }
 
 }
-
 

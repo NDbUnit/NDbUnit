@@ -52,6 +52,11 @@ namespace NDbUnit.Test.Mysql
             return XmlTestFiles.MySql.XmlFile;
         }
 
+        protected override string GetXmlModifyFilename()
+        {
+            return XmlTestFiles.MySql.XmlModFile;
+        }
+
         protected override string GetXmlRefeshFilename()
         {
             return XmlTestFiles.MySql.XmlRefreshFile;

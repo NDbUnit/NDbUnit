@@ -33,21 +33,6 @@ namespace NDbUnit.Test.OleDb
     [TestFixture]
     public class OleDbUnitTestTest : NDbUnit.Test.Common.DbUnitTestTestBase
     {
-        protected override string GetXmlSchemaFilename()
-        {
-            return XmlTestFiles.OleDb.XmlSchemaFile;
-        }
-
-        protected override string GetXmlFilename()
-        {
-            return XmlTestFiles.OleDb.XmlFile;
-        }
-
-        protected override IUnitTestStub GetUnitTestStub()
-        {
-            return new OleDbUnitTestStub(DbConnection.OleDbConnectionString);
-        }
-
         public override IList<string> ExpectedDataSetTableNames
         {
             get
@@ -57,6 +42,21 @@ namespace NDbUnit.Test.OleDb
                     "Role", "dbo.User", "UserRole" 
                 };
             }
+        }
+
+        protected override IUnitTestStub GetUnitTestStub()
+        {
+            return new OleDbUnitTestStub(DbConnection.OleDbConnectionString);
+        }
+
+        protected override string GetXmlFilename()
+        {
+            return XmlTestFiles.OleDb.XmlFile;
+        }
+
+        protected override string GetXmlSchemaFilename()
+        {
+            return XmlTestFiles.OleDb.XmlSchemaFile;
         }
 
         protected class OleDbUnitTestStub : OleDbUnitTest, IUnitTestStub
@@ -104,5 +104,4 @@ namespace NDbUnit.Test.OleDb
     }
 
 }
-
 

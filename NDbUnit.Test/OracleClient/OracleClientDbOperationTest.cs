@@ -57,6 +57,11 @@ namespace NDbUnit.Test.OracleClient
             return XmlTestFiles.OracleClient.XmlFile;
         }
 
+        protected override string GetXmlModifyFilename()
+        {
+            return XmlTestFiles.OracleClient.XmlModFile;
+        }
+
         protected override string GetXmlRefeshFilename()
         {
             return XmlTestFiles.OracleClient.XmlRefreshFile;

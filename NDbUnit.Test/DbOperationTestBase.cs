@@ -49,14 +49,7 @@ namespace NDbUnit.Test.Common
             string xmlSchemaFile = GetXmlSchemaFilename();
             _xmlFile = GetXmlFilename();
 
-            try
-            {
-                _commandBuilder.BuildCommands(xmlSchemaFile);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            _commandBuilder.BuildCommands(xmlSchemaFile);
 
             DataSet dsSchema = _commandBuilder.GetSchema();
             _dsData = dsSchema.Clone();
@@ -75,6 +68,23 @@ namespace NDbUnit.Test.Common
         public void _TearDown()
         {
             _commandBuilder.Connection.Close();
+        }
+
+        [Test]
+        public void All_Test_Xml_Files_Comply_With_Test_Xsd_Schema()
+        {
+            DataSet ds = new DataSet();
+            ds.ReadXmlSchema(GetXmlSchemaFilename());
+            ds.ReadXml(GetXmlFilename());
+
+            DataSet dsRefresh = new DataSet();
+            dsRefresh.ReadXmlSchema(GetXmlSchemaFilename());
+            dsRefresh.ReadXml(GetXmlRefeshFilename());
+
+            DataSet dsModify = new DataSet();
+            dsModify.ReadXmlSchema(GetXmlSchemaFilename());
+            dsModify.ReadXml(GetXmlRefeshFilename());
+
         }
 
         [Test]
@@ -212,7 +222,7 @@ namespace NDbUnit.Test.Common
             {
                 DataSet dsSchema = _commandBuilder.GetSchema();
                 DataSet ds = dsSchema.Clone();
-                string xmlFile = XmlTestFiles.SqlServerCe.XmlModFile;
+                string xmlFile = GetXmlFilename();
                 ds.ReadXml(xmlFile);
 
                 sqlTransaction = _commandBuilder.Connection.BeginTransaction();
@@ -238,6 +248,8 @@ namespace NDbUnit.Test.Common
         protected abstract IDbCommand GetResetIdentityColumnsDbCommand(DataTable table, DataColumn column);
 
         protected abstract string GetXmlFilename();
+
+        protected abstract string GetXmlModifyFilename();
 
         protected abstract string GetXmlRefeshFilename();
 

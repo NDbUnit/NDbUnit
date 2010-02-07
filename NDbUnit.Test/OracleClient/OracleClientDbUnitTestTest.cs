@@ -33,21 +33,6 @@ namespace NDbUnit.Test.OracleClient
 {
     public class OracleClientDbUnitTestTest : DbUnitTestTestBase
     {
-        protected override string GetXmlSchemaFilename()
-        {
-            return XmlTestFiles.OracleClient.XmlSchemaFile;
-        }
-
-        protected override string GetXmlFilename()
-        {
-            return XmlTestFiles.OracleClient.XmlFile;
-        }
-
-        protected override IUnitTestStub GetUnitTestStub()
-        {
-            return new OracleClientDbUnitTestStub(DbConnection.OracleClientConnectionString);
-        }
-
         public override IList<string> ExpectedDataSetTableNames
         {
             get
@@ -57,6 +42,21 @@ namespace NDbUnit.Test.OracleClient
                     "USER", "USERROLE", "ROLE"
                 };
             }
+        }
+
+        protected override IUnitTestStub GetUnitTestStub()
+        {
+            return new OracleClientDbUnitTestStub(DbConnection.OracleClientConnectionString);
+        }
+
+        protected override string GetXmlFilename()
+        {
+            return XmlTestFiles.OracleClient.XmlFile;
+        }
+
+        protected override string GetXmlSchemaFilename()
+        {
+            return XmlTestFiles.OracleClient.XmlSchemaFile;
         }
 
         protected class OracleClientDbUnitTestStub : OracleClientDbUnitTest, IUnitTestStub

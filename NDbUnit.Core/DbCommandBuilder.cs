@@ -23,17 +23,15 @@
 using System;
 using System.IO;
 using System.Text;
-using System.Xml;
 using System.Data;
 using System.Collections;
-
-
-
 
 namespace NDbUnit.Core
 {
     public abstract class DbCommandBuilder : IDbCommandBuilder
     {
+        private DataSet _dataSet = new DataSet();
+
         protected DataTable _dataTableSchema;
 
         private Hashtable _dbCommandColl = new Hashtable();
@@ -43,8 +41,6 @@ namespace NDbUnit.Core
         private bool _passedconnection;
 
         protected IDbConnection _sqlConnection;
-
-        private XmlDataDocument _xdd = new XmlDataDocument();
 
         private string _xmlSchemaFile = "";
 
@@ -81,37 +77,6 @@ namespace NDbUnit.Core
             get { return _xmlSchemaFile; }
         }
 
-        public void BuildCommands(Stream xmlSchema)
-        {
-            //XmlDataDocument xdd = new XmlDataDocument();
-
-            _xdd.DataSet.ReadXmlSchema(xmlSchema);
-            // DataSet table rows RowState property is set to Added
-            // when read in from an xml file.
-            _xdd.DataSet.AcceptChanges();
-
-            Hashtable ht = new Hashtable();
-
-            Commands commands;
-            foreach (DataTable dataTable in _xdd.DataSet.Tables)
-            {
-                // Virtual overrides.
-                commands = new Commands();
-                commands.SelectCommand = CreateSelectCommand(_xdd.DataSet, dataTable.TableName);
-                commands.InsertCommand = CreateInsertCommand(commands.SelectCommand, dataTable.TableName);
-                commands.InsertIdentityCommand = CreateInsertIdentityCommand(commands.SelectCommand, dataTable.TableName);
-                commands.DeleteCommand = CreateDeleteCommand(commands.SelectCommand, dataTable.TableName);
-                commands.DeleteAllCommand = CreateDeleteAllCommand(dataTable.TableName);
-                commands.UpdateCommand = CreateUpdateCommand(commands.SelectCommand, dataTable.TableName);
-
-                ht[dataTable.TableName] = commands;
-            }
-
-            //_xdd = xdd;
-            _dbCommandColl = ht;
-            _initialized = true;
-        }
-
         public void BuildCommands(string xmlSchemaFile)
         {
             Stream stream = null;
@@ -128,6 +93,35 @@ namespace NDbUnit.Core
                 }
             }
             _xmlSchemaFile = xmlSchemaFile;
+            _initialized = true;
+        }
+
+        public void BuildCommands(Stream xmlSchema)
+        {
+
+            _dataSet.ReadXmlSchema(xmlSchema);
+            // DataSet table rows RowState property is set to Added
+            // when read in from an xml file.
+            _dataSet.AcceptChanges();
+
+            Hashtable ht = new Hashtable();
+
+            Commands commands;
+            foreach (DataTable dataTable in _dataSet.Tables)
+            {
+                // Virtual overrides.
+                commands = new Commands();
+                commands.SelectCommand = CreateSelectCommand(_dataSet, dataTable.TableName);
+                commands.InsertCommand = CreateInsertCommand(commands.SelectCommand, dataTable.TableName);
+                commands.InsertIdentityCommand = CreateInsertIdentityCommand(commands.SelectCommand, dataTable.TableName);
+                commands.DeleteCommand = CreateDeleteCommand(commands.SelectCommand, dataTable.TableName);
+                commands.DeleteAllCommand = CreateDeleteAllCommand(dataTable.TableName);
+                commands.UpdateCommand = CreateUpdateCommand(commands.SelectCommand, dataTable.TableName);
+
+                ht[dataTable.TableName] = commands;
+            }
+
+            _dbCommandColl = ht;
             _initialized = true;
         }
 
@@ -158,7 +152,7 @@ namespace NDbUnit.Core
         public DataSet GetSchema()
         {
             isInitialized();
-            return _xdd.DataSet;
+            return _dataSet;
         }
 
         public IDbCommand GetSelectCommand(string tableName)
@@ -171,6 +165,30 @@ namespace NDbUnit.Core
         {
             isInitialized();
             return ((Commands)_dbCommandColl[tableName]).UpdateCommand;
+        }
+
+        protected virtual bool ColumnOKToInclude(DataRow dataRow)
+        {
+            try
+            {
+                string columnName = (string)dataRow["ColumnName"];
+
+                bool found = false;
+
+                foreach (DataTable table in _dataSet.Tables)
+                {
+                    found = table.Columns.Contains(columnName);
+                    if (found == true)
+                        break;
+                }
+
+                return found && !(bool)dataRow["IsHidden"] && dataRow["DataTypeName"].ToString() != "timestamp";
+            }
+            catch (Exception)
+            {
+                //if we cannot determine a reason NOT to include the column, we have to assume its OK to do so
+                return true;
+            }
         }
 
         protected abstract IDbCommand CreateDbCommand();
@@ -213,31 +231,6 @@ namespace NDbUnit.Core
             sqlDeleteCommand.CommandText = sb.ToString();
 
             return sqlDeleteCommand;
-        }
-
-
-        protected virtual bool ColumnOKToInclude(DataRow dataRow)
-        {
-            try
-            {
-                string columnName = (string)dataRow["ColumnName"];
-
-                bool found = false;
-
-                foreach (DataTable table in _xdd.DataSet.Tables)
-                {
-                    found = table.Columns.Contains(columnName);
-                    if (found == true)
-                        break;
-                }
-
-                return found && !(bool)dataRow["IsHidden"] && dataRow["DataTypeName"].ToString() != "timestamp";
-            }
-            catch (Exception)
-            {
-                //if we cannot determine a reason NOT to include the column, we have to assume its OK to do so
-                return true;
-            }
         }
 
         protected virtual IDbCommand CreateInsertCommand(IDbCommand selectCommand, string tableName)

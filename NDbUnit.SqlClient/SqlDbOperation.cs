@@ -68,7 +68,6 @@ namespace NDbUnit.Core.SqlClient
             sqlCommand.Connection = (DbConnection)dbTransaction.Connection;
             sqlCommand.Transaction = (DbTransaction)dbTransaction;
             sqlCommand.ExecuteNonQuery();
-
         }
     }
 }

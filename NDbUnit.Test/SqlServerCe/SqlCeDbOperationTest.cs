@@ -53,6 +53,11 @@ namespace NDbUnit.Test.SqlServerCe
             return XmlTestFiles.SqlServerCe.XmlFile;
         }
 
+        protected override string GetXmlModifyFilename()
+        {
+            return XmlTestFiles.SqlServerCe.XmlModFile;
+        }
+
         protected override string GetXmlRefeshFilename()
         {
             return XmlTestFiles.SqlServerCe.XmlRefreshFile;

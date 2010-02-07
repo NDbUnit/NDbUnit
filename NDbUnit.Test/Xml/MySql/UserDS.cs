@@ -1,2 +1,0 @@
-public partial class UserDS {
-}

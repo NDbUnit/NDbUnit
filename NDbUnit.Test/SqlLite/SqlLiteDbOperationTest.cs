@@ -43,13 +43,18 @@ namespace NDbUnit.Test.SqlLite
 
         protected override IDbCommand GetResetIdentityColumnsDbCommand(DataTable table, DataColumn column)
         {
-            String sql = "delete from sqlite_sequence where name = '" + table.TableName + "'";
+            String sql = String.Format("delete from sqlite_sequence where name = '{0}'", table.TableName);
             return new SQLiteCommand(sql, (SQLiteConnection)_commandBuilder.Connection);
         }
 
         protected override string GetXmlFilename()
         {
             return XmlTestFiles.Sqlite.XmlFile;
+        }
+
+        protected override string GetXmlModifyFilename()
+        {
+            return XmlTestFiles.Sqlite.XmlModFile;
         }
 
         protected override string GetXmlRefeshFilename()

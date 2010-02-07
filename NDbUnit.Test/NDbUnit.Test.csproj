@@ -135,11 +135,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DbOperationTestBase.cs" />
+    <Compile Include="IntegationTestBase.cs" />
     <Compile Include="Mysql\MySqlDbCommandBuilderTest.cs" />
     <Compile Include="Mysql\MySqlDbUnitTestTest.cs" />
+    <Compile Include="Mysql\MySqlDbUnitIntegrationTest.cs" />
     <Compile Include="OleDb\OleDbOperationTest.cs" />
     <Compile Include="OleDb\OleDbCommandBuilderTest.cs" />
     <Compile Include="OleDb\OleDbUnitTestTest.cs" />
+    <Compile Include="OleDb\OleDbUnitIntegrationTest.cs" />
     <Compile Include="OracleClient\OracleClientDbCommandBuilderTest.cs" />
     <Compile Include="OracleClient\OracleClientDbOperationTest.cs" />
     <Compile Include="OracleClient\OracleClientDbUnitTestTest.cs" />
@@ -149,7 +152,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="DbUnitTestTestBase.cs" />
+    <Compile Include="SqlClient\SqlDbUnitIntegrationTest.cs" />
     <Compile Include="SqlLite-InMemory\SQLliteInMemoryIntegrationTest.cs" />
+    <Compile Include="SqlLite\SqlLiteDbUnitIntegrationTest.cs" />
     <Compile Include="SqlLite\SqlLiteUnitTestTest.cs" />
     <Compile Include="SqlLite\SqlLiteCommandBuilderTest.cs" />
     <Compile Include="SqlServerCe\SqlCeDbCommandBuilderTest.cs" />
@@ -158,29 +163,12 @@
     <Compile Include="SqlLite\SqlLiteDbOperationTest.cs" />
     <Compile Include="SqlClient\SqlDbOperationTest.cs" />
     <Compile Include="SqlServerCe\SqlCeDbOperationTest.cs" />
+    <Compile Include="SqlServerCe\SqlCeDbUnitIntegrationTest.cs" />
     <Compile Include="TableNameHelperTest.cs" />
     <Compile Include="Mysql\MySqlDbOperationTest.cs" />
     <Compile Include="SqlServerCe\SqlCeDbUnitTestTest.cs" />
     <Compile Include="XmlTestFiles.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Xml\MySql\UserDS.cs">
-      <DependentUpon>UserDS.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Xml\OleDb\UserDS.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>UserDS.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Xml\SQLite\UserDS.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>UserDS.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Xml\SqlServer\UserDS.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>UserDS.xsd</DependentUpon>
     </Compile>
     <None Include="app.config" />
     <None Include="NDbUnit.Test.build" />
@@ -192,9 +180,6 @@
     <None Include="SqlLite\test.sqlite.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Xml\MySql\UserDS.xsc">
-      <DependentUpon>UserDS.xsd</DependentUpon>
-    </None>
     <None Include="Xml\MySql\UserDS.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>UserDS.Designer.cs</LastGenOutput>
@@ -205,15 +190,6 @@
       <LastGenOutput>UserDS.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </Content>
-    <None Include="Xml\MySql\UserDS.xss">
-      <DependentUpon>UserDS.xsd</DependentUpon>
-    </None>
-    <None Include="Xml\OleDb\UserDS.xsc">
-      <DependentUpon>UserDS.xsd</DependentUpon>
-    </None>
-    <None Include="Xml\OleDb\UserDS.xss">
-      <DependentUpon>UserDS.xsd</DependentUpon>
-    </None>
     <None Include="Xml\OracleClient\UserDS.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>UserDS1.Designer.cs</LastGenOutput>
@@ -236,12 +212,6 @@
       <LastGenOutput>UserDS.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </Content>
-    <None Include="Xml\SqlServer\UserDS.xsc">
-      <DependentUpon>UserDS.xsd</DependentUpon>
-    </None>
-    <None Include="Xml\SqlServer\UserDS.xss">
-      <DependentUpon>UserDS.xsd</DependentUpon>
-    </None>
     <None Include="Xml\SQLite\UserDS.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>UserDS.Designer.cs</LastGenOutput>

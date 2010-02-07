@@ -52,6 +52,11 @@ namespace NDbUnit.Test.OleDb
             return XmlTestFiles.OleDb.XmlFile;
         }
 
+        protected override string GetXmlModifyFilename()
+        {
+            return XmlTestFiles.OleDb.XmlModFile;
+        }
+
         protected override string GetXmlRefeshFilename()
         {
             return XmlTestFiles.OleDb.XmlRefreshFile;

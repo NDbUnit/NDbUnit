@@ -50,7 +50,7 @@ namespace NDbUnit.Core
 
         private readonly IDbOperation _dbOperation;
 
-        private DataSet _ds;
+        private DataSet _dataSet;
 
         private bool _initialized;
 
@@ -84,21 +84,21 @@ namespace NDbUnit.Core
 
         protected virtual DataSet DS
         {
-            get { return _ds; }
+            get { return _dataSet; }
         }
 
         //Todo: remove method at some point
         public DataSet CopyDataSet()
         {
             checkInitialized();
-            return _ds.Copy();
+            return _dataSet.Copy();
         }
 
         //Todo: remove method at some point  
         public DataSet CopySchema()
         {
             checkInitialized();
-            return _ds.Clone();
+            return _dataSet.Clone();
         }
 
         public DataSet GetDataSetFromDb(StringCollection tableNames)
@@ -109,7 +109,7 @@ namespace NDbUnit.Core
             if (null == tableNames)
             {
                 tableNames = new StringCollection();
-                foreach (DataTable dt in _ds.Tables)
+                foreach (DataTable dt in _dataSet.Tables)
                 {
                     tableNames.Add(dt.TableName);
                 }
@@ -119,7 +119,7 @@ namespace NDbUnit.Core
             try
             {
                 dbConnection.Open();
-                DataSet dsToFill = _ds.Clone();
+                DataSet dsToFill = _dataSet.Clone();
                 foreach (string tableName in tableNames)
                 {
                     OnGetDataSetFromDb(tableName, ref dsToFill, dbConnection);
@@ -180,17 +180,17 @@ namespace NDbUnit.Core
                 {
                     case DbOperationFlag.Insert:
                         {
-                            dbOperation.Insert(_ds, dbCommandBuilder, dbTransaction);
+                            dbOperation.Insert(_dataSet, dbCommandBuilder, dbTransaction);
                             break;
                         }
                     case DbOperationFlag.InsertIdentity:
                         {
-                            dbOperation.InsertIdentity(_ds, dbCommandBuilder, dbTransaction);
+                            dbOperation.InsertIdentity(_dataSet, dbCommandBuilder, dbTransaction);
                             break;
                         }
                     case DbOperationFlag.Delete:
                         {
-                            dbOperation.Delete(_ds, dbCommandBuilder, dbTransaction);
+                            dbOperation.Delete(_dataSet, dbCommandBuilder, dbTransaction);
 
                             break;
                         }
@@ -201,24 +201,24 @@ namespace NDbUnit.Core
                         }
                     case DbOperationFlag.Refresh:
                         {
-                            dbOperation.Refresh(_ds, dbCommandBuilder, dbTransaction);
+                            dbOperation.Refresh(_dataSet, dbCommandBuilder, dbTransaction);
                             break;
                         }
                     case DbOperationFlag.Update:
                         {
-                            dbOperation.Update(_ds, dbCommandBuilder, dbTransaction);
+                            dbOperation.Update(_dataSet, dbCommandBuilder, dbTransaction);
                             break;
                         }
                     case DbOperationFlag.CleanInsert:
                         {
                             dbOperation.DeleteAll(dbCommandBuilder, dbTransaction);
-                            dbOperation.Insert(_ds, dbCommandBuilder, dbTransaction);
+                            dbOperation.Insert(_dataSet, dbCommandBuilder, dbTransaction);
                             break;
                         }
                     case DbOperationFlag.CleanInsertIdentity:
                         {
                             dbOperation.DeleteAll(dbCommandBuilder, dbTransaction);
-                            dbOperation.InsertIdentity(_ds, dbCommandBuilder, dbTransaction);
+                            dbOperation.InsertIdentity(_dataSet, dbCommandBuilder, dbTransaction);
                             break;
                         }
                 }
@@ -264,7 +264,7 @@ namespace NDbUnit.Core
                 try
                 {
                     stream = GetXmlDataFileStream(xmlFile);
-                    ReadXml(stream);
+                    ReadXml(stream);                    
                 }
                 finally
                 {
@@ -279,12 +279,12 @@ namespace NDbUnit.Core
 
         public void ReadXml(Stream xml)
         {
-            if (_ds == null)
+            if (_dataSet == null)
             {
                 throw new InvalidOperationException("You must first call ReadXmlSchema before reading in xml data.");
             }
-            _ds.Clear();
-            _ds.ReadXml(xml);
+            _dataSet.Clear();
+            _dataSet.ReadXml(xml);
         }
 
         public void ReadXmlSchema(string xmlSchemaFile)
@@ -322,7 +322,7 @@ namespace NDbUnit.Core
 
             DataSet dsSchema = dbCommandBuilder.GetSchema();
 
-            _ds = dsSchema.Clone();
+            _dataSet = dsSchema.Clone();
 
             _initialized = true;
         }
