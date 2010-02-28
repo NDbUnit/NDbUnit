@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="SchemaWithSchemaPrefixes" targetNamespace="http://tempuri.org/SchemaWithSchemaPrefixes.xsd" xmlns:mstns="http://tempuri.org/SchemaWithSchemaPrefixes.xsd" xmlns="http://tempuri.org/SchemaWithSchemaPrefixes.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="testdbConnectionString2" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="testdbConnectionString2 (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.NDbUnit.Test.Properties.Settings.GlobalReference.Default.testdbConnectionString2" Provider="System.Data.SqlClient" />
+        </Connections>
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="SchemaWithSchemaPrefixes" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_UserDSName="SchemaWithSchemaPrefixes" msprop:Generator_DataSetName="SchemaWithSchemaPrefixes" msprop:EnableTableAdapterManager="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="OtherSchema.Item" msprop:Generator_UserTableName="OtherSchema.Item" msprop:Generator_RowDeletedName="_OtherSchema_ItemRowDeleted" msprop:Generator_RowChangedName="_OtherSchema_ItemRowChanged" msprop:Generator_RowClassName="_OtherSchema_ItemRow" msprop:Generator_RowChangingName="_OtherSchema_ItemRowChanging" msprop:Generator_RowEvArgName="_OtherSchema_ItemRowChangeEvent" msprop:Generator_RowEvHandlerName="_OtherSchema_ItemRowChangeEventHandler" msprop:Generator_TableClassName="_OtherSchema_ItemDataTable" msprop:Generator_TableVarName="_tableOtherSchema_Item" msprop:Generator_RowDeletingName="_OtherSchema_ItemRowDeleting" msprop:Generator_TablePropName="_OtherSchema_Item">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="id" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_UserColumnName="id" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" type="xs:int" />
+              <xs:element name="Description" msprop:Generator_UserColumnName="Description" msprop:Generator_ColumnVarNameInTable="columnDescription" msprop:Generator_ColumnPropNameInRow="Description" msprop:Generator_ColumnPropNameInTable="DescriptionColumn">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="OtherSchema.Order" msprop:Generator_UserTableName="OtherSchema.Order" msprop:Generator_RowDeletedName="_OtherSchema_OrderRowDeleted" msprop:Generator_RowChangedName="_OtherSchema_OrderRowChanged" msprop:Generator_RowClassName="_OtherSchema_OrderRow" msprop:Generator_RowChangingName="_OtherSchema_OrderRowChanging" msprop:Generator_RowEvArgName="_OtherSchema_OrderRowChangeEvent" msprop:Generator_RowEvHandlerName="_OtherSchema_OrderRowChangeEventHandler" msprop:Generator_TableClassName="_OtherSchema_OrderDataTable" msprop:Generator_TableVarName="_tableOtherSchema_Order" msprop:Generator_RowDeletingName="_OtherSchema_OrderRowDeleting" msprop:Generator_TablePropName="_OtherSchema_Order">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="id" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_UserColumnName="id" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" type="xs:int" />
+              <xs:element name="OrderNumber" msprop:Generator_UserColumnName="OrderNumber" msprop:Generator_ColumnVarNameInTable="columnOrderNumber" msprop:Generator_ColumnPropNameInRow="OrderNumber" msprop:Generator_ColumnPropNameInTable="OrderNumberColumn" type="xs:int" />
+              <xs:element name="Description" msprop:Generator_UserColumnName="Description" msprop:Generator_ColumnVarNameInTable="columnDescription" msprop:Generator_ColumnPropNameInRow="Description" msprop:Generator_ColumnPropNameInTable="DescriptionColumn">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="ItemId" msprop:Generator_UserColumnName="ItemId" msprop:Generator_ColumnVarNameInTable="columnItemId" msprop:Generator_ColumnPropNameInRow="ItemId" msprop:Generator_ColumnPropNameInTable="ItemIdColumn" type="xs:int" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:OtherSchema.Item" />
+      <xs:field xpath="mstns:id" />
+    </xs:unique>
+    <xs:unique name="OtherSchema.Order_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:OtherSchema.Order" />
+      <xs:field xpath="mstns:id" />
+    </xs:unique>
+  </xs:element>
+  <xs:annotation>
+    <xs:appinfo>
+      <msdata:Relationship name="FK_Order_Item" msdata:parent="OtherSchema.Item" msdata:child="OtherSchema.Order" msdata:parentkey="id" msdata:childkey="ItemId" msprop:Generator_UserRelationName="FK_Order_Item" msprop:Generator_RelationVarName="relationFK_Order_Item" msprop:Generator_UserChildTable="OtherSchema.Order" msprop:Generator_UserParentTable="OtherSchema.Item" msprop:Generator_ParentPropName="ItemRow" msprop:Generator_ChildPropName="_GetOtherSchema_OrderRows" />
+    </xs:appinfo>
+  </xs:annotation>
+</xs:schema>

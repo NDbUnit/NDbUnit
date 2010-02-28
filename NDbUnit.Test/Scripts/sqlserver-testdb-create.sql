@@ -8,7 +8,10 @@ GO
 
 USE [testdb]
 GO
-/****** Object:  Table [dbo].[User]    Script Date: 12/14/2009 23:16:02 ******/
+/****** Object:  Schema [OtherSchema]    Script Date: 02/28/2010 11:32:01 ******/
+CREATE SCHEMA [OtherSchema] AUTHORIZATION [db_owner]
+GO
+/****** Object:  Table [dbo].[User]    Script Date: 02/28/2010 11:32:02 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -21,7 +24,6 @@ CREATE TABLE [dbo].[User](
 	[LastName] [varchar](50) NOT NULL,
 	[Age] [int] NULL,
 	[SupervisorID] [int] NULL,
-	[Stamp] [timestamp] NULL,
  CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
@@ -30,7 +32,7 @@ CREATE TABLE [dbo].[User](
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[Role]    Script Date: 12/14/2009 23:16:02 ******/
+/****** Object:  Table [dbo].[Role]    Script Date: 02/28/2010 11:32:02 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -49,7 +51,25 @@ CREATE TABLE [dbo].[Role](
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[UserRole]    Script Date: 12/14/2009 23:16:02 ******/
+/****** Object:  Table [OtherSchema].[Item]    Script Date: 02/28/2010 11:32:02 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [OtherSchema].[Item](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[Description] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_Item] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[UserRole]    Script Date: 02/28/2010 11:32:02 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -64,21 +84,47 @@ CREATE TABLE [dbo].[UserRole](
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  ForeignKey [FK_User_Supervisor]    Script Date: 12/14/2009 23:16:02 ******/
+/****** Object:  Table [OtherSchema].[Order]    Script Date: 02/28/2010 11:32:02 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [OtherSchema].[Order](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[OrderNumber] [int] NOT NULL,
+	[Description] [varchar](50) NOT NULL,
+	[ItemId] [int] NOT NULL,
+ CONSTRAINT [PK_Order] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  ForeignKey [FK_User_Supervisor]    Script Date: 02/28/2010 11:32:02 ******/
 ALTER TABLE [dbo].[User]  WITH NOCHECK ADD  CONSTRAINT [FK_User_Supervisor] FOREIGN KEY([SupervisorID])
 REFERENCES [dbo].[User] ([ID])
 GO
 ALTER TABLE [dbo].[User] CHECK CONSTRAINT [FK_User_Supervisor]
 GO
-/****** Object:  ForeignKey [FK_UserRole_Role]    Script Date: 12/14/2009 23:16:02 ******/
+/****** Object:  ForeignKey [FK_UserRole_Role]    Script Date: 02/28/2010 11:32:02 ******/
 ALTER TABLE [dbo].[UserRole]  WITH NOCHECK ADD  CONSTRAINT [FK_UserRole_Role] FOREIGN KEY([RoleID])
 REFERENCES [dbo].[Role] ([ID])
 GO
 ALTER TABLE [dbo].[UserRole] CHECK CONSTRAINT [FK_UserRole_Role]
 GO
-/****** Object:  ForeignKey [FK_UserRole_User]    Script Date: 12/14/2009 23:16:02 ******/
+/****** Object:  ForeignKey [FK_UserRole_User]    Script Date: 02/28/2010 11:32:02 ******/
 ALTER TABLE [dbo].[UserRole]  WITH NOCHECK ADD  CONSTRAINT [FK_UserRole_User] FOREIGN KEY([UserID])
 REFERENCES [dbo].[User] ([ID])
 GO
 ALTER TABLE [dbo].[UserRole] CHECK CONSTRAINT [FK_UserRole_User]
+GO
+/****** Object:  ForeignKey [FK_Order_Item]    Script Date: 02/28/2010 11:32:02 ******/
+ALTER TABLE [OtherSchema].[Order]  WITH NOCHECK ADD  CONSTRAINT [FK_Order_Item] FOREIGN KEY([ItemId])
+REFERENCES [OtherSchema].[Item] ([id])
+GO
+ALTER TABLE [OtherSchema].[Order] CHECK CONSTRAINT [FK_Order_Item]
 GO

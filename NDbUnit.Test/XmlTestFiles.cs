@@ -64,6 +64,14 @@ namespace NDbUnit.Test
 
         public class SqlServer : XmlTestFilesBase
         {
+            public static string XmlFileForSchemaPrefixTests
+            {
+                get { return Path.Combine(_xmlPath, "DataFileWithSchemaPrefixes.xml"); }
+            }
+            public static string XmlSchemaFileForSchemaPrefixTests
+            {
+                get { return Path.Combine(_xmlPath, "SchemaWithSchemaPrefixes.xsd"); }
+            }
             private static string _xmlPath = @"..\..\Xml\SqlServer\";
 
             public static string XmlFile

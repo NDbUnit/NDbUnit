@@ -152,6 +152,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="DbUnitTestTestBase.cs" />
+    <Compile Include="SqlClient\SchemaPrefixTest.cs" />
     <Compile Include="SqlClient\SqlDbUnitIntegrationTest.cs" />
     <Compile Include="SqlLite-InMemory\SQLliteInMemoryIntegrationTest.cs" />
     <Compile Include="SqlLite\SqlLiteDbUnitIntegrationTest.cs" />
@@ -206,6 +207,7 @@
     <Content Include="Xml\OracleClient\User.xml" />
     <Content Include="Xml\OracleClient\UserMod.xml" />
     <Content Include="Xml\OracleClient\UserRefresh.xml" />
+    <Content Include="Xml\SqlServer\DataFileWithSchemaPrefixes.xml" />
     <Content Include="Xml\SqlServer\User.xml" />
     <Content Include="Xml\SqlServer\UserDS.xsd">
       <Generator>MSDataSetGenerator</Generator>
@@ -216,6 +218,11 @@
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>UserDS.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </None>
+    <None Include="Xml\SqlServer\SchemaWithSchemaPrefixes.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>SchemaWithSchemaPrefixes.Designer.cs</LastGenOutput>
     </None>
     <Content Include="Scripts\mysql-testdb-create.sql" />
     <Content Include="Scripts\sqlite-testdb-create.sql" />
