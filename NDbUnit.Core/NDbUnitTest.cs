@@ -1,7 +1,7 @@
 /*
  *
  * NDbUnit
- * Copyright (C)2005 - 2009
+ * Copyright (C)2005 - 2010
  * http://code.google.com/p/ndbunit
  *
  * This library is free software; you can redistribute it and/or
@@ -196,7 +196,7 @@ namespace NDbUnit.Core
                         }
                     case DbOperationFlag.DeleteAll:
                         {
-                            dbOperation.DeleteAll(dbCommandBuilder, dbTransaction);
+                            dbOperation.DeleteAll(_dataSet, dbCommandBuilder, dbTransaction);
                             break;
                         }
                     case DbOperationFlag.Refresh:
@@ -211,13 +211,13 @@ namespace NDbUnit.Core
                         }
                     case DbOperationFlag.CleanInsert:
                         {
-                            dbOperation.DeleteAll(dbCommandBuilder, dbTransaction);
+                            dbOperation.DeleteAll(_dataSet, dbCommandBuilder, dbTransaction);
                             dbOperation.Insert(_dataSet, dbCommandBuilder, dbTransaction);
                             break;
                         }
                     case DbOperationFlag.CleanInsertIdentity:
                         {
-                            dbOperation.DeleteAll(dbCommandBuilder, dbTransaction);
+                            dbOperation.DeleteAll(_dataSet, dbCommandBuilder, dbTransaction);
                             dbOperation.InsertIdentity(_dataSet, dbCommandBuilder, dbTransaction);
                             break;
                         }

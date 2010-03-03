@@ -1,7 +1,7 @@
 ﻿/*
  *
  * NDbUnit
- * Copyright (C)2005 - 2009
+ * Copyright (C)2005 - 2010
  * http://code.google.com/p/ndbunit
  *
  * This library is free software; you can redistribute it and/or
@@ -116,7 +116,7 @@ namespace NDbUnit.Test.Common
             try
             {
                 sqlTransaction = _commandBuilder.Connection.BeginTransaction();
-                _dbOperation.DeleteAll(_commandBuilder, sqlTransaction);
+                _dbOperation.DeleteAll(_dsData, _commandBuilder, sqlTransaction);
                 sqlTransaction.Commit();
             }
             catch (Exception)

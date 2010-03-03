@@ -1,7 +1,7 @@
 /*
  *
  * NDbUnit
- * Copyright (C)2005 - 2009
+ * Copyright (C)2005 - 2010
  * http://code.google.com/p/ndbunit
  *
  * This library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ namespace NDbUnit.Core
         void Insert(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction);
         void InsertIdentity(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction);
         void Delete(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction);
-        void DeleteAll(IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction);
+        void DeleteAll(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction);
         void Update(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction);
         void Refresh(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction);
     }

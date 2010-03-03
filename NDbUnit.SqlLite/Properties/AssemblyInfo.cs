@@ -1,7 +1,7 @@
 ﻿/*
  *
  * NDbUnit
- * Copyright (C)2005 - 2009
+ * Copyright (C)2005 - 2010
  * http://code.google.com/p/ndbunit
  *
  * This library is free software; you can redistribute it and/or
@@ -54,5 +54,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.6.1.*")]
-[assembly: AssemblyFileVersion("1.6.1.0")]
+[assembly: AssemblyVersion("1.6.2.*")]
+[assembly: AssemblyFileVersion("1.6.2.0")]

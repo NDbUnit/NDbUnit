@@ -1,7 +1,7 @@
 /*
  *
  * NDbUnit
- * Copyright (C)2005 - 2009
+ * Copyright (C)2005 - 2010
  * http://code.google.com/p/ndbunit
  *
  * This library is free software; you can redistribute it and/or
@@ -59,6 +59,21 @@ namespace NDbUnit.Core
         {
             AddTablesToList(dataSet.Tables);
 
+            if (List.Count != dataSet.Tables.Count)
+            {
+                Debug.WriteLine("Iterator Contents:");
+                foreach (var item in List)
+                {
+                    Debug.WriteLine(((DataTable)item).TableName);
+                }
+
+                Debug.WriteLine("DataSet Contents:");
+                foreach (var item in dataSet.Tables)
+                {
+                    Debug.WriteLine(((DataTable)item).TableName);
+                }
+            }
+
             Trace.Assert(List.Count == dataSet.Tables.Count, "Dataset iterator did not add all tables to collection.");
         }
 
@@ -107,22 +122,29 @@ namespace NDbUnit.Core
         /// <param name="tables">Collection of tables.</param>
         private void AddTablesToList(DataTableCollection tables)
         {
-            int count = 0;
-
-            // Add tables with no parent keys
             foreach (DataTable table in tables)
             {
-                if (ShouldAddToList(table))
-                {
-                    List.Add(table);
-                    count++;
-                }
+                List.Add(table);
             }
 
-            if (count > 0)
-            {
-                AddTablesToList(tables);
-            }
+            //TODO: Refactor.. the reverse sort is unnecessary now that constraints are dropped prior to inserts
+
+            //int count = 0;
+
+            //// Add tables with no parent keys
+            //foreach (DataTable table in tables)
+            //{
+            //    if (ShouldAddToList(table))
+            //    {
+            //        List.Add(table);
+            //        count++;
+            //    }
+            //}
+
+            //if (count > 0)
+            //{
+            //    AddTablesToList(tables);
+            //}
 
         }
 

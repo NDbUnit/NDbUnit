@@ -1,7 +1,7 @@
 /*
  *
  * NDbUnit
- * Copyright (C)2005 - 2009
+ * Copyright (C)2005 - 2010
  * http://code.google.com/p/ndbunit
  *
  * This library is free software; you can redistribute it and/or
@@ -35,22 +35,30 @@ namespace NDbUnit.Core
 
         public void Delete(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction)
         {
+            DisableAllTableConstraints(ds, dbTransaction);
             deleteCommon(ds, dbCommandBuilder, dbTransaction, false);
+            EnableAllTableConstraints(ds, dbTransaction);
         }
 
-        public void DeleteAll(IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction)
+        public void DeleteAll(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction)
         {
-            deleteCommon(null, dbCommandBuilder, dbTransaction, true);
+            DisableAllTableConstraints(ds, dbTransaction);
+            deleteCommon(ds, dbCommandBuilder, dbTransaction, true);
+            EnableAllTableConstraints(ds, dbTransaction);
         }
 
         public void Insert(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction)
         {
+            DisableAllTableConstraints(ds, dbTransaction);
             insertCommon(ds, dbCommandBuilder, dbTransaction, false);
+            EnableAllTableConstraints(ds, dbTransaction);
         }
 
         public void InsertIdentity(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction)
         {
+            DisableAllTableConstraints(ds, dbTransaction);
             insertCommon(ds, dbCommandBuilder, dbTransaction, true);
+            EnableAllTableConstraints(ds, dbTransaction);
         }
 
         public void Refresh(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction)
@@ -58,10 +66,14 @@ namespace NDbUnit.Core
 
             DataSetTableIterator iterator = new DataSetTableIterator(ds, false);
 
+            DisableAllTableConstraints(ds, dbTransaction);
+
             foreach (DataTable dataTable in iterator)
             {
                 OnRefresh(ds, dbCommandBuilder, dbTransaction, dataTable.TableName);
             }
+
+            EnableAllTableConstraints(ds, dbTransaction);
         }
 
         public void Update(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction)
@@ -70,6 +82,8 @@ namespace NDbUnit.Core
             dsCopy.AcceptChanges();
 
             DataSetTableIterator iterator = new DataSetTableIterator(dsCopy, true);
+
+            DisableAllTableConstraints(ds, dbTransaction);
 
             foreach (DataTable dataTable in iterator)
             {
@@ -82,6 +96,8 @@ namespace NDbUnit.Core
 
                 OnUpdate(dsCopy, dbCommandBuilder, dbTransaction, dataTable.TableName);
             }
+
+            EnableAllTableConstraints(ds, dbTransaction);
         }
 
         protected DataRow CloneDataRow(DataTable dataTable, DataRow dataRow)
@@ -98,6 +114,22 @@ namespace NDbUnit.Core
         protected abstract IDbCommand CreateDbCommand(string cmdText);
 
         protected abstract IDbDataAdapter CreateDbDataAdapter();
+
+        private void DisableAllTableConstraints(DataSet dataSet, IDbTransaction transaction)
+        {
+            foreach (DataTable table in dataSet.Tables)
+            {
+                DisableTableConstraints(table, transaction);
+            }
+        }
+
+        private void EnableAllTableConstraints(DataSet dataSet, IDbTransaction transaction)
+        {
+            foreach (DataTable table in dataSet.Tables)
+            {
+                EnableTableConstraints(table, transaction);
+            }
+        }
 
         protected virtual void DisableTableConstraints(DataTable dataTable, IDbTransaction dbTransaction)
         {
@@ -156,7 +188,7 @@ namespace NDbUnit.Core
         {
             IDbTransaction sqlTransaction = dbTransaction;
 
-            DisableTableConstraints(dataTable, dbTransaction);
+            //DisableTableConstraints(dataTable, dbTransaction);
 
             IDbDataAdapter sqlDataAdapter = CreateDbDataAdapter();
             sqlDataAdapter.InsertCommand = dbCommand;
@@ -165,14 +197,14 @@ namespace NDbUnit.Core
 
             ((DbDataAdapter)sqlDataAdapter).Update(dataTable);
 
-            EnableTableConstraints(dataTable, dbTransaction);
+            //EnableTableConstraints(dataTable, dbTransaction);
         }
 
         protected virtual void OnInsertIdentity(DataTable dataTable, IDbCommand dbCommand, IDbTransaction dbTransaction)
         {
             IDbTransaction sqlTransaction = dbTransaction;
 
-            DisableTableConstraints(dataTable, dbTransaction);
+            //DisableTableConstraints(dataTable, dbTransaction);
 
             foreach (DataColumn column in dataTable.Columns)
             {
@@ -220,7 +252,7 @@ namespace NDbUnit.Core
                     }
                 }
 
-                EnableTableConstraints(dataTable, dbTransaction);
+                //EnableTableConstraints(dataTable, dbTransaction);
             }
         }
 
@@ -279,18 +311,18 @@ namespace NDbUnit.Core
             sqlDataAdapter.UpdateCommand.Connection = sqlTransaction.Connection;
             sqlDataAdapter.UpdateCommand.Transaction = sqlTransaction;
 
-            DisableTableConstraints(dsUpdate.Tables[tableName], dbTransaction);
+            //DisableTableConstraints(dsUpdate.Tables[tableName], dbTransaction);
 
             ((DbDataAdapter)sqlDataAdapter).Update(dsUpdate, tableName);
 
-            EnableTableConstraints(dsUpdate.Tables[tableName], dbTransaction);
+            //EnableTableConstraints(dsUpdate.Tables[tableName], dbTransaction);
         }
 
         protected virtual void OnUpdate(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction, string tableName)
         {
             IDbTransaction sqlTransaction = dbTransaction;
 
-            DisableTableConstraints(ds.Tables[tableName], dbTransaction);
+            //DisableTableConstraints(ds.Tables[tableName], dbTransaction);
 
             IDbDataAdapter sqlDataAdapter = CreateDbDataAdapter();
             sqlDataAdapter.UpdateCommand = dbCommandBuilder.GetUpdateCommand(tableName);
@@ -299,7 +331,7 @@ namespace NDbUnit.Core
 
             ((DbDataAdapter)sqlDataAdapter).Update(ds, tableName);
 
-            EnableTableConstraints(ds.Tables[tableName], dbTransaction);
+            //EnableTableConstraints(ds.Tables[tableName], dbTransaction);
         }
 
         private void deleteCommon(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction,
@@ -461,6 +493,9 @@ namespace NDbUnit.Core
             dataRowNew.BeginEdit();
             dataRowNew.EndEdit();
         }
+
+
+
 
     }
 }
