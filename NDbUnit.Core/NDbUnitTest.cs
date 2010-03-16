@@ -120,10 +120,15 @@ namespace NDbUnit.Core
             {
                 dbConnection.Open();
                 DataSet dsToFill = _dataSet.Clone();
+                
+                dsToFill.EnforceConstraints = false;
+                
                 foreach (string tableName in tableNames)
                 {
                     OnGetDataSetFromDb(tableName, ref dsToFill, dbConnection);
                 }
+
+                dsToFill.EnforceConstraints = true;
 
                 return dsToFill;
             }
