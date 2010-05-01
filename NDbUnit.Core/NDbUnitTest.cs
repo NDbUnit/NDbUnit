@@ -46,11 +46,11 @@ namespace NDbUnit.Core
 
         private string _connectionString;
 
+        private DataSet _dataSet;
+
         private IDbCommandBuilder _dbCommandBuilder;
 
         private readonly IDbOperation _dbOperation;
-
-        private DataSet _dataSet;
 
         private bool _initialized;
 
@@ -64,6 +64,13 @@ namespace NDbUnit.Core
 
         public event PreOperationEvent PreOperation;
 
+        protected NDbUnitTest(string connectionString)
+        {
+            _connectionString = connectionString;
+            _dbOperation = CreateDbOperation();
+
+        }
+
         protected NDbUnitTest(IDbConnection connection)
         {
             _passedconnection = true;
@@ -73,18 +80,21 @@ namespace NDbUnit.Core
 
         }
 
-        protected NDbUnitTest(string connectionString)
-        {
-            _connectionString = connectionString;
-            _dbOperation = CreateDbOperation();
-
-        }
-
         public int CommandTimeOut { get; set; }
 
         protected virtual DataSet DS
         {
             get { return _dataSet; }
+        }
+
+        public void AppendXml(string xmlFile)
+        {
+            DoReadXml(xmlFile, true);
+        }
+
+        public void AppendXml(Stream xml)
+        {
+            DoReadXml(xml, true);
         }
 
         //Todo: remove method at some point
@@ -99,6 +109,11 @@ namespace NDbUnit.Core
         {
             checkInitialized();
             return _dataSet.Clone();
+        }
+
+        public DataSet GetDataSetFromDb()
+        {
+            return GetDataSetFromDb(null);
         }
 
         public DataSet GetDataSetFromDb(StringCollection tableNames)
@@ -120,9 +135,9 @@ namespace NDbUnit.Core
             {
                 dbConnection.Open();
                 DataSet dsToFill = _dataSet.Clone();
-                
+
                 dsToFill.EnforceConstraints = false;
-                
+
                 foreach (string tableName in tableNames)
                 {
                     OnGetDataSetFromDb(tableName, ref dsToFill, dbConnection);
@@ -143,11 +158,6 @@ namespace NDbUnit.Core
                     dbConnection.Close();
                 }
             }
-        }
-
-        public DataSet GetDataSetFromDb()
-        {
-            return GetDataSetFromDb(null);
         }
 
         public void PerformDbOperation(DbOperationFlag dbOperationFlag)
@@ -256,40 +266,26 @@ namespace NDbUnit.Core
             }
         }
 
-        public void ReadXml(string xmlFile)
-        {
-            if (string.IsNullOrEmpty(xmlFile))
-            {
-                throw new ArgumentException("Xml file cannot be null or empty", "xmlFile");
-            }
-
-            if (XmlDataFileHasNotYetBeenRead(xmlFile))
-            {
-                Stream stream = null;
-                try
-                {
-                    stream = GetXmlDataFileStream(xmlFile);
-                    ReadXml(stream);                    
-                }
-                finally
-                {
-                    if (stream != null)
-                    {
-                        stream.Close();
-                    }
-                }
-                _xmlFile = xmlFile;
-            }
-        }
-
         public void ReadXml(Stream xml)
         {
-            if (_dataSet == null)
-            {
-                throw new InvalidOperationException("You must first call ReadXmlSchema before reading in xml data.");
-            }
-            _dataSet.Clear();
-            _dataSet.ReadXml(xml);
+            DoReadXml(xml, false);
+        }
+
+        public void ReadXml(string xmlFile)
+        {
+            DoReadXml(xmlFile, false);
+        }
+
+        public void ReadXmlSchema(Stream xmlSchema)
+        {
+            IDbCommandBuilder dbCommandBuilder = GetDbCommandBuilder();
+            dbCommandBuilder.BuildCommands(xmlSchema);
+
+            DataSet dsSchema = dbCommandBuilder.GetSchema();
+
+            _dataSet = dsSchema.Clone();
+
+            _initialized = true;
         }
 
         public void ReadXmlSchema(string xmlSchemaFile)
@@ -320,23 +316,11 @@ namespace NDbUnit.Core
             _initialized = true;
         }
 
-        public void ReadXmlSchema(Stream xmlSchema)
-        {
-            IDbCommandBuilder dbCommandBuilder = GetDbCommandBuilder();
-            dbCommandBuilder.BuildCommands(xmlSchema);
-
-            DataSet dsSchema = dbCommandBuilder.GetSchema();
-
-            _dataSet = dsSchema.Clone();
-
-            _initialized = true;
-        }
-
         protected abstract IDbDataAdapter CreateDataAdapter(IDbCommand command);
 
-        protected abstract IDbCommandBuilder CreateDbCommandBuilder(IDbConnection connection);
-
         protected abstract IDbCommandBuilder CreateDbCommandBuilder(string connectionString);
+
+        protected abstract IDbCommandBuilder CreateDbCommandBuilder(IDbConnection connection);
 
         protected abstract IDbOperation CreateDbOperation();
 
@@ -388,6 +372,45 @@ namespace NDbUnit.Core
                     "INDbUnitTest.ReadXmlSchema(string) or INDbUnitTest.ReadXmlSchema(Stream) must be called successfully";
                 throw new NDbUnitException(message);
             }
+        }
+
+        private void DoReadXml(string xmlFile, bool appendData)
+        {
+            if (string.IsNullOrEmpty(xmlFile))
+            {
+                throw new ArgumentException("Xml file cannot be null or empty", "xmlFile");
+            }
+
+            if (XmlDataFileHasNotYetBeenRead(xmlFile))
+            {
+                Stream stream = null;
+                try
+                {
+                    stream = GetXmlDataFileStream(xmlFile);
+                    DoReadXml(stream, appendData);
+                }
+                finally
+                {
+                    if (stream != null)
+                    {
+                        stream.Close();
+                    }
+                }
+                _xmlFile = xmlFile;
+            }
+        }
+
+        private void DoReadXml(Stream xml, bool appendData)
+        {
+            if (_dataSet == null)
+            {
+                throw new InvalidOperationException("You must first call ReadXmlSchema before reading in xml data.");
+            }
+
+            if (!appendData)
+                _dataSet.Clear();
+
+            _dataSet.ReadXml(xml);
         }
 
         private bool XmlDataFileHasNotYetBeenRead(string xmlFile)

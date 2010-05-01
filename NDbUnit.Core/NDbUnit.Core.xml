@@ -183,6 +183,28 @@
             <param name="xml">The xml stream.</param>
             <exception cref="T:System.ArgumentException"/>
         </member>
+        <member name="M:NDbUnit.Core.INDbUnitTest.AppendXml(System.String)">
+            <summary>
+            Read in an xml file whose data should be conform to the schema 
+            of the file specified in the call to <see cref="M:NDbUnit.Core.INDbUnitTest.ReadXmlSchema(System.String)"/>.  
+            The data is appended to any existing data in the dataset.
+            If the data does not conform to the schema, it will be ignored.  
+            This data is used to update the database.
+            </summary>
+            <param name="xmlFile">The xml file.</param>
+            <exception cref="T:System.ArgumentException"/>
+        </member>
+        <member name="M:NDbUnit.Core.INDbUnitTest.AppendXml(System.IO.Stream)">
+            <summary>
+            Read in an xml stream whose data should be conform to the schema 
+            specified in the call to <see cref="M:NDbUnit.Core.INDbUnitTest.ReadXmlSchema(System.String)"/>.
+            The data is appended to any existing data in the dataset.
+            If the data does not conform to the schema, it will be ignored.  
+            This data is used to update the database.
+            </summary>
+            <param name="xml">The xml stream.</param>
+            <exception cref="T:System.ArgumentException"/>
+        </member>
         <member name="M:NDbUnit.Core.INDbUnitTest.CopyDataSet">
             <summary>
             Gets a <see cref="T:System.Data.DataSet"/> object that contains both the 
