@@ -1,5 +1,5 @@
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NDbUnit.Core", "NDbUnit.Core.csproj", "{093E77F8-2F55-4823-B118-3D33F376F1A8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NDbUnit.Test", "..\NDbUnit.Test\NDbUnit.Test.csproj", "{37055A36-0019-4ECE-94C3-DA25D6BC5935}"

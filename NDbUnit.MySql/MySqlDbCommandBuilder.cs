@@ -41,12 +41,12 @@ namespace NDbUnit.Core.MySqlClient
 
         public override string QuotePrefix
         {
-            get { return ""; }
+            get { return "`"; }
         }
 
         public override string QuoteSuffix
         {
-            get { return ""; }
+            get { return "`"; }
         }
 
         protected override IDbCommand CreateDbCommand()
