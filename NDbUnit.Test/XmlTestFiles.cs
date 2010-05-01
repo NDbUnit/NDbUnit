@@ -31,9 +31,13 @@ namespace NDbUnit.Test
         public abstract class XmlTestFilesBase
         {
             protected const string _defaultXmlFilename = "User.xml";
+
             protected const string _defaultXmlModFilename = "UserMod.xml";
+
             protected const string _defaultXmlRefreshFilename = "UserRefresh.xml";
+
             protected const string _defaultXmlSchemaFilename = "UserDS.xsd";
+
         }
 
         public class MySql : XmlTestFilesBase
@@ -64,19 +68,23 @@ namespace NDbUnit.Test
 
         public class SqlServer : XmlTestFilesBase
         {
-            public static string XmlFileForSchemaPrefixTests
-            {
-                get { return Path.Combine(_xmlPath, "DataFileWithSchemaPrefixes.xml"); }
-            }
-            public static string XmlSchemaFileForSchemaPrefixTests
-            {
-                get { return Path.Combine(_xmlPath, "SchemaWithSchemaPrefixes.xsd"); }
-            }
+            private static string xmlAppendFilename = "UserAppend.xml";
+
             private static string _xmlPath = @"..\..\Xml\SqlServer\";
+
+            public static string XmlApppendFile
+            {
+                get { return Path.Combine(_xmlPath, xmlAppendFilename); }
+            }
 
             public static string XmlFile
             {
                 get { return Path.Combine(_xmlPath, _defaultXmlFilename); }
+            }
+
+            public static string XmlFileForSchemaPrefixTests
+            {
+                get { return Path.Combine(_xmlPath, "DataFileWithSchemaPrefixes.xml"); }
             }
 
             public static string XmlModFile
@@ -92,6 +100,11 @@ namespace NDbUnit.Test
             public static string XmlSchemaFile
             {
                 get { return Path.Combine(_xmlPath, _defaultXmlSchemaFilename); }
+            }
+
+            public static string XmlSchemaFileForSchemaPrefixTests
+            {
+                get { return Path.Combine(_xmlPath, "SchemaWithSchemaPrefixes.xsd"); }
             }
 
         }
