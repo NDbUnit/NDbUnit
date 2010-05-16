@@ -151,7 +151,24 @@ namespace NDbUnit.Core
         DataSet GetDataSetFromDb(StringCollection tableNames);
 
 
+        /// <summary>
+        /// Gets or sets the command time out.
+        /// </summary>
+        /// <value>The command time out.</value>
         int CommandTimeOut { get; set; }
+
+
+        /// <summary>
+        /// Executes the scripts.
+        /// </summary>
+        void ExecuteScripts();
+
+
+        /// <summary>
+        /// Gets the Script Manager.
+        /// </summary>
+        /// <value>The Script Manager.</value>
+        ScriptManager Scripts { get; }
 
     }
 }

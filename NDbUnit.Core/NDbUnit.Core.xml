@@ -237,6 +237,11 @@
             schema will be exported.</param>
             <exception cref="T:NDbUnit.Core.NDbUnitException"/>
         </member>
+        <member name="M:NDbUnit.Core.INDbUnitTest.ExecuteScripts">
+            <summary>
+            Executes the scripts.
+            </summary>
+        </member>
         <member name="E:NDbUnit.Core.INDbUnitTest.PostOperation">
             <summary>
             Occurs after DbOperation has completed.
@@ -246,6 +251,18 @@
             <summary>
             Occurs before DbOperation begins.
             </summary>
+        </member>
+        <member name="P:NDbUnit.Core.INDbUnitTest.CommandTimeOut">
+            <summary>
+            Gets or sets the command time out.
+            </summary>
+            <value>The command time out.</value>
+        </member>
+        <member name="P:NDbUnit.Core.INDbUnitTest.Scripts">
+            <summary>
+            Gets the Script Manager.
+            </summary>
+            <value>The Script Manager.</value>
         </member>
         <member name="T:NDbUnit.Core.NDbUnitException">
             <summary>

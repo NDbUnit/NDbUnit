@@ -29,7 +29,7 @@
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
     <IsWebBootstrapper>true</IsWebBootstrapper>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <PublishUrl>http://localhost/NDbUnit.Test/</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
@@ -44,6 +44,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -118,6 +119,7 @@
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.OracleClient" />
     <Reference Include="System.Data.SQLite, Version=1.0.60.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
@@ -157,6 +159,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="DbUnitTestTestBase.cs" />
+    <Compile Include="ScriptManagerTest.cs" />
     <Compile Include="SqlClient\DataSetAppendXmlTest.cs" />
     <Compile Include="SqlClient\SchemaPrefixTest.cs" />
     <Compile Include="SqlClient\SqlDbUnitIntegrationTest.cs" />
@@ -227,6 +230,12 @@
       <LastGenOutput>UserDS.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
+    <Content Include="TestScripts\sqlserver-drop-create-testdb.sql" />
+    <Content Include="TestScripts\sqlserver-testdb03.sql" />
+    <Content Include="TestScripts\sqlserver-testdb04.sql" />
+    <Content Include="TestScripts\testscript03.sql" />
+    <Content Include="TestScripts\testscript02.sql" />
+    <Content Include="TestScripts\testscript01.sql" />
     <Content Include="Xml\OleDb\UserDS.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>UserDS.Designer.cs</LastGenOutput>

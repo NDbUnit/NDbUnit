@@ -56,6 +56,8 @@ namespace NDbUnit.Core
 
         private bool _passedconnection;
 
+        private ScriptManager _scriptManager;
+
         private string _xmlFile = "";
 
         private string _xmlSchemaFile = "";
@@ -87,14 +89,25 @@ namespace NDbUnit.Core
             get { return _dataSet; }
         }
 
-        public void AppendXml(string xmlFile)
+        public ScriptManager Scripts
         {
-            DoReadXml(xmlFile, true);
+            get
+            {
+                if (_scriptManager == null)
+                    _scriptManager = new ScriptManager(new FileSystemService());
+
+                return _scriptManager;
+            }
         }
 
         public void AppendXml(Stream xml)
         {
             DoReadXml(xml, true);
+        }
+
+        public void AppendXml(string xmlFile)
+        {
+            DoReadXml(xmlFile, true);
         }
 
         //Todo: remove method at some point
@@ -111,9 +124,23 @@ namespace NDbUnit.Core
             return _dataSet.Clone();
         }
 
-        public DataSet GetDataSetFromDb()
+        public void ExecuteScripts()
         {
-            return GetDataSetFromDb(null);
+            if (_connection == null)
+                _connection = GetDbCommandBuilder().Connection;
+
+            if (_connection.State != ConnectionState.Open)
+                _connection.Open();
+
+            foreach (string ddlText in _scriptManager.ScriptContents)
+            {
+                IDbCommand command = _connection.CreateCommand();
+                command.CommandText = ddlText;
+                command.ExecuteNonQuery();
+            }
+
+            if (_connection.State != ConnectionState.Closed)
+                _connection.Close();
         }
 
         public DataSet GetDataSetFromDb(StringCollection tableNames)
@@ -158,6 +185,11 @@ namespace NDbUnit.Core
                     dbConnection.Close();
                 }
             }
+        }
+
+        public DataSet GetDataSetFromDb()
+        {
+            return GetDataSetFromDb(null);
         }
 
         public void PerformDbOperation(DbOperationFlag dbOperationFlag)
@@ -374,6 +406,19 @@ namespace NDbUnit.Core
             }
         }
 
+        private void DoReadXml(Stream xml, bool appendData)
+        {
+            if (_dataSet == null)
+            {
+                throw new InvalidOperationException("You must first call ReadXmlSchema before reading in xml data.");
+            }
+
+            if (!appendData)
+                _dataSet.Clear();
+
+            _dataSet.ReadXml(xml);
+        }
+
         private void DoReadXml(string xmlFile, bool appendData)
         {
             if (string.IsNullOrEmpty(xmlFile))
@@ -398,19 +443,6 @@ namespace NDbUnit.Core
                 }
                 _xmlFile = xmlFile;
             }
-        }
-
-        private void DoReadXml(Stream xml, bool appendData)
-        {
-            if (_dataSet == null)
-            {
-                throw new InvalidOperationException("You must first call ReadXmlSchema before reading in xml data.");
-            }
-
-            if (!appendData)
-                _dataSet.Clear();
-
-            _dataSet.ReadXml(xml);
         }
 
         private bool XmlDataFileHasNotYetBeenRead(string xmlFile)
