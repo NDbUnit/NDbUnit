@@ -39,10 +39,10 @@ namespace NDbUnit.Test
             INDbUnitTest database = GetNDbUnitTest();
 
             DataSet preOperation = new DataSet();
-            preOperation.ReadXmlSchema(GetXmlSchemaFilename());
+            preOperation.ReadXmlSchema(ReadOnlyStreamFromFilename(GetXmlSchemaFilename()));
 
-            database.ReadXmlSchema(GetXmlSchemaFilename());
-            database.ReadXml(GetXmlFilename());
+            database.ReadXmlSchema(ReadOnlyStreamFromFilename(GetXmlSchemaFilename()));
+            database.ReadXml(ReadOnlyStreamFromFilename(GetXmlFilename()));
 
             database.PerformDbOperation(DbOperationFlag.DeleteAll);
             database.PerformDbOperation(DbOperationFlag.InsertIdentity);
@@ -59,11 +59,11 @@ namespace NDbUnit.Test
             INDbUnitTest database = GetNDbUnitTest();
 
             DataSet preOperation = new DataSet();
-            preOperation.ReadXmlSchema(GetXmlSchemaFilename());
-            preOperation.ReadXml(GetXmlFilename());
+            preOperation.ReadXmlSchema(ReadOnlyStreamFromFilename(GetXmlSchemaFilename()));
+            preOperation.ReadXml(ReadOnlyStreamFromFilename(GetXmlFilename()));
 
-            database.ReadXmlSchema(GetXmlSchemaFilename());
-            database.ReadXml(GetXmlFilename());
+            database.ReadXmlSchema(ReadOnlyStreamFromFilename(GetXmlSchemaFilename()));
+            database.ReadXml(ReadOnlyStreamFromFilename(GetXmlFilename()));
 
             database.PerformDbOperation(DbOperationFlag.DeleteAll);
             database.PerformDbOperation(DbOperationFlag.InsertIdentity);
@@ -80,11 +80,11 @@ namespace NDbUnit.Test
             INDbUnitTest database = GetNDbUnitTest();
 
             DataSet preOperation = new DataSet();
-            preOperation.ReadXmlSchema(GetXmlSchemaFilename());
-            preOperation.ReadXml(GetXmlFilename());
+            preOperation.ReadXmlSchema(ReadOnlyStreamFromFilename(GetXmlSchemaFilename()));
+            preOperation.ReadXml(ReadOnlyStreamFromFilename(GetXmlFilename()));
 
-            database.ReadXmlSchema(GetXmlSchemaFilename());
-            database.ReadXml(GetXmlFilename());
+            database.ReadXmlSchema(ReadOnlyStreamFromFilename(GetXmlSchemaFilename()));
+            database.ReadXml(ReadOnlyStreamFromFilename(GetXmlFilename()));
 
             database.PerformDbOperation(DbOperationFlag.DeleteAll);
             database.PerformDbOperation(DbOperationFlag.InsertIdentity);
@@ -104,11 +104,11 @@ namespace NDbUnit.Test
             INDbUnitTest database = GetNDbUnitTest();
 
             DataSet preOperation = new DataSet();
-            preOperation.ReadXmlSchema(GetXmlSchemaFilename());
-            preOperation.ReadXml(GetXmlModFilename());
+            preOperation.ReadXmlSchema(ReadOnlyStreamFromFilename(GetXmlSchemaFilename()));
+            preOperation.ReadXml(ReadOnlyStreamFromFilename(GetXmlModFilename()));
 
-            database.ReadXmlSchema(GetXmlSchemaFilename());
-            database.ReadXml(GetXmlFilename());
+            database.ReadXmlSchema(ReadOnlyStreamFromFilename(GetXmlSchemaFilename()));
+            database.ReadXml(ReadOnlyStreamFromFilename(GetXmlFilename()));
 
             database.PerformDbOperation(DbOperationFlag.DeleteAll);
             database.PerformDbOperation(DbOperationFlag.InsertIdentity);
@@ -131,6 +131,11 @@ namespace NDbUnit.Test
         protected abstract string GetXmlRefreshFilename();
 
         protected abstract string GetXmlSchemaFilename();
+
+        private FileStream ReadOnlyStreamFromFilename(string filename)
+        {
+            return new FileStream(filename, FileMode.Open, FileAccess.Read);
+        }
 
     }
 }

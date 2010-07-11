@@ -63,10 +63,9 @@ namespace NDbUnit.Test.Common
         [SetUp]
         public void _SetUp()
         {
-            _mockSchemaFileStream = new FileStream(GetXmlSchemaFilename(), FileMode.Open,
-                                                  FileAccess.Read, FileShare.Read);
+            _mockSchemaFileStream = new FileStream(GetXmlSchemaFilename(), FileMode.Open, FileAccess.Read, FileShare.Read);
 
-            _mockDataFileStream = new FileStream(GetXmlFilename(), FileMode.Open);
+            _mockDataFileStream = new FileStream(GetXmlFilename(), FileMode.Open, FileAccess.Read, FileShare.Read);
 
             _mocker = new MockRepository();
             _mockDbCommandBuilder = _mocker.CreateMock<IDbCommandBuilder>();
@@ -108,14 +107,13 @@ namespace NDbUnit.Test.Common
             //expectations
             _mockDbCommandBuilder.BuildCommands(_mockSchemaFileStream);
             DataSet dummyDS = new DataSet();
-            dummyDS.ReadXmlSchema(GetXmlSchemaFilename());
+            dummyDS.ReadXmlSchema(ReadOnlyStreamFromFilename(GetXmlSchemaFilename()));
             SetupResult.For(_mockDbCommandBuilder.GetSchema()).Return(dummyDS);
             SetupResult.For(_mockDbCommandBuilder.Connection).Return(_mockConnection);
             //_mockConnection.Open();
             SetupResult.For(_mockConnection.BeginTransaction()).Return(_mockTransaction);
             _mockDbOperation.Update(dummyDS, _mockDbCommandBuilder, _mockTransaction);
-            LastCall.IgnoreArguments().Constraints(Is.TypeOf<DataSet>(), Is.Equal(_mockDbCommandBuilder),
-                                                   Is.Equal(_mockTransaction));
+            LastCall.IgnoreArguments().Constraints(Is.TypeOf<DataSet>(), Is.Equal(_mockDbCommandBuilder), Is.Equal(_mockTransaction));
             _mockTransaction.Commit();
             SetupResult.For(_mockConnection.State).Return(ConnectionState.Open);
             _mockConnection.Close();
@@ -143,7 +141,7 @@ namespace NDbUnit.Test.Common
             //expectations
             _mockDbCommandBuilder.BuildCommands(_mockSchemaFileStream);
             DataSet dummyDS = new DataSet();
-            dummyDS.ReadXmlSchema(GetXmlSchemaFilename());
+            dummyDS.ReadXmlSchema(ReadOnlyStreamFromFilename(GetXmlSchemaFilename()));
             SetupResult.For(_mockDbCommandBuilder.GetSchema()).Return(dummyDS);
             _mocker.ReplayAll();
 
@@ -203,6 +201,11 @@ namespace NDbUnit.Test.Common
         protected abstract string GetXmlFilename();
 
         protected abstract string GetXmlSchemaFilename();
+
+        private FileStream ReadOnlyStreamFromFilename(string filename)
+        {
+            return new FileStream(filename, FileMode.Open, FileAccess.Read);
+        }
 
         private void sqlCeTest_PostOperation(object sender, OperationEventArgs args)
         {

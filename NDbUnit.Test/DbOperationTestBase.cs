@@ -28,6 +28,7 @@ using MbUnit.Framework;
 using NDbUnit.Core;
 using System.Data.SqlClient;
 using NDbUnit.Core.SqlClient;
+using System.IO;
 
 namespace NDbUnit.Test.Common
 {
@@ -53,7 +54,7 @@ namespace NDbUnit.Test.Common
 
             DataSet dsSchema = _commandBuilder.GetSchema();
             _dsData = dsSchema.Clone();
-            _dsData.ReadXml(_xmlFile);
+            _dsData.ReadXml(ReadOnlyStreamFromFilename(_xmlFile));
 
             _dbOperation = GetDbOperation();
         }
@@ -74,16 +75,16 @@ namespace NDbUnit.Test.Common
         public void All_Test_Xml_Files_Comply_With_Test_Xsd_Schema()
         {
             DataSet ds = new DataSet();
-            ds.ReadXmlSchema(GetXmlSchemaFilename());
-            ds.ReadXml(GetXmlFilename());
+            ds.ReadXmlSchema(ReadOnlyStreamFromFilename(GetXmlSchemaFilename()));
+            ds.ReadXml(ReadOnlyStreamFromFilename(GetXmlFilename()));
 
             DataSet dsRefresh = new DataSet();
-            dsRefresh.ReadXmlSchema(GetXmlSchemaFilename());
-            dsRefresh.ReadXml(GetXmlRefeshFilename());
+            dsRefresh.ReadXmlSchema(ReadOnlyStreamFromFilename(GetXmlSchemaFilename()));
+            dsRefresh.ReadXml(ReadOnlyStreamFromFilename(GetXmlRefeshFilename()));
 
             DataSet dsModify = new DataSet();
-            dsModify.ReadXmlSchema(GetXmlSchemaFilename());
-            dsModify.ReadXml(GetXmlRefeshFilename());
+            dsModify.ReadXmlSchema(ReadOnlyStreamFromFilename(GetXmlSchemaFilename()));
+            dsModify.ReadXml(ReadOnlyStreamFromFilename(GetXmlRefeshFilename()));
 
         }
 
@@ -192,8 +193,7 @@ namespace NDbUnit.Test.Common
             {
                 DataSet dsSchema = _commandBuilder.GetSchema();
                 DataSet ds = dsSchema.Clone();
-                string xmlFile = GetXmlRefeshFilename();
-                ds.ReadXml(xmlFile);
+                ds.ReadXml(ReadOnlyStreamFromFilename(GetXmlRefeshFilename()));
 
                 sqlTransaction = _commandBuilder.Connection.BeginTransaction();
                 _dbOperation.Refresh(ds, _commandBuilder, sqlTransaction);
@@ -222,8 +222,7 @@ namespace NDbUnit.Test.Common
             {
                 DataSet dsSchema = _commandBuilder.GetSchema();
                 DataSet ds = dsSchema.Clone();
-                string xmlFile = GetXmlFilename();
-                ds.ReadXml(xmlFile);
+                ds.ReadXml(ReadOnlyStreamFromFilename(GetXmlFilename()));
 
                 sqlTransaction = _commandBuilder.Connection.BeginTransaction();
                 _dbOperation.Update(ds, _commandBuilder, sqlTransaction);
@@ -288,6 +287,11 @@ namespace NDbUnit.Test.Common
 
                 throw;
             }
+        }
+
+        private FileStream ReadOnlyStreamFromFilename(string filename)
+        {
+            return new FileStream(filename, FileMode.Open, FileAccess.Read);
         }
 
     }

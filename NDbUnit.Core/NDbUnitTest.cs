@@ -379,13 +379,12 @@ namespace NDbUnit.Core
 
         protected virtual FileStream GetXmlDataFileStream(string xmlFile)
         {
-            return new FileStream(xmlFile, FileMode.Open);
+            return new FileStream(xmlFile, FileMode.Open, FileAccess.Read, FileShare.Read);
         }
 
         protected virtual FileStream GetXmlSchemaFileStream(string xmlSchemaFile)
         {
-            return new FileStream(xmlSchemaFile, FileMode.Open,
-                                  FileAccess.Read, FileShare.Read);
+            return new FileStream(xmlSchemaFile, FileMode.Open, FileAccess.Read, FileShare.Read);
         }
 
         protected virtual void OnGetDataSetFromDb(string tableName, ref DataSet dsToFill, IDbConnection dbConnection)

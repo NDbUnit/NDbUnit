@@ -82,7 +82,7 @@ namespace NDbUnit.Core
             Stream stream = null;
             try
             {
-                stream = new FileStream(xmlSchemaFile, FileMode.Open);
+                stream = new FileStream(xmlSchemaFile, FileMode.Open, FileAccess.Read);
                 BuildCommands(stream);
             }
             finally
