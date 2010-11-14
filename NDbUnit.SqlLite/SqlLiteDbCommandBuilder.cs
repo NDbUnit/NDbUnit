@@ -129,7 +129,7 @@ namespace NDbUnit.Core.SqlLite
 
                         notFirstColumn = true;
 
-                        sb.Append(base.QuotePrefix + dataRow[SchemaColumns.ColumnName] + base.QuoteSuffix);
+                        sb.Append(QuotePrefix + dataRow[SchemaColumns.ColumnName] + QuoteSuffix);
                         sbParam.Append("@p" + count);
 
                         sqlParameter = (SQLiteParameter)CreateNewSqlParameter(count, dataRow);
@@ -168,7 +168,7 @@ namespace NDbUnit.Core.SqlLite
 
                     notFirstColumn = true;
 
-                    sb.Append(base.QuotePrefix + dataRow[SchemaColumns.ColumnName] + base.QuoteSuffix);
+                    sb.Append(QuotePrefix + dataRow[SchemaColumns.ColumnName] + QuoteSuffix);
                     sbParam.Append("@p" + count);
 
                     sqlParameter = (SQLiteParameter)CreateNewSqlParameter(count, dataRow);
@@ -209,7 +209,7 @@ namespace NDbUnit.Core.SqlLite
 
                 notFirstColumn = true;
 
-                sb.Append(base.QuotePrefix + dataColumn.ColumnName + base.QuoteSuffix);
+                sb.Append(QuotePrefix + dataColumn.ColumnName + QuoteSuffix);
             }
 
             sb.Append(" FROM ");
@@ -271,7 +271,7 @@ namespace NDbUnit.Core.SqlLite
 
                         notFirstKey = true;
 
-                        sbPrimaryKey.Append(base.QuotePrefix + dataRow[SchemaColumns.ColumnName] + base.QuoteSuffix);
+                        sbPrimaryKey.Append(QuotePrefix + dataRow[SchemaColumns.ColumnName] + QuoteSuffix);
                         sbPrimaryKey.Append("=@p" + count);
 
                         sqlParameter = (SQLiteParameter)CreateNewSqlParameter(count, dataRow);
@@ -290,7 +290,7 @@ namespace NDbUnit.Core.SqlLite
 
                         notFirstColumn = true;
 
-                        sb.Append(base.QuotePrefix + dataRow[SchemaColumns.ColumnName] + base.QuoteSuffix);
+                        sb.Append(QuotePrefix + dataRow[SchemaColumns.ColumnName] + QuoteSuffix);
                         sb.Append("=@p" + count);
 
                         sqlParameter = (SQLiteParameter)CreateNewSqlParameter(count, dataRow);

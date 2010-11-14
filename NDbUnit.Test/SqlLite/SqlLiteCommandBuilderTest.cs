@@ -75,9 +75,9 @@ namespace NDbUnit.Test.SqlClient
             {
                 return new List<string>()
                 {
-                    "INSERT INTO [Role](Name, Description) VALUES(@p1, @p2)",
-                    "INSERT INTO [User](FirstName, LastName, Age, SupervisorID) VALUES(@p1, @p2, @p3, @p4)",
-                    "INSERT INTO [UserRole](UserID, RoleID) VALUES(@p1, @p2)"
+                    "INSERT INTO [Role]([Name], [Description]) VALUES(@p1, @p2)",
+                    "INSERT INTO [User]([FirstName], [LastName], [Age], [SupervisorID]) VALUES(@p1, @p2, @p3, @p4)",
+                    "INSERT INTO [UserRole]([UserID], [RoleID]) VALUES(@p1, @p2)"
                 };
 
             }
@@ -89,9 +89,9 @@ namespace NDbUnit.Test.SqlClient
             {
                 return new List<string>()
                 {
-                    "INSERT INTO [Role](ID, Name, Description) VALUES(@p1, @p2, @p3)",
-                    "INSERT INTO [User](ID, FirstName, LastName, Age, SupervisorID) VALUES(@p1, @p2, @p3, @p4, @p5)",
-                    "INSERT INTO [UserRole](UserID, RoleID) VALUES(@p1, @p2)"
+                    "INSERT INTO [Role]([ID], [Name], [Description]) VALUES(@p1, @p2, @p3)",
+                    "INSERT INTO [User]([ID], [FirstName], [LastName], [Age], [SupervisorID]) VALUES(@p1, @p2, @p3, @p4, @p5)",
+                    "INSERT INTO [UserRole]([UserID], [RoleID]) VALUES(@p1, @p2)"
                 };
             }
         }
@@ -102,9 +102,9 @@ namespace NDbUnit.Test.SqlClient
             {
                 return new List<string>()
                 {
-                    "SELECT ID, Name, Description FROM [Role]",
-                    "SELECT ID, FirstName, LastName, Age, SupervisorID FROM [User]",
-                    "SELECT UserID, RoleID FROM [UserRole]"
+                    "SELECT [ID], [Name], [Description] FROM [Role]",
+                    "SELECT [ID], [FirstName], [LastName], [Age], [SupervisorID] FROM [User]",
+                    "SELECT [UserID], [RoleID] FROM [UserRole]"
                 };
             }
         }
@@ -115,9 +115,9 @@ namespace NDbUnit.Test.SqlClient
             {
                 return new List<string>()
                 {
-                    "UPDATE [Role] SET Name=@p2, Description=@p3 WHERE ID=@p1",
-                    "UPDATE [User] SET FirstName=@p2, LastName=@p3, Age=@p4, SupervisorID=@p5 WHERE ID=@p1",
-                    "UPDATE [UserRole] SET UserID=@p2, RoleID=@p4 WHERE UserID=@p1 AND RoleID=@p3"
+                    "UPDATE [Role] SET [Name]=@p2, [Description]=@p3 WHERE [ID]=@p1",
+                    "UPDATE [User] SET [FirstName]=@p2, [LastName]=@p3, [Age]=@p4, [SupervisorID]=@p5 WHERE [ID]=@p1",
+                    "UPDATE [UserRole] SET [UserID]=@p2, [RoleID]=@p4 WHERE [UserID]=@p1 AND [RoleID]=@p3"
                 };
             }
         }
