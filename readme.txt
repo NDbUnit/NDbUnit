@@ -1,1 +1,0 @@
-readme.txt added by JVP to verify authentication is working correctly.
