@@ -143,6 +143,10 @@
     </Compile>
     <Compile Include="DbOperationTestBase.cs" />
     <Compile Include="IntegationTestBase.cs" />
+    <Compile Include="MongoDB\MongoDBCommandBuilderTest.cs" />
+    <Compile Include="MongoDB\MongoDBIntegrationTest.cs" />
+    <Compile Include="MongoDB\MongoDBOperationTest.cs" />
+    <Compile Include="MongoDB\MongoDBUnitTest.cs" />
     <Compile Include="Mysql\MySqlDbCommandBuilderTest.cs" />
     <Compile Include="Mysql\MySqlDbUnitTestTest.cs" />
     <Compile Include="Mysql\MySqlDbUnitIntegrationTest.cs" />
