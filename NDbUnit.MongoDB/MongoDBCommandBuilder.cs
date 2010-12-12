@@ -16,7 +16,6 @@ namespace NDbUnit.Core.MongoDB
         {
         }
 
-
         protected override IDbCommand CreateDbCommand()
         {
             throw new NotImplementedException();
@@ -29,7 +28,7 @@ namespace NDbUnit.Core.MongoDB
 
         protected override IDbConnection GetConnection(string connectionString)
         {
-            throw new NotImplementedException();
+            return new MongoDBConnection(connectionString);
         }
     }
 }

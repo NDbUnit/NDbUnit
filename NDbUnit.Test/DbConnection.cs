@@ -23,6 +23,12 @@ namespace NDbUnit.Test
 {
     public class DbConnection
     {
+
+        public static string MongoDBConnectionString
+        {
+            get { return ConfigurationManager.ConnectionStrings["MongoDBConnectionString"].ConnectionString; }
+        }
+        
         public static string MySqlConnectionString
         {
             get { return ConfigurationManager.ConnectionStrings["MysqlConnectionString"].ConnectionString; }
