@@ -185,6 +185,11 @@
     <Compile Include="XmlTestFiles.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Xml\MongoDB\BooksDS.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BooksDS.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Xml\MySql\UserDS.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -230,6 +235,20 @@
     <None Include="SqlLite\test.sqlite.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Xml\MongoDB\BooksDS.xsc">
+      <DependentUpon>BooksDS.xsd</DependentUpon>
+    </None>
+    <None Include="Xml\MongoDB\BooksDS.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>BooksDS.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Xml\MongoDB\BooksDS.xss">
+      <DependentUpon>BooksDS.xsd</DependentUpon>
+    </None>
+    <None Include="Xml\MySql\UserDS.xsc">
+      <DependentUpon>UserDS.xsd</DependentUpon>
+    </None>
     <None Include="Xml\MySql\UserDS.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>UserDS.Designer.cs</LastGenOutput>
@@ -241,11 +260,15 @@
     <Content Include="TestScripts\testscript03.sql" />
     <Content Include="TestScripts\testscript02.sql" />
     <Content Include="TestScripts\testscript01.sql" />
+    <Content Include="Xml\MongoDB\Books.xml" />
     <Content Include="Xml\OleDb\UserDS.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>UserDS.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </Content>
+    <None Include="Xml\MySql\UserDS.xss">
+      <DependentUpon>UserDS.xsd</DependentUpon>
+    </None>
     <None Include="Xml\OracleClient\UserDS.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>UserDS1.Designer.cs</LastGenOutput>
