@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MbUnit.Framework;
+using NDbUnit.Core.MongoDB;
 
 namespace NDbUnit.Test.MongoDB
 {
@@ -11,7 +12,7 @@ namespace NDbUnit.Test.MongoDB
     {
         protected override Core.IDbCommandBuilder GetCommandBuilder()
         {
-            throw new NotImplementedException();
+            return new MongoDBCommandBuilder(DbConnection.MongoDBConnectionString);
         }
 
         protected override Core.IDbOperation GetDbOperation()
