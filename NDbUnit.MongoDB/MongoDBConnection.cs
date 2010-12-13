@@ -21,6 +21,8 @@ namespace NDbUnit.Core.MongoDB
                                                    {MongoServerState.Disconnected, ConnectionState.Closed},
                                                    {MongoServerState.None, ConnectionState.Broken}
                                                };
+            ConnectionTimeout = 30;
+
         }
 
         public MongoDBConnection(string connectionString) : this()
@@ -63,15 +65,12 @@ namespace NDbUnit.Core.MongoDB
         public void Open()
         {
             _mongoServer = MongoServer.Create(ConnectionString);
-            _mongoServer.Connect();
+            _mongoServer.Connect(System.TimeSpan.FromSeconds(ConnectionTimeout));
         }
 
         public string ConnectionString { get; set; }
 
-        public int ConnectionTimeout
-        {
-            get { return 0; }
-        }
+        public int ConnectionTimeout { get; set; }
 
         public string Database
         {

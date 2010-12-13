@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
 using MbUnit.Framework;
+using NDbUnit.Core.MongoDB;
 
 namespace NDbUnit.Test.MongoDB
 {
@@ -47,7 +47,7 @@ namespace NDbUnit.Test.MongoDB
 
         protected override Core.IDbCommandBuilder GetDbCommandBuilder()
         {
-            throw new NotImplementedException();
+            return new MongoDBCommandBuilder(DbConnection.MongoDBConnectionString);
         }
 
         protected override string GetXmlSchemaFilename()
