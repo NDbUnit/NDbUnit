@@ -17,7 +17,7 @@ namespace NDbUnit.Test.MongoDB
 
         protected override Core.IDbOperation GetDbOperation()
         {
-            throw new NotImplementedException();
+            return new MongoDBOperation();
         }
 
         protected override System.Data.IDbCommand GetResetIdentityColumnsDbCommand(System.Data.DataTable table, System.Data.DataColumn column)

@@ -76,6 +76,9 @@ namespace NDbUnit.Core.MongoDB
             get { return _connectionString; } 
             set
             {
+                if (value == _connectionString)
+                    return;
+                
                 if (this.State != ConnectionState.Closed) 
                     this.Close();
 
