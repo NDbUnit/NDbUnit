@@ -9,7 +9,10 @@ namespace NDbUnit.Core.MongoDB
     {
         private MongoServer _mongoServer;
         private string _database;
+        private string _connectionString;
+        
         private readonly Dictionary<MongoServerState, ConnectionState> _mongoServerToConnectionXRef;
+
 
 
         public MongoDBConnection()
@@ -27,7 +30,7 @@ namespace NDbUnit.Core.MongoDB
 
         public MongoDBConnection(string connectionString) : this()
         {
-            ConnectionString = connectionString;
+            _connectionString = connectionString;
         }
 
 
@@ -68,7 +71,17 @@ namespace NDbUnit.Core.MongoDB
             _mongoServer.Connect(System.TimeSpan.FromSeconds(ConnectionTimeout));
         }
 
-        public string ConnectionString { get; set; }
+        public string ConnectionString
+        {
+            get { return _connectionString; } 
+            set
+            {
+                if (this.State != ConnectionState.Closed) 
+                    this.Close();
+
+                _connectionString = value;
+            }  
+        }
 
         public int ConnectionTimeout { get; set; }
 
