@@ -260,7 +260,9 @@
     <Content Include="TestScripts\testscript03.sql" />
     <Content Include="TestScripts\testscript02.sql" />
     <Content Include="TestScripts\testscript01.sql" />
-    <Content Include="Xml\MongoDB\Books.xml" />
+    <Content Include="Xml\MongoDB\Books.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Xml\OleDb\UserDS.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>UserDS.Designer.cs</LastGenOutput>

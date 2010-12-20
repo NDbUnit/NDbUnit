@@ -6,16 +6,36 @@ using System.Text;
 
 namespace NDbUnit.Core.MongoDB
 {
-    public class MongoDBOperation : DbOperation
+    public class MongoDBOperation : IDbOperation
     {
-        protected override IDbCommand CreateDbCommand(string cmdText)
+        public void Insert(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction)
         {
-            return new MongoDBCommand(cmdText);
+            throw new NotImplementedException();
         }
 
-        protected override IDbDataAdapter CreateDbDataAdapter()
+        public void InsertIdentity(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction)
         {
-            return new MongoDBDataAdapter();
+            throw new NotImplementedException();
+        }
+
+        public void Delete(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteAll(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Refresh(DataSet ds, IDbCommandBuilder dbCommandBuilder, IDbTransaction dbTransaction)
+        {
+            throw new NotImplementedException();
         }
     }
 }

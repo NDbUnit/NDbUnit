@@ -1,12 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <BooksDS xmlns="http://tempuri.org/BooksDS.xsd">
-  <Book>
-    <Data>
-      { "_id" : { "$oid" : "4d059d040d3b9606d8227c60" }, "author" : "Ernest Hemingway", "title" : "For Whom the Bell Tolls", "publication date" : 1940 }
-    </Data>
-    <Data>
-      { "_id" : { "$oid" : "4d059d040d3b9606d8227c61" }, "author" : "John Steinbeck", "title" : "The Grapes of Wrath", "publication date" : 1939 }
-    </Data>
-  </Book>
+  <Books>
+    <BsonDocument>
+      <BsonElement>
+        <Name>Author</Name>
+        <Value>Ernest Hemmingway</Value>
+        <Type>String</Type>
+      </BsonElement>
+      <BsonElement>
+        <Name>Title</Name>
+        <Value>For Whom the Bell Tolls</Value>
+        <Type>String</Type>
+      </BsonElement>
+      <BsonElement>
+        <Name>DatePublished</Name>
+        <Value>1939</Value>
+        <Type>Int32</Type>
+      </BsonElement>
+    </BsonDocument>
+  </Books>
 </BooksDS>
 
