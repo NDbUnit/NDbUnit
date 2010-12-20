@@ -69,7 +69,14 @@ namespace MongoDBCSharpDriverTest
                         }
                         else
                         {
-                            array.Add(BsonValue.Create(field.Value));
+                            if (array.Count > 0 && array[array.Count - 1].GetType() == typeof(BsonArray))
+                            {
+                                ((BsonArray)array[array.Count - 1]).Add(BsonValue.Create(field.Value));    
+                            }
+                            else
+                            {
+                                array.Add(BsonValue.Create(field.Value));    
+                            }
                         }
 
                         break;
@@ -78,6 +85,9 @@ namespace MongoDBCSharpDriverTest
                         array = getarray(field, array);
                         break;
                     case JsonType.Array:
+
+                        array.Add(new BsonArray());
+                        array = getarray(field, array);
                         break;
                 }
             }

@@ -18,17 +18,14 @@ namespace MongoDBCSharpDriverTest
         [TestFixtureSetUp]
         void Setup()
         {
-            jsonText = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("MongoDBCSharpDriverTest.json.txt")).ReadToEnd();
-            jsonText2 = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("MongoDBCSharpDriverTest.json2.txt")).ReadToEnd();
-            jsonText3 = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("MongoDBCSharpDriverTest.json3.txt")).ReadToEnd();
+            jsonText = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("MongoDBCSharpDriverTest.json5.txt")).ReadToEnd();
         
         }
-
 
         [Test]
         public void CanConvertJsonToBson()
         {
-            var bsonDoc = JsonToBson.ToBson(jsonText2);
+            var bsonDoc = JsonToBson.ToBson(jsonText);
 
             Console.WriteLine(bsonDoc.ToJson());
         }
