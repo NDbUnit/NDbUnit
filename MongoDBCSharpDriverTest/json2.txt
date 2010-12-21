@@ -25,6 +25,4 @@
                     }
                  }
 
-              },
-"foo": {"will": "This work?"}
 }

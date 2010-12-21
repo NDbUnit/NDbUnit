@@ -75,7 +75,7 @@
     <EmbeddedResource Include="json3.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="json4.txt" />
+    <EmbeddedResource Include="json4.txt" />
     <EmbeddedResource Include="json5.txt" />
   </ItemGroup>
   <ItemGroup />

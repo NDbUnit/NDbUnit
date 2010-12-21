@@ -23,51 +23,88 @@ public class jsonParsertest
 {
     private string jsonText;
     private JsonObjectType jsonType;
+    private BsonDocument root;
     
+
     [TestFixtureSetUp]
     void Setup()
     {
-        jsonText = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("MongoDBCSharpDriverTest.json2.txt")).ReadToEnd();
-
+        jsonText = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("MongoDBCSharpDriverTest.json.txt")).ReadToEnd();
+        root = new BsonDocument();
     }
 
     [Test]
     public void TestParser()
     {
-        var root = new BsonDocument();
         
         var json = JsonParser.JSON.JsonDecode(jsonText) as Hashtable;
-        enumerate(json,root);
+        enumerate(json,root,null);
 
         Console.WriteLine(root.ToJson());
 
     }
 
 
-    void enumerate(Object jsonObject, BsonDocument document)
+    void enumerate(Object jsonObject, BsonDocument document, BsonArray array)
     {
-
         var hashtable = jsonObject as Hashtable;
 
         if (hashtable != null)
         {
+           if (array != null)
+           {
+               var newDocument = new BsonDocument();
+               array.Add(newDocument);
+           }
+
             foreach (DictionaryEntry dictionaryEntry in hashtable)
             {
-               if (dictionaryEntry.Value.GetType() == typeof(Hashtable))
+                
+                if (dictionaryEntry.Value.GetType() == typeof(Hashtable))
                {
-                   enumerate(dictionaryEntry.Value, document);
+                    var newDocument = new BsonDocument();
+                    if (array != null)
+                    {
+                        array.Add(newDocument);
+                        newDocument.Add(dictionaryEntry.Key.ToString(), BsonValue.Create(dictionaryEntry.Value));
+                    }
+                    else
+                    {
+                       document.Add(dictionaryEntry.Key.ToString(), newDocument);    
+                    }
+                    
+                    enumerate(dictionaryEntry.Value, newDocument,array);
                }
                else
                {
                    if (dictionaryEntry.Value.GetType() == typeof(ArrayList))
                    {
+
+                       var newArray = new BsonArray();
+                       document.Add(dictionaryEntry.Key.ToString(), newArray);
+                       
                        foreach (object entry in dictionaryEntry.Value as ArrayList)
                        {
-                           enumerate(entry,document);
+                           enumerate(entry,document,newArray);
                        }
                    }
                    else
                    {
+                       if (array != null)
+                       {
+                           if (array.Count > 0 && array[array.Count-1].GetType() == typeof(BsonDocument))
+                           {
+                               ((BsonDocument) array[array.Count - 1]).Add(dictionaryEntry.Key.ToString(), BsonValue.Create(dictionaryEntry.Value));
+                           }
+                           else
+                           {
+                               array.Add(BsonValue.Create(dictionaryEntry.Value));
+                           }
+                       }
+                       else
+                       {
+                           document.Add(dictionaryEntry.Key.ToString(), BsonValue.Create(dictionaryEntry.Value));
+                       }
                        Console.WriteLine("Key:{0} Value:{1}", dictionaryEntry.Key, dictionaryEntry.Value);     
                    }
                }    
@@ -75,72 +112,10 @@ public class jsonParsertest
         }
         else
         {
-            var arraylist = jsonObject as ArrayList;
-            if (arraylist != null)
+            if (array != null)
             {
-                foreach (object entry in arraylist)
-                {
-                    enumerate(entry,document);
-                }
-            }
-            else
-            {
-               Console.WriteLine(jsonObject);
+                array.Add(BsonValue.Create(jsonObject));
             }
         }
-    }
-
-    private static BsonArray getarray(ArrayList jsonObject, BsonArray array)
-    {
-        if (array == null)
-            array = new BsonArray();
-
-        JsonObjectType jsonType = JsonObjectType.Value;
-
-        return array;
-        /*
-        
-        foreach (DictionaryEntry dictionaryEntry in jsonObject)
-        {
-
-            if (dictionaryEntry.Key.GetType() == typeof(Hashtable))
-            {
-                jsonType = JsonObjectType.HashTable;
-                array.Add(new BsonDocument());
-                array = getarray(dictionaryEntry.Value as Hashtable, array);
-            }
-
-            if (dictionaryEntry.Key.GetType() == typeof(ArrayList))
-            {
-                jsonType = JsonObjectType.ArrayList;
-                array.Add(new BsonArray());
-                array = getarray(dictionaryEntry.Value as Hashtable, array);
-            }
-
-            if (jsonType == JsonObjectType.Value)
-            {
-                if (array.Count > 0 && array[array.Count - 1].GetType() == typeof(BsonDocument))
-                {
-                    ((BsonDocument)array[array.Count - 1]).Add(dictionaryEntry.Key.ToString(), BsonValue.Create(dictionaryEntry.Value));
-                }
-                else
-                {
-                    if (array.Count > 0 && array[array.Count - 1].GetType() == typeof(BsonArray))
-                    {
-                        ((BsonArray)array[array.Count - 1]).Add(BsonValue.Create(dictionaryEntry.Value));
-                    }
-                    else
-                    {
-                        array.Add(BsonValue.Create(dictionaryEntry.Value));
-                    }
-                }
-            }
-         
-
-         }
-
-          return array;
-         */
-    }
-
+   }
 }
