@@ -60,9 +60,9 @@
   <ItemGroup>
     <Compile Include="Formatting.cs" />
     <Compile Include="jsonParser.cs" />
+    <Compile Include="jsonParserTest.cs" />
     <Compile Include="JsonToBson.cs" />
     <Compile Include="JsonToBsonTest.cs" />
-    <Compile Include="Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -78,6 +78,7 @@
     <Content Include="json4.txt" />
     <EmbeddedResource Include="json5.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
