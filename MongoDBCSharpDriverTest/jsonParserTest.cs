@@ -1,121 +1,38 @@
-﻿
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Reflection;
 using MongoDB.Bson;
 using NUnit.Framework;
 
-
-public enum JsonObjectType
+namespace MongoDBCSharpDriverTest
 {
-    HashTable,
-    ArrayList,
-    Value
-}
-
-
-
-
-[TestFixture]
-public class jsonParsertest
-{
-    private string jsonText;
-    private JsonObjectType jsonType;
-    private BsonDocument root;
-    
-
-    [TestFixtureSetUp]
-    void Setup()
+    [TestFixture]
+    public class jsonParsertest
     {
-        jsonText = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("MongoDBCSharpDriverTest.json.txt")).ReadToEnd();
-        root = new BsonDocument();
-    }
-
-    [Test]
-    public void TestParser()
-    {
-        
-        var json = JsonParser.JSON.JsonDecode(jsonText) as Hashtable;
-        enumerate(json,root,null);
-
-        Console.WriteLine(root.ToJson());
-
-    }
-
-
-    void enumerate(Object jsonObject, BsonDocument document, BsonArray array)
-    {
-        var hashtable = jsonObject as Hashtable;
-
-        if (hashtable != null)
+        [Test]
+        public void ExtensionMethodTest()
         {
-           if (array != null)
-           {
-               var newDocument = new BsonDocument();
-               array.Add(newDocument);
-           }
+            var jsonText1 = new StreamReader(
+                        Assembly.GetExecutingAssembly().GetManifestResourceStream("MongoDBCSharpDriverTest.json.txt")).
+                        ReadToEnd();
 
-            foreach (DictionaryEntry dictionaryEntry in hashtable)
-            {
-                
-                if (dictionaryEntry.Value.GetType() == typeof(Hashtable))
-               {
-                    var newDocument = new BsonDocument();
-                    if (array != null)
-                    {
-                        array.Add(newDocument);
-                        newDocument.Add(dictionaryEntry.Key.ToString(), BsonValue.Create(dictionaryEntry.Value));
-                    }
-                    else
-                    {
-                       document.Add(dictionaryEntry.Key.ToString(), newDocument);    
-                    }
+            var jsonText2 = new StreamReader(
+                        Assembly.GetExecutingAssembly().GetManifestResourceStream("MongoDBCSharpDriverTest.json2.txt")).
+                        ReadToEnd();
+
+
+            var bsonDocument1 = new BsonDocument().FromJson(jsonText1);
                     
-                    enumerate(dictionaryEntry.Value, newDocument,array);
-               }
-               else
-               {
-                   if (dictionaryEntry.Value.GetType() == typeof(ArrayList))
-                   {
+            var bsonDocument2 = new BsonDocument().FromJson(jsonText2);
 
-                       var newArray = new BsonArray();
-                       document.Add(dictionaryEntry.Key.ToString(), newArray);
-                       
-                       foreach (object entry in dictionaryEntry.Value as ArrayList)
-                       {
-                           enumerate(entry,document,newArray);
-                       }
-                   }
-                   else
-                   {
-                       if (array != null)
-                       {
-                           if (array.Count > 0 && array[array.Count-1].GetType() == typeof(BsonDocument))
-                           {
-                               ((BsonDocument) array[array.Count - 1]).Add(dictionaryEntry.Key.ToString(), BsonValue.Create(dictionaryEntry.Value));
-                           }
-                           else
-                           {
-                               array.Add(BsonValue.Create(dictionaryEntry.Value));
-                           }
-                       }
-                       else
-                       {
-                           document.Add(dictionaryEntry.Key.ToString(), BsonValue.Create(dictionaryEntry.Value));
-                       }
-                       Console.WriteLine("Key:{0} Value:{1}", dictionaryEntry.Key, dictionaryEntry.Value);     
-                   }
-               }    
-            }
+            Console.WriteLine(bsonDocument1.ToJson());
+            Console.WriteLine(bsonDocument2.ToJson());
+
+            Assert.AreEqual(jsonText1.Length,bsonDocument1.ToJson().Length);
+            Assert.AreEqual(jsonText2.Length,bsonDocument2.ToJson().Length);
+
+
+
         }
-        else
-        {
-            if (array != null)
-            {
-                array.Add(BsonValue.Create(jsonObject));
-            }
-        }
-   }
+    }
 }

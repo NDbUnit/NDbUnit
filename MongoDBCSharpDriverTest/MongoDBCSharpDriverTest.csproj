@@ -59,10 +59,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Formatting.cs" />
-    <Compile Include="jsonParser.cs" />
     <Compile Include="jsonParserTest.cs" />
     <Compile Include="JsonToBson.cs" />
     <Compile Include="JsonToBsonTest.cs" />
+    <Compile Include="MongoDriverExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -70,13 +70,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="json2.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="json3.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="json4.txt" />
-    <EmbeddedResource Include="json5.txt" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

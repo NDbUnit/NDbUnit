@@ -1,8 +1,98 @@
 ﻿using System;
-using System.Data;
 using System.Collections;
 using System.Globalization;
 using System.Text;
+using MongoDB.Bson;
+
+namespace MongoDBCSharpDriverTest
+{
+    public static class MongoDriverExtensions
+    {
+        public static BsonDocument FromJson(this BsonDocument document,string json)
+        {
+            var jsonObject = JsonParser.JSON.JsonDecode(json) as Hashtable;
+            enumerate(jsonObject, document, null);
+
+            return document;
+        }
+
+        static void enumerate(Object jsonObject, BsonDocument document, BsonArray array)
+        {
+            var hashtable = jsonObject as Hashtable;
+
+            if (hashtable != null)
+            {
+                if (array != null)
+                {
+                    var newDocument = new BsonDocument();
+                    array.Add(newDocument);
+                }
+
+                foreach (DictionaryEntry dictionaryEntry in hashtable)
+                {
+
+                    if (dictionaryEntry.Value.GetType() == typeof(Hashtable))
+                    {
+                        var newDocument = new BsonDocument();
+                        if (array != null)
+                        {
+                            array.Add(newDocument);
+                            newDocument.Add(dictionaryEntry.Key.ToString(), BsonValue.Create(dictionaryEntry.Value));
+                        }
+                        else
+                        {
+                            document.Add(dictionaryEntry.Key.ToString(), newDocument);
+                        }
+
+                        enumerate(dictionaryEntry.Value, newDocument, array);
+                    }
+                    else
+                    {
+                        if (dictionaryEntry.Value.GetType() == typeof(ArrayList))
+                        {
+
+                            var newArray = new BsonArray();
+                            document.Add(dictionaryEntry.Key.ToString(), newArray);
+
+                            foreach (object entry in dictionaryEntry.Value as ArrayList)
+                            {
+                                enumerate(entry, document, newArray);
+                            }
+                        }
+                        else
+                        {
+                            if (array != null)
+                            {
+                                if (array.Count > 0 && array[array.Count - 1].GetType() == typeof(BsonDocument))
+                                {
+                                    ((BsonDocument)array[array.Count - 1]).Add(dictionaryEntry.Key.ToString(), BsonValue.Create(dictionaryEntry.Value));
+                                }
+                                else
+                                {
+                                    array.Add(BsonValue.Create(dictionaryEntry.Value));
+                                }
+                            }
+                            else
+                            {
+                                document.Add(dictionaryEntry.Key.ToString(), BsonValue.Create(dictionaryEntry.Value));
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (array != null)
+                {
+                    array.Add(BsonValue.Create(jsonObject));
+                }
+            }
+        }
+
+
+    }
+
+}
 
 namespace JsonParser
 {
