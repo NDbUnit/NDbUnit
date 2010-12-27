@@ -56,6 +56,7 @@
     <Compile Include="MongoDBDataAdapter.cs" />
     <Compile Include="MongoDBOperation.cs" />
     <Compile Include="MongoDBUnitTest.cs" />
+    <Compile Include="MongoDriverExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

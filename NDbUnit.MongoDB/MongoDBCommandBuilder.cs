@@ -6,6 +6,19 @@ namespace NDbUnit.Core.MongoDB
 {
     public class MongoDBCommandBuilder : IDbCommandBuilder
     {
+ 
+
+        public MongoDBCommandBuilder(IDbConnection connection)
+        {
+        }
+
+        public MongoDBCommandBuilder(string connectionString)
+        {
+        }
+
+        
+        
+        
         public int CommandTimeOutSeconds
         {
             get { throw new NotImplementedException(); }
