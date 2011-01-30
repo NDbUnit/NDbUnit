@@ -4,7 +4,7 @@
 		<id>NDbUnit.SqlServerCe</id>
 		<version>1.6.7.0</version>
 		<title>NDbUnit for SQL Server CE</title>
-		<authors>Stephen Bohlen, et.al. (see http://ndbunit.googlecode.com/)</authors>
+		<authors>Stephen Bohlen</authors>
 		<description>NDbUnit for SqlServer CE targets; NDbUnit is a framework for managing database state during data-dependent unit tests</description>
 		<language>en-US</language>
 		<projectUrl>http://ndbunit.googlecode.com/</projectUrl>

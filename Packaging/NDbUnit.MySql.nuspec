@@ -3,7 +3,7 @@
 	<metadata>
 		<id>NDbUnit.MySql</id>
 		<version>1.6.7.0</version>
-		<authors>Stephen Bohlen, et.al. (see http://ndbunit.googlecode.com/)</authors>
+		<authors>Stephen Bohlen</authors>
 		<description>NDbUnit for MySql targets; NDbUnit is a framework for managing database state during data-dependent unit tests</description>
 		<language>en-US</language>
 		<projectUrl>http://ndbunit.googlecode.com/</projectUrl>
