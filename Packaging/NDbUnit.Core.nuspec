@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+	<metadata>
+		<id>NDbUnit.Core</id>
+		<version>1.6.7.0</version>
+		<authors>Stephen Bohlen, et.al. (see http://ndbunit.googlecode.com/)</authors>
+		<description>NDbUnit Core Services; not intended to be consumed by itself</description>
+		<language>en-US</language>
+		<projectUrl>http://ndbunit.googlecode.com/</projectUrl>
+		<licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+	</metadata>
+	<files>
+		<file src="..\NDbUnit.Core\bin\Debug\*.dll" target="lib\Net35" />
+	</files>
+</package>
+
