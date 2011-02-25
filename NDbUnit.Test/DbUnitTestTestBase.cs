@@ -178,7 +178,7 @@ namespace NDbUnit.Test.Common
         {
             //expectations
             _mockDbCommandBuilder.BuildCommands(_mockSchemaFileStream);
-            DataSet dummyDS = new DataSet();
+            DataSet dummyDS = new DataSet() { DataSetName = "NewDataSet", Namespace = "http://tempuri.org/NewDataSet.xsd" };
             dummyDS.Tables.Add("dummyTable");
             SetupResult.For(_mockDbCommandBuilder.GetSchema()).Return(dummyDS);
 

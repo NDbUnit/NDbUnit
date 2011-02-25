@@ -42,7 +42,7 @@ namespace NDbUnit.Core
     {
         private IDbConnection _connection;
 
-        private string _connectionString;
+        private readonly string _connectionString;
 
         private DataSet _dataSet;
 
@@ -52,13 +52,15 @@ namespace NDbUnit.Core
 
         private bool _initialized;
 
-        private bool _passedconnection;
+        private readonly bool _passedconnection;
 
         private ScriptManager _scriptManager;
 
         private string _xmlFile = "";
 
         private string _xmlSchemaFile = "";
+
+        private const string SCHEMA_NAMESPACE_PREFIX = "http://tempuri.org/";
 
         public event PostOperationEvent PostOperation;
 
@@ -171,10 +173,6 @@ namespace NDbUnit.Core
                 dsToFill.EnforceConstraints = true;
 
                 return dsToFill;
-            }
-            catch (Exception)
-            {
-                throw;
             }
             finally
             {
@@ -313,9 +311,21 @@ namespace NDbUnit.Core
 
             DataSet dsSchema = dbCommandBuilder.GetSchema();
 
+            ValidateNamespace(dsSchema);
+
             _dataSet = dsSchema.Clone();
 
             _initialized = true;
+        }
+
+        private void ValidateNamespace(DataSet dsSchema)
+        {
+            string expectedNamespace = string.Format("{0}.xsd", Path.Combine(SCHEMA_NAMESPACE_PREFIX, dsSchema.DataSetName));
+            
+            if (expectedNamespace != dsSchema.Namespace)
+            {
+                throw new ArgumentException(string.Format("The namespace in the file '{0}' is invalid.  Expected '{1}' but was '{2}'", _xmlSchemaFile, expectedNamespace, dsSchema.Namespace));
+            }
         }
 
         public void ReadXmlSchema(string xmlSchemaFile)
@@ -397,8 +407,7 @@ namespace NDbUnit.Core
         {
             if (!_initialized)
             {
-                string message =
-                    "INDbUnitTest.ReadXmlSchema(string) or INDbUnitTest.ReadXmlSchema(Stream) must be called successfully";
+                const string message = "INDbUnitTest.ReadXmlSchema(string) or INDbUnitTest.ReadXmlSchema(Stream) must be called successfully";
                 throw new NDbUnitException(message);
             }
         }

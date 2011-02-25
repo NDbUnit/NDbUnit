@@ -4,40 +4,10 @@
         <name>NDbUnit.Core</name>
     </assembly>
     <members>
-        <member name="T:NDbUnit.Core.NDbUnitException">
+        <member name="T:NDbUnit.Core.NDbUnitTest">
             <summary>
-            The base class exception of all exceptions thrown by objects
-            in NDbUnit.
+            The base class implementation of all NDbUnit unit test data adapters.
             </summary>
-        </member>
-        <member name="M:NDbUnit.Core.NDbUnitException.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:NDbUnit.Core.NDbUnitException"/> class.
-            </summary>
-        </member>
-        <member name="M:NDbUnit.Core.NDbUnitException.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:NDbUnit.Core.NDbUnitException"/> class 
-            with a specified error message.
-            </summary>
-            <param name="message"></param>
-        </member>
-        <member name="M:NDbUnit.Core.NDbUnitException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Initializes a new instance of the <see cref="T:NDbUnit.Core.NDbUnitException"/> class 
-            with serialized data.
-            </summary>
-            <param name="info"></param>
-            <param name="context"></param>
-        </member>
-        <member name="M:NDbUnit.Core.NDbUnitException.#ctor(System.String,System.Exception)">
-            <summary>
-            Initializes a new instance of the <see cref="T:NDbUnit.Core.NDbUnitException"/> class 
-            with the specified error message and a reference to the inner exception 
-            that is the cause of this exception.
-            </summary>
-            <param name="message"></param>
-            <param name="innerException"></param>
         </member>
         <member name="T:NDbUnit.Core.INDbUnitTest">
             <summary>
@@ -179,6 +149,75 @@
             </summary>
             <value>The Script Manager.</value>
         </member>
+        <member name="T:NDbUnit.Core.NDbUnitException">
+            <summary>
+            The base class exception of all exceptions thrown by objects
+            in NDbUnit.
+            </summary>
+        </member>
+        <member name="M:NDbUnit.Core.NDbUnitException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:NDbUnit.Core.NDbUnitException"/> class.
+            </summary>
+        </member>
+        <member name="M:NDbUnit.Core.NDbUnitException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NDbUnit.Core.NDbUnitException"/> class 
+            with a specified error message.
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:NDbUnit.Core.NDbUnitException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NDbUnit.Core.NDbUnitException"/> class 
+            with serialized data.
+            </summary>
+            <param name="info"></param>
+            <param name="context"></param>
+        </member>
+        <member name="M:NDbUnit.Core.NDbUnitException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NDbUnit.Core.NDbUnitException"/> class 
+            with the specified error message and a reference to the inner exception 
+            that is the cause of this exception.
+            </summary>
+            <param name="message"></param>
+            <param name="innerException"></param>
+        </member>
+        <member name="T:NDbUnit.Core.DbOperationFlag">
+            <summary>
+            The database operation to perform.
+            </summary>
+        </member>
+        <member name="F:NDbUnit.Core.DbOperationFlag.None">
+            <summary>No operation.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.DbOperationFlag.Insert">
+            <summary>Insert rows into a set of database tables.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.DbOperationFlag.InsertIdentity">
+            <summary>Insert rows into a set of database tables.  Allow identity 
+            inserts to occur.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.DbOperationFlag.Delete">
+            <summary>Delete rows from a set of database tables.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.DbOperationFlag.DeleteAll">
+            <summary>Delete all rows from a set of database tables.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.DbOperationFlag.Update">
+            <summary>Update rows in a set of database tables.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.DbOperationFlag.Refresh">
+            <summary>Refresh rows in a set of database tables.  Rows that exist 
+            in the database are updated.  Rows that don't exist are inserted.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.DbOperationFlag.CleanInsert">
+            <summary>Composite operation of DeleteAll and Insert.</summary>
+        </member>
+        <member name="F:NDbUnit.Core.DbOperationFlag.CleanInsertIdentity">
+            <summary>Composite operation of DeleteAll and InsertIdentity.</summary>
+        </member>
         <member name="T:NDbUnit.Core.DataSetTableIterator">
             <summary>
             Class that builds an iterator for tables.  The order of the tables returned by the iterator
@@ -259,45 +298,6 @@
             </returns>
             <exception cref="T:System.InvalidOperationException">The enumerator is positioned before the first element of the collection or after the last element. </exception>
             <filterpriority>2</filterpriority>
-        </member>
-        <member name="T:NDbUnit.Core.DbOperationFlag">
-            <summary>
-            The database operation to perform.
-            </summary>
-        </member>
-        <member name="F:NDbUnit.Core.DbOperationFlag.None">
-            <summary>No operation.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.DbOperationFlag.Insert">
-            <summary>Insert rows into a set of database tables.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.DbOperationFlag.InsertIdentity">
-            <summary>Insert rows into a set of database tables.  Allow identity 
-            inserts to occur.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.DbOperationFlag.Delete">
-            <summary>Delete rows from a set of database tables.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.DbOperationFlag.DeleteAll">
-            <summary>Delete all rows from a set of database tables.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.DbOperationFlag.Update">
-            <summary>Update rows in a set of database tables.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.DbOperationFlag.Refresh">
-            <summary>Refresh rows in a set of database tables.  Rows that exist 
-            in the database are updated.  Rows that don't exist are inserted.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.DbOperationFlag.CleanInsert">
-            <summary>Composite operation of DeleteAll and Insert.</summary>
-        </member>
-        <member name="F:NDbUnit.Core.DbOperationFlag.CleanInsertIdentity">
-            <summary>Composite operation of DeleteAll and InsertIdentity.</summary>
-        </member>
-        <member name="T:NDbUnit.Core.NDbUnitTest">
-            <summary>
-            The base class implementation of all NDbUnit unit test data adapters.
-            </summary>
         </member>
     </members>
 </doc>
