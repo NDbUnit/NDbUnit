@@ -18,20 +18,21 @@
  *
  */
 
+using System;
 using System.Data.Common;
 using System.Data.SqlServerCe;
 using System.Data;
 
 namespace NDbUnit.Core.SqlServerCe
 {
-    public class SqlCeUnitTest : NDbUnitTest
+    public class SqlCeDbUnitTest : NDbUnitTest
     {
-        public SqlCeUnitTest(IDbConnection connection)
+        public SqlCeDbUnitTest(IDbConnection connection)
             : base(connection)
         {
         }
 
-        public SqlCeUnitTest(string connectionString)
+        public SqlCeDbUnitTest(string connectionString)
             : base(connectionString)
         {
         }
@@ -56,5 +57,17 @@ namespace NDbUnit.Core.SqlServerCe
             return new SqlCeDbOperation();
         }
 
+    }
+
+    [Obsolete("Use SqlCeDbUnitTest class in place of this.")]
+    public class SqlCeUnitTest : SqlCeDbUnitTest
+    {
+        public SqlCeUnitTest(IDbConnection connection) : base(connection)
+        {
+        }
+
+        public SqlCeUnitTest(string connectionString) : base(connectionString)
+        {
+        }
     }
 }

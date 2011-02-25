@@ -65,7 +65,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlLiteDbCommandBuilder.cs" />
     <Compile Include="SqlLiteDbOperation.cs" />
-    <Compile Include="SqlLiteUnitTest.cs" />
+    <Compile Include="SqlLiteDbUnitTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NDbUnit.Core\NDbUnit.Core.csproj">

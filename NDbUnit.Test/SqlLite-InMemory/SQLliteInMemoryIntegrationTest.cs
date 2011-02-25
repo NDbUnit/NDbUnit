@@ -45,7 +45,7 @@ namespace NDbUnit.Test.SqlLite_InMemory
         [MultipleAsserts]
         public void Can_Get_Data_From_In_Memory_Instance()
         {
-            var database = new SqlLiteUnitTest(_connection);
+            var database = new SqlLiteDbUnitTest(_connection);
 
             database.ReadXmlSchema(XmlTestFiles.Sqlite.XmlSchemaFile);
             database.ReadXml(XmlTestFiles.Sqlite.XmlFile);

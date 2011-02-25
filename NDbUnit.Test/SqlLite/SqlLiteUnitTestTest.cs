@@ -44,7 +44,7 @@ namespace NDbUnit.Test.SqlLite
 
         protected override IUnitTestStub GetUnitTestStub()
         {
-            return new SqliteUnitTestStub(DbConnection.SqlLiteConnectionString);
+            return new SqliteDbUnitTestStub(DbConnection.SqlLiteConnectionString);
         }
 
         protected override string GetXmlFilename()
@@ -57,9 +57,9 @@ namespace NDbUnit.Test.SqlLite
             return XmlTestFiles.Sqlite.XmlSchemaFile;
         }
 
-        protected class SqliteUnitTestStub : SqlLiteUnitTest, IUnitTestStub
+        protected class SqliteDbUnitTestStub : SqlLiteDbUnitTest, IUnitTestStub
         {
-            public SqliteUnitTestStub(string connectionString)
+            public SqliteDbUnitTestStub(string connectionString)
                 : base(connectionString)
             {
             }

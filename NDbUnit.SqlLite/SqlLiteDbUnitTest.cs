@@ -18,20 +18,21 @@
  *
  */
 
+using System;
 using System.Data.Common;
 using System.Data.SQLite;
 using System.Data;
 
 namespace NDbUnit.Core.SqlLite
 {
-    public class SqlLiteUnitTest : NDbUnitTest
+    public class SqlLiteDbUnitTest : NDbUnitTest
     {
-        public SqlLiteUnitTest(string connectionString)
+        public SqlLiteDbUnitTest(string connectionString)
             : base(connectionString)
         {
         }
 
-        public SqlLiteUnitTest(IDbConnection connection)
+        public SqlLiteDbUnitTest(IDbConnection connection)
             : base(connection)
         {
         }
@@ -56,5 +57,17 @@ namespace NDbUnit.Core.SqlLite
             return new SqlLiteDbOperation();
         }
 
+    }
+
+    [Obsolete("Use SqlLiteDbUnitTest class in place of this.")]
+    public class SqlLiteUnitTest : SqlLiteDbUnitTest
+    {
+        public SqlLiteUnitTest(string connectionString) : base(connectionString)
+        {
+        }
+
+        public SqlLiteUnitTest(IDbConnection connection) : base(connection)
+        {
+        }
     }
 }

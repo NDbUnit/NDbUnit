@@ -65,7 +65,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlCeDbCommandBuilder.cs" />
     <Compile Include="SqlCeDbOperation.cs" />
-    <Compile Include="SqlCeUnitTest.cs" />
+    <Compile Include="SqlCeDbUnitTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NDbUnit.Core\NDbUnit.Core.csproj">

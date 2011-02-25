@@ -45,7 +45,7 @@ namespace NDbUnit.Test.SqlServerCe
 
         protected override IUnitTestStub GetUnitTestStub()
         {
-            return new SqlCeUnitTestStub(DbConnection.SqlCeConnectionString);
+            return new SqlCeDbUnitTestStub(DbConnection.SqlCeConnectionString);
         }
 
         protected override string GetXmlFilename()
@@ -58,9 +58,9 @@ namespace NDbUnit.Test.SqlServerCe
             return XmlTestFiles.SqlServerCe.XmlSchemaFile;
         }
 
-        protected class SqlCeUnitTestStub : SqlCeUnitTest, IUnitTestStub
+        protected class SqlCeDbUnitTestStub : SqlCeDbUnitTest, IUnitTestStub
         {
-            public SqlCeUnitTestStub(string connectionString)
+            public SqlCeDbUnitTestStub(string connectionString)
                 : base(connectionString)
             {
             }
