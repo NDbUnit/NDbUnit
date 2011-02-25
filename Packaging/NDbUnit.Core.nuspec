@@ -2,7 +2,7 @@
 <package>
 	<metadata>
 		<id>NDbUnit.Core</id>
-		<version>1.6.7.0</version>
+		<version>1.6.8.0</version>
 		<authors>Stephen Bohlen</authors>
 		<description>NDbUnit Core Services; not intended to be consumed by itself</description>
 		<language>en-US</language>

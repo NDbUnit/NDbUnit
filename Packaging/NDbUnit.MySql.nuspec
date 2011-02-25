@@ -2,7 +2,7 @@
 <package>
 	<metadata>
 		<id>NDbUnit.MySql</id>
-		<version>1.6.7.0</version>
+		<version>1.6.8.0</version>
 		<authors>Stephen Bohlen</authors>
 		<description>NDbUnit for MySql targets; NDbUnit is a framework for managing database state during data-dependent unit tests</description>
 		<language>en-US</language>
@@ -10,7 +10,7 @@
 		<licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
 		<tags>unittest test database MySQL</tags>
 		<dependencies>
-			<dependency id="NDbUnit.Core" version="1.6.7.0" />
+			<dependency id="NDbUnit.Core" version="1.6.8.0" />
 		</dependencies> 		
 	</metadata>
 	<files>
