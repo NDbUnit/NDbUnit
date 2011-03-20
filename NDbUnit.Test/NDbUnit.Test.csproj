@@ -222,9 +222,15 @@
     <None Include="SqlLite\test.sqlite.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Xml\MySql\DateAsPrimaryKey.xsc">
+      <DependentUpon>DateAsPrimaryKey.xsd</DependentUpon>
+    </None>
     <None Include="Xml\MySql\DateAsPrimaryKey.xsd">
       <LastGenOutput>DateAsPrimaryKey.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </None>
+    <None Include="Xml\MySql\DateAsPrimaryKey.xss">
+      <DependentUpon>DateAsPrimaryKey.xsd</DependentUpon>
     </None>
     <None Include="Xml\MySql\UserDS.xsd">
       <SubType>Designer</SubType>

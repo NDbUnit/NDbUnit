@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <DateAsPrimaryKey xmlns="http://tempuri.org/DateAsPrimaryKey.xsd">
-	<TableWithDateAsPrimaryKey>
-		<PrimaryKey>2001-01-01T00:00:00</PrimaryKey>
-	</TableWithDateAsPrimaryKey>
+  <TableWithDateAsPrimaryKey>
+    <PrimaryKey>2001-01-01T00:00:00</PrimaryKey>
+  </TableWithDateAsPrimaryKey>
+  <TableWithStringAsPrimaryKey>
+    <PrimaryKey>SomeString</PrimaryKey>
+  </TableWithStringAsPrimaryKey>
 </DateAsPrimaryKey>

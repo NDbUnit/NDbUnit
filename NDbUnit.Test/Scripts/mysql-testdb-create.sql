@@ -39,4 +39,10 @@ CREATE TABLE  `testdb`.`TableWithDateAsPrimaryKey` (
  PRIMARY KEY  (`PrimaryKey`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+DROP TABLE IF EXISTS `testdb`.`TableWithStringAsPrimaryKey`;
+CREATE TABLE  `testdb`.`TableWithStringAsPrimaryKey` (
+ `PrimaryKey` nvarchar(50) NOT NULL,
+  PRIMARY KEY  (`PrimaryKey`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 SET FOREIGN_KEY_CHECKS = 1;
