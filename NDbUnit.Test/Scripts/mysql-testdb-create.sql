@@ -35,7 +35,7 @@ CREATE TABLE  `testdb`.`UserRole` (
 
 DROP TABLE IF EXISTS `testdb`.`DateAsPrimaryKey`;
 CREATE TABLE  `testdb`.`DateAsPrimaryKey` (
-  `PrimaryKey` date NOT NULL auto_increment,
+  `PrimaryKey` date NOT NULL,
   PRIMARY KEY  (`PrimaryKey`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
