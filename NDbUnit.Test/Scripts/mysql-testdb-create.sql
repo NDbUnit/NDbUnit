@@ -33,10 +33,10 @@ CREATE TABLE  `testdb`.`UserRole` (
   CONSTRAINT `FK_UserRole_User` FOREIGN KEY (`UserID`) REFERENCES `User` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-DROP TABLE IF EXISTS `testdb`.`DateAsPrimaryKey`;
-CREATE TABLE  `testdb`.`DateAsPrimaryKey` (
-  `PrimaryKey` date NOT NULL,
-  PRIMARY KEY  (`PrimaryKey`)
+DROP TABLE IF EXISTS `testdb`.`TableWithDateAsPrimaryKey`;
+CREATE TABLE  `testdb`.`TableWithDateAsPrimaryKey` (
+ `PrimaryKey` date NOT NULL,
+ PRIMARY KEY  (`PrimaryKey`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 SET FOREIGN_KEY_CHECKS = 1;
