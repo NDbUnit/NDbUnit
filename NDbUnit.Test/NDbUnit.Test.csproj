@@ -180,11 +180,6 @@
     <Compile Include="XmlTestFiles.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Xml\MySql\UserDS.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>UserDS.xsd</DependentUpon>
-    </Compile>
     <Compile Include="Xml\OleDb\UserDS.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -215,7 +210,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>UserDS.xsd</DependentUpon>
     </Compile>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="NDbUnit.Test.build" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -225,9 +222,11 @@
     <None Include="SqlLite\test.sqlite.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Xml\MySql\DateAsPrimaryKey.xsd">
+      <LastGenOutput>DateAsPrimaryKey.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Xml\MySql\UserDS.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>UserDS.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
     <Content Include="TestScripts\sqlserver-drop-create-testdb.sql" />
@@ -236,6 +235,7 @@
     <Content Include="TestScripts\testscript03.sql" />
     <Content Include="TestScripts\testscript02.sql" />
     <Content Include="TestScripts\testscript01.sql" />
+    <Content Include="Xml\MySql\DateAsPrimaryKey.xml" />
     <Content Include="Xml\OleDb\UserDS.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>UserDS.Designer.cs</LastGenOutput>

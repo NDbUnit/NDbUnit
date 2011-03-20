@@ -19,7 +19,9 @@
  */
 
 using System;
+using NDbUnit.Core;
 using NDbUnit.Core.MySqlClient;
+using MbUnit.Framework;
 
 namespace NDbUnit.Test.SqlClient
 {
@@ -49,6 +51,18 @@ namespace NDbUnit.Test.SqlClient
         {
             return XmlTestFiles.MySql.XmlSchemaFile;
         }
+
+        [Test]
+        public void Issue38_Test()
+        {
+            INDbUnitTest db = GetNDbUnitTest();
+            db.ReadXmlSchema( @"..\..\Xml\MySql\DateAsPrimaryKey.xsd");
+            db.ReadXml(@"..\..\Xml\MySql\DateAsPrimaryKey.xml");
+
+            db.PerformDbOperation(DbOperationFlag.CleanInsertIdentity);
+
+        }
+
 
     }
 }
