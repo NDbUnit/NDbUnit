@@ -1,7 +1,7 @@
 ﻿/*
  *
  * NDbUnit
- * Copyright (C)2005 - 2010
+ * Copyright (C)2005 - 2011
  * http://code.google.com/p/ndbunit
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,10 +18,9 @@
  *
  */
 
-using System;
 using NDbUnit.Core.SqlLite;
 
-namespace NDbUnit.Test.SqlClient
+namespace NDbUnit.Test.SqlLite
 {
     public class SqlLiteDbUnitIntegrationTest : IntegationTestBase
     {

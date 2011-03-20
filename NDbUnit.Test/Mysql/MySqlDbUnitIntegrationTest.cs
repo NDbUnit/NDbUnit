@@ -1,7 +1,7 @@
 ﻿/*
  *
  * NDbUnit
- * Copyright (C)2005 - 2010
+ * Copyright (C)2005 - 2011
  * http://code.google.com/p/ndbunit
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,16 +18,15 @@
  *
  */
 
-using System;
 using NDbUnit.Core;
 using NDbUnit.Core.MySqlClient;
 using MbUnit.Framework;
 
-namespace NDbUnit.Test.SqlClient
+namespace NDbUnit.Test.Mysql
 {
     public class MySqlDbUnitIntegrationTest : IntegationTestBase
     {
-        protected override NDbUnit.Core.INDbUnitTest GetNDbUnitTest()
+        protected override INDbUnitTest GetNDbUnitTest()
         {
             return new MySqlDbUnitTest(DbConnection.MySqlConnectionString);
         }
