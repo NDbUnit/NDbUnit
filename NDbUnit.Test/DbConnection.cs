@@ -23,6 +23,10 @@ namespace NDbUnit.Test
 {
     public class DbConnection
     {
+        public static string PostgresqlConnectionString
+        {
+            get { return ConfigurationManager.ConnectionStrings["PostgresqlConnectionString"].ConnectionString; }
+        }
         public static string MySqlConnectionString
         {
             get { return ConfigurationManager.ConnectionStrings["MysqlConnectionString"].ConnectionString; }

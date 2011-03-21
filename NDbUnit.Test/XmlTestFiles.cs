@@ -38,6 +38,33 @@ namespace NDbUnit.Test
 
         }
 
+        public class Postgresql : XmlTestFilesBase
+        {
+            private static string _xmlPath = @"..\..\Xml\Postgresql\";
+
+            public static string XmlFile
+            {
+                get { return Path.Combine(_xmlPath, _defaultXmlFilename); }
+            }
+
+            public static string XmlModFile
+            {
+                get { return Path.Combine(_xmlPath, _defaultXmlModFilename); }
+            }
+
+            public static string XmlRefreshFile
+            {
+                get { return Path.Combine(_xmlPath, _defaultXmlRefreshFilename); }
+            }
+
+            public static string XmlSchemaFile
+            {
+                get { return Path.Combine(_xmlPath, _defaultXmlSchemaFilename); }
+            }
+
+        }
+
+
         public class MySql : XmlTestFilesBase
         {
             private static string _xmlPath = @"..\..\Xml\MySql\";

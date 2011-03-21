@@ -108,6 +108,9 @@
       <HintPath>..\NDbUnit.Core\Lib\MySql.Data.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Npgsql">
+      <HintPath>..\NDbUnit.Core\Lib\Npgsql.dll</HintPath>
+    </Reference>
     <Reference Include="Rhino.Mocks, Version=3.4.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Lib\Rhino.Mocks.dll</HintPath>
@@ -153,6 +156,10 @@
     <Compile Include="OracleClient\OracleClientDbCommandBuilderTest.cs" />
     <Compile Include="OracleClient\OracleClientDbOperationTest.cs" />
     <Compile Include="OracleClient\OracleClientDbUnitTestTest.cs" />
+    <Compile Include="Postgresql\PostgresqlDbCommandBuilderTest.cs" />
+    <Compile Include="Postgresql\PostgresqlDbOperationTest.cs" />
+    <Compile Include="Postgresql\PostgresqlDbUnitIntegrationTest.cs" />
+    <Compile Include="Postgresql\PostgresqlDbUnitTestTest.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -218,19 +225,14 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Content Include="Scripts\postgres-testdb-create.sql" />
     <Content Include="Scripts\oracle-testdb-create.sql" />
     <None Include="SqlLite\test.sqlite.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Xml\MySql\DateAsPrimaryKey.xsc">
-      <DependentUpon>DateAsPrimaryKey.xsd</DependentUpon>
-    </None>
     <None Include="Xml\MySql\DateAsPrimaryKey.xsd">
       <LastGenOutput>DateAsPrimaryKey.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Xml\MySql\DateAsPrimaryKey.xss">
-      <DependentUpon>DateAsPrimaryKey.xsd</DependentUpon>
     </None>
     <None Include="Xml\MySql\UserDS.xsd">
       <SubType>Designer</SubType>
@@ -252,6 +254,10 @@
       <LastGenOutput>UserDS1.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
+    <None Include="Xml\Postgresql\UserDS.xsd">
+      <SubType>Designer</SubType>
+      <LastGenOutput>UserDS.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Xml\SqlServerCe\UserDS.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>UserDS.Designer.cs</LastGenOutput>
@@ -263,6 +269,9 @@
     <Content Include="Xml\OracleClient\User.xml" />
     <Content Include="Xml\OracleClient\UserMod.xml" />
     <Content Include="Xml\OracleClient\UserRefresh.xml" />
+    <Content Include="Xml\Postgresql\User.xml" />
+    <Content Include="Xml\Postgresql\UserMod.xml" />
+    <Content Include="Xml\Postgresql\UserRefresh.xml" />
     <Content Include="Xml\SqlServer\DataFileWithSchemaPrefixes.xml" />
     <Content Include="Xml\SqlServer\User.xml" />
     <Content Include="Xml\SqlServer\UserDS.xsd">
@@ -341,6 +350,10 @@
     <ProjectReference Include="..\NDbUnit.OracleClient\NDbUnit.OracleClient.csproj">
       <Project>{0B83B341-1D0D-4284-B4E5-7DE97052F950}</Project>
       <Name>NDbUnit.OracleClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NDbUnit.Postgresql\NDbUnit.Postgresql.csproj">
+      <Project>{49A6A896-89E9-4293-8014-1AC1EFB20F31}</Project>
+      <Name>NDbUnit.Postgresql</Name>
     </ProjectReference>
     <ProjectReference Include="..\NDbUnit.SqlClient\NDbUnit.SqlClient.csproj">
       <Project>{89F1342D-0FF8-492E-BD74-175D1AAC9FE8}</Project>
