@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+	<metadata>
+		<id>NDbUnit.Postgresql</id>
+		<version>1.6.8.0</version>
+		<authors>Stephen Bohlen</authors>
+		<description>NDbUnit for Postgresql targets; NDbUnit is a framework for managing database state during data-dependent unit tests</description>
+		<language>en-US</language>
+		<projectUrl>http://ndbunit.googlecode.com/</projectUrl>
+		<licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+		<tags>unittest test database Postgresql</tags>
+		<dependencies>
+			<dependency id="NDbUnit.Core" version="1.6.8.0" />
+		</dependencies> 		
+	</metadata>
+	<files>
+		<file src="..\NDbUnit.Postgresql\bin\Debug\NDbUnit.Postgresql.dll" target="lib\Net35" />
+		<file src="..\NDbUnit.Postgresql\bin\Debug\NDbUnit.Postgresql.pdb" target="lib\Net35" />
+	</files>
+</package>
+
