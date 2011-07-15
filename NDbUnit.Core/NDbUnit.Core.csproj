@@ -21,7 +21,6 @@
     <OutputType>Library</OutputType>
     <RootNamespace>NDbUnit.Core</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject>NDbUnit.Core.Class1</StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
