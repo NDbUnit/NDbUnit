@@ -24,3 +24,5 @@ The easiest way to get NDbUnit is via [the NuGet Package Manager](http://nuget.o
 * MySQL
 * Oracle (XE thru Enterprise, 9i and later)
 
+For additional planned features and enhancements, see the [Project Road-Map](https://github.com/NDbUnit/NDbUnit/wiki/Project-Road-Map).
+
