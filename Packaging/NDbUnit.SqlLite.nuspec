@@ -14,8 +14,9 @@
 		</dependencies> 		
 	</metadata>
 	<files>
-		<file src="..\NDbUnit.SqlLite\bin\Debug\NDbUnit.SqlLite.dll" target="lib\Net35" />
-		<file src="..\NDbUnit.SqlLite\bin\Debug\NDbUnit.SqlLite.pdb" target="lib\Net35" />
+		<file src="..\NDbUnit.SqlLite\bin\Release\NDbUnit.SqlLite.dll" target="lib\Net35" />
+		<file src="..\NDbUnit.SqlLite\bin\Release\NDbUnit.SqlLite.pdb" target="lib\Net35" />
+		<file src="..\NDbUnit.SqlLite\bin\Release\NDbUnit.SqlLite.xml" target="lib\Net35" />
 	</files>
 </package>
 

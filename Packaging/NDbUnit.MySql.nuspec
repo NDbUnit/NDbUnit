@@ -14,8 +14,9 @@
 		</dependencies> 		
 	</metadata>
 	<files>
-		<file src="..\NDbUnit.MySql\bin\Debug\NDbUnit.MySql.dll" target="lib\Net35" />
-		<file src="..\NDbUnit.MySql\bin\Debug\NDbUnit.MySql.pdb" target="lib\Net35" />
+		<file src="..\NDbUnit.MySql\bin\Release\NDbUnit.MySql.dll" target="lib\Net35" />
+		<file src="..\NDbUnit.MySql\bin\Release\NDbUnit.MySql.pdb" target="lib\Net35" />
+		<file src="..\NDbUnit.MySql\bin\Release\NDbUnit.MySql.xml" target="lib\Net35" />
 	</files>
 </package>
 

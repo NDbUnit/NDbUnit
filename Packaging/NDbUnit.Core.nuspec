@@ -11,7 +11,9 @@
 		<tags>unittest test database</tags>
 	</metadata>
 	<files>
-		<file src="..\NDbUnit.Core\bin\Debug\*.dll" target="lib\Net35" />
+		<file src="..\NDbUnit.Core\bin\Release\NDbUnit.Core.dll" target="lib\Net35" />
+		<file src="..\NDbUnit.Core\bin\Release\NDbUnit.Core.pdb" target="lib\Net35" />
+		<file src="..\NDbUnit.Core\bin\Release\NDbUnit.Core.xml" target="lib\Net35" />
 	</files>
 </package>
 

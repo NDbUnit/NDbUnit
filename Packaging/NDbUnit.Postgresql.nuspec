@@ -14,8 +14,9 @@
 		</dependencies> 		
 	</metadata>
 	<files>
-		<file src="..\NDbUnit.Postgresql\bin\Debug\NDbUnit.Postgresql.dll" target="lib\Net35" />
-		<file src="..\NDbUnit.Postgresql\bin\Debug\NDbUnit.Postgresql.pdb" target="lib\Net35" />
+		<file src="..\NDbUnit.Postgresql\bin\Release\NDbUnit.Postgresql.dll" target="lib\Net35" />
+		<file src="..\NDbUnit.Postgresql\bin\Release\NDbUnit.Postgresql.pdb" target="lib\Net35" />
+		<file src="..\NDbUnit.Postgresql\bin\Release\NDbUnit.Postgresql.xml" target="lib\Net35" />
 	</files>
 </package>
 

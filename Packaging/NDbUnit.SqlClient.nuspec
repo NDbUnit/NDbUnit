@@ -14,8 +14,9 @@
 		</dependencies> 		
 	</metadata>
 	<files>
-		<file src="..\NDbUnit.SqlClient\bin\Debug\NDbUnit.SqlClient.dll" target="lib\Net35" />
-		<file src="..\NDbUnit.SqlClient\bin\Debug\NDbUnit.SqlClient.pdb" target="lib\Net35" />
+		<file src="..\NDbUnit.SqlClient\bin\Release\NDbUnit.SqlClient.dll" target="lib\Net35" />
+		<file src="..\NDbUnit.SqlClient\bin\Release\NDbUnit.SqlClient.pdb" target="lib\Net35" />
+		<file src="..\NDbUnit.SqlClient\bin\Release\NDbUnit.SqlClient.xml" target="lib\Net35" />
 	</files>
 </package>
 

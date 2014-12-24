@@ -14,8 +14,9 @@
 		</dependencies> 		
 	</metadata>
 	<files>
-		<file src="..\NDbUnit.OracleClient\bin\Debug\NDbUnit.OracleClient.dll" target="lib\Net35" />
-		<file src="..\NDbUnit.OracleClient\bin\Debug\NDbUnit.OracleClient.pdb" target="lib\Net35" />
+		<file src="..\NDbUnit.OracleClient\bin\Release\NDbUnit.OracleClient.dll" target="lib\Net35" />
+		<file src="..\NDbUnit.OracleClient\bin\Release\NDbUnit.OracleClient.pdb" target="lib\Net35" />
+		<file src="..\NDbUnit.OracleClient\bin\Release\NDbUnit.OracleClient.xml" target="lib\Net35" />
 	</files>
 </package>
 

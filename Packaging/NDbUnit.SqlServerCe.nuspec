@@ -15,8 +15,9 @@
 		</dependencies> 		
 	</metadata>
 	<files>
-		<file src="..\NDbUnit.SqlServerCe\bin\Debug\NDbUnit.SqlServerCe.dll" target="lib\Net35" />
-		<file src="..\NDbUnit.SqlServerCe\bin\Debug\NDbUnit.SqlServerCe.pdb" target="lib\Net35" />
+		<file src="..\NDbUnit.SqlServerCe\bin\Release\NDbUnit.SqlServerCe.dll" target="lib\Net35" />
+		<file src="..\NDbUnit.SqlServerCe\bin\Release\NDbUnit.SqlServerCe.pdb" target="lib\Net35" />
+		<file src="..\NDbUnit.SqlServerCe\bin\Release\NDbUnit.SqlServerCe.xml" target="lib\Net35" />
 	</files>
 </package>
 
