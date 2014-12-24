@@ -1,5 +1,7 @@
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NDbUnit.Core", "NDbUnit.Core\NDbUnit.Core.csproj", "{093E77F8-2F55-4823-B118-3D33F376F1A8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NDbUnit.Test", "NDbUnit.Test\NDbUnit.Test.csproj", "{37055A36-0019-4ECE-94C3-DA25D6BC5935}"
@@ -20,6 +22,13 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NDbUnit.OracleClient", "NDbUnit.OracleClient\NDbUnit.OracleClient.csproj", "{0B83B341-1D0D-4284-B4E5-7DE97052F950}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NDbUnit.Postgresql", "NDbUnit.Postgresql\NDbUnit.Postgresql.csproj", "{49A6A896-89E9-4293-8014-1AC1EFB20F31}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{8AB255FA-5C87-4546-B546-E9629CCCB9B2}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
