@@ -40,7 +40,7 @@ namespace NDbUnit.Core
     /// </summary>
     public abstract class NDbUnitTest : INDbUnitTest
     {
-        private IDbConnection _connection;
+        protected IDbConnection Connection;
 
         private readonly string _connectionString;
 
@@ -54,7 +54,7 @@ namespace NDbUnit.Core
 
         private readonly bool _passedconnection;
 
-        private ScriptManager _scriptManager;
+        protected ScriptManager ScriptManager;
 
         private string _xmlFile = "";
 
@@ -76,7 +76,7 @@ namespace NDbUnit.Core
         protected NDbUnitTest(IDbConnection connection)
         {
             _passedconnection = true;
-            _connection = connection;
+            Connection = connection;
             _connectionString = connection.ConnectionString;
             _dbOperation = CreateDbOperation();
 
@@ -93,10 +93,10 @@ namespace NDbUnit.Core
         {
             get
             {
-                if (_scriptManager == null)
-                    _scriptManager = new ScriptManager(new FileSystemService());
+                if (ScriptManager == null)
+                    ScriptManager = new ScriptManager(new FileSystemService());
 
-                return _scriptManager;
+                return ScriptManager;
             }
         }
 
@@ -124,23 +124,23 @@ namespace NDbUnit.Core
             return _dataSet.Clone();
         }
 
-        public void ExecuteScripts()
+        public virtual void ExecuteScripts()
         {
-            if (_connection == null)
-                _connection = GetDbCommandBuilder().Connection;
+            if (Connection == null)
+                Connection = GetDbCommandBuilder().Connection;
 
-            if (_connection.State != ConnectionState.Open)
-                _connection.Open();
+            if (Connection.State != ConnectionState.Open)
+                Connection.Open();
 
-            foreach (string ddlText in _scriptManager.ScriptContents)
+            foreach (string ddlText in ScriptManager.ScriptContents)
             {
-                IDbCommand command = _connection.CreateCommand();
+                IDbCommand command = Connection.CreateCommand();
                 command.CommandText = ddlText;
                 command.ExecuteNonQuery();
             }
 
-            if (_connection.State != ConnectionState.Closed)
-                _connection.Close();
+            if (Connection.State != ConnectionState.Closed)
+                Connection.Close();
         }
 
         public DataSet GetDataSetFromDb(StringCollection tableNames)
@@ -368,13 +368,13 @@ namespace NDbUnit.Core
         {
             if (_dbCommandBuilder == null)
 
-                if (_connection == null)
+                if (Connection == null)
                 {
                     _dbCommandBuilder = CreateDbCommandBuilder(_connectionString);
                 }
                 else
                 {
-                    _dbCommandBuilder = CreateDbCommandBuilder(_connection);
+                    _dbCommandBuilder = CreateDbCommandBuilder(Connection);
                 }
 
             return _dbCommandBuilder;

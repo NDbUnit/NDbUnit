@@ -81,5 +81,24 @@ namespace NDbUnit.Core.MySqlClient
             adapter.Fill(dsToFill, tableName);
         }
 
+        public override void ExecuteScripts()
+        {
+            if (Connection == null)
+                Connection = GetDbCommandBuilder().Connection;
+
+            if (Connection.State != ConnectionState.Open)
+                Connection.Open();
+
+            foreach (string ddlText in ScriptManager.ScriptContents)
+            {
+                var script = new MySqlScript((MySqlConnection)Connection, ddlText);
+                script.Execute();
+            }
+
+
+            if (Connection.State != ConnectionState.Closed)
+                Connection.Close();
+
+        }
     }
 }
