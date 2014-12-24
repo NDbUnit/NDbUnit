@@ -18,13 +18,10 @@
  *
  */
 
-using System;
 using System.Collections.Generic;
-using System.Text;
-using NDbUnit.Core.SqlClient;
-using MbUnit.Framework;
 using NDbUnit.Core;
 using NDbUnit.Core.OleDb;
+using NUnit.Framework;
 
 namespace NDbUnit.Test.SqlClient
 {

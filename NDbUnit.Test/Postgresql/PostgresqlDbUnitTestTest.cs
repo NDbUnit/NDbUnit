@@ -19,12 +19,11 @@
  */
 
 using System.Collections.Generic;
-using MbUnit.Framework;
 using NDbUnit.Core;
 using System.Data;
 using System.IO;
-using NDbUnit.Core.MySqlClient;
 using NDbUnit.Postgresql;
+using NUnit.Framework;
 
 namespace NDbUnit.Test.Postgresql
 {

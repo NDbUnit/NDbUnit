@@ -19,10 +19,10 @@
  */
 
 using System;
-using MbUnit.Framework;
 using NDbUnit.Core.MySqlClient;
 using System.Data;
 using MySql.Data.MySqlClient;
+using NUnit.Framework;
 
 namespace NDbUnit.Test.Mysql
 {

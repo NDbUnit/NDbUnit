@@ -20,7 +20,7 @@
 
 
 using NDbUnit.Core;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace NDbUnit.Test
 {

@@ -18,13 +18,12 @@
  *
  */
 
-using System;
-using MbUnit.Framework;
 using NDbUnit.Core;
 using System.Data;
 using System.IO;
 using NDbUnit.Core.SqlClient;
 using System.Collections.Generic;
+using NUnit.Framework;
 
 namespace NDbUnit.Test.SqlServerCe
 {

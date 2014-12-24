@@ -19,9 +19,9 @@
  */
 
 using System.Collections.Generic;
-using MbUnit.Framework;
 using NDbUnit.Core;
 using NDbUnit.Postgresql;
+using NUnit.Framework;
 
 namespace NDbUnit.Test.Postgresql
 {

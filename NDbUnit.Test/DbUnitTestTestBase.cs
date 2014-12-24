@@ -20,13 +20,12 @@
 
 using System;
 using System.Data;
-using System.Data.Common;
 using System.IO;
 using NDbUnit.Core;
-using NDbUnit.Core.SqlServerCe;
-using MbUnit.Framework;
+using NUnit.Framework;
 using Rhino.Mocks;
 using Is = Rhino.Mocks.Constraints.Is;
+using AssertIs = NUnit.Framework.Is;
 using System.Collections.Generic;
 
 namespace NDbUnit.Test.Common
@@ -157,7 +156,7 @@ namespace NDbUnit.Test.Common
             }
 
             Assert.AreEqual(EXPECTED_COUNT_OF_COMMANDS, copyOfDataSet.Tables.Count, string.Format("Should be {0} Tables in dataset", EXPECTED_COUNT_OF_COMMANDS));
-            Assert.AreElementsEqual<string>(ExpectedDataSetTableNames, schemaTables);
+            Assert.That(ExpectedDataSetTableNames, AssertIs.EquivalentTo(schemaTables));
         }
 
         [Test]

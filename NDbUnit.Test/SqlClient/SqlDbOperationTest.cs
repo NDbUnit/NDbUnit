@@ -19,10 +19,10 @@
  */
 
 using System;
-using MbUnit.Framework;
 using NDbUnit.Core.SqlClient;
 using System.Data;
 using System.Data.SqlClient;
+using NUnit.Framework;
 
 namespace NDbUnit.Test.SqlClient
 {

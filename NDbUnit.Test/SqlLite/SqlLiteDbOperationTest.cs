@@ -19,10 +19,10 @@
  */
 
 using System;
-using MbUnit.Framework;
 using NDbUnit.Core.SqlLite;
 using System.Data;
 using System.Data.SQLite;
+using NUnit.Framework;
 
 namespace NDbUnit.Test.SqlLite
 {

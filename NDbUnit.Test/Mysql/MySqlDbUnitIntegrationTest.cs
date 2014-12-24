@@ -20,7 +20,7 @@
 
 using NDbUnit.Core;
 using NDbUnit.Core.MySqlClient;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace NDbUnit.Test.Mysql
 {

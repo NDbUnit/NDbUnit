@@ -18,20 +18,19 @@
  *
  */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using MbUnit.Framework;
 using System.IO;
+using MbUnit.Framework;
 using NDbUnit.Core;
 using System.Data;
+using NUnit.Framework;
+using Assert = NUnit.Framework.Assert;
 
 namespace NDbUnit.Test
 {
-    [TestFixture]
+    [NUnit.Framework.TestFixture]
     public abstract class IntegationTestBase
     {
-        [Test]
+        [NUnit.Framework.Test]
         public void Delete_Operation_Matches_Expected_Data()
         {
             INDbUnitTest database = GetNDbUnitTest();
@@ -48,10 +47,10 @@ namespace NDbUnit.Test
 
             DataSet postOperation = database.GetDataSetFromDb();
 
-            Assert.AreEqual(preOperation, postOperation, new StructuralEqualityComparer<DataSet>());
+            Assert.That(preOperation, Is.EqualTo(postOperation).Using(new StructuralEqualityComparer<DataSet>()));
         }
 
-        [Test]
+        [NUnit.Framework.Test]
         public void InsertIdentity_Operation_Matches_Expected_Data()
         {
             INDbUnitTest database = GetNDbUnitTest();
@@ -68,11 +67,11 @@ namespace NDbUnit.Test
 
             DataSet postOperation = database.GetDataSetFromDb();
 
-            Assert.AreEqual(preOperation, postOperation, new StructuralEqualityComparer<DataSet>());
+            Assert.That(preOperation, Is.EqualTo(postOperation).Using(new StructuralEqualityComparer<DataSet>()));
 
         }
 
-        [Test]
+        [NUnit.Framework.Test]
         public void Refresh_Operation_Matches_Expected_Data()
         {
             INDbUnitTest database = GetNDbUnitTest();
@@ -92,11 +91,11 @@ namespace NDbUnit.Test
 
             DataSet postOperation = database.GetDataSetFromDb();
 
-            Assert.AreEqual(preOperation, postOperation, new StructuralEqualityComparer<DataSet>());
+            Assert.That(preOperation, Is.EqualTo(postOperation).Using(new StructuralEqualityComparer<DataSet>()));
 
         }
 
-        [Test]
+        [NUnit.Framework.Test]
         public void Update_Operation_Matches_Expected_Data()
         {
             INDbUnitTest database = GetNDbUnitTest();
@@ -116,7 +115,7 @@ namespace NDbUnit.Test
 
             DataSet postOperation = database.GetDataSetFromDb();
 
-            Assert.AreEqual(preOperation, postOperation, new StructuralEqualityComparer<DataSet>());
+            Assert.That(preOperation, Is.EqualTo(postOperation).Using(new StructuralEqualityComparer<DataSet>()));
 
         }
 

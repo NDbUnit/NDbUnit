@@ -18,13 +18,12 @@
  *
  */
 
-using System;
 using System.Collections.Generic;
-using MbUnit.Framework;
 using NDbUnit.Core;
 using System.Data;
 using System.IO;
 using NDbUnit.Core.OleDb;
+using NUnit.Framework;
 
 namespace NDbUnit.Test.OleDb
 {

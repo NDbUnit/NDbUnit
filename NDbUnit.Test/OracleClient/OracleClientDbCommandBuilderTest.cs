@@ -18,13 +18,10 @@
  *
  */
 
-using System;
 using System.Collections.Generic;
-using System.Text;
 using NDbUnit.Test.Common;
 using NDbUnit.OracleClient;
 using NDbUnit.Core;
-using MbUnit.Framework;
 
 namespace NDbUnit.Test.OracleClient
 {

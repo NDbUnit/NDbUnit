@@ -20,12 +20,11 @@
 
 using System;
 using System.Data;
-using System.Diagnostics;
-using MbUnit.Framework;
 using NDbUnit.Core;
 using NDbUnit.Postgresql;
 using NDbUnit.Test.Common;
 using Npgsql;
+using NUnit.Framework;
 
 namespace NDbUnit.Test.Postgresql
 {

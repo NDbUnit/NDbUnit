@@ -95,13 +95,9 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Gallio, Version=3.1.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
+    <Reference Include="MbUnit, Version=3.2.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Lib\Gallio.dll</HintPath>
-    </Reference>
-    <Reference Include="MbUnit, Version=3.1.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Lib\MbUnit.dll</HintPath>
+      <HintPath>..\Lib\MbUnit.dll</HintPath>
     </Reference>
     <Reference Include="MySql.Data, Version=1.0.10.1, Culture=neutral, PublicKeyToken=c5687fc88969c44d">
       <SpecificVersion>False</SpecificVersion>
@@ -111,9 +107,12 @@
     <Reference Include="Npgsql">
       <HintPath>..\Lib\Npgsql.dll</HintPath>
     </Reference>
-    <Reference Include="Rhino.Mocks, Version=3.4.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Rhino.Mocks, Version=3.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Lib\Rhino.Mocks.dll</HintPath>
+      <HintPath>..\Lib\Rhino.Mocks.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -221,6 +220,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="NDbUnit.Test.build" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

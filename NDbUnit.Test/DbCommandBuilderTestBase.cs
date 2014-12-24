@@ -20,11 +20,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
-using MbUnit.Framework;
 using NDbUnit.Core;
-using NDbUnit.Core.SqlClient;
 using System.Data;
+using NUnit.Framework;
 
 namespace NDbUnit.Test.Common
 {
@@ -58,7 +56,6 @@ namespace NDbUnit.Test.Common
         }
 
         [Test]
-        [MultipleAsserts]
         public void GetDeleteAllCommand_Creates_Correct_SQL_Commands()
         {
             IList<string> commandList = new List<string>();
@@ -74,11 +71,10 @@ namespace NDbUnit.Test.Common
             }
 
             Assert.AreEqual(EXPECTED_COUNT_OF_COMMANDS, commandList.Count, string.Format("Should be {0} commands", EXPECTED_COUNT_OF_COMMANDS));
-            Assert.AreElementsEqual<string>(ExpectedDeleteAllCommands, commandList);
+            Assert.That(ExpectedDeleteAllCommands, Is.EquivalentTo(commandList));
         }
 
         [Test]
-        [MultipleAsserts]
         public void GetDeleteCommand_Creates_Correct_SQL_Commands()
         {
             IList<string> commandList = new List<string>();
@@ -94,11 +90,10 @@ namespace NDbUnit.Test.Common
             }
 
             Assert.AreEqual(EXPECTED_COUNT_OF_COMMANDS, commandList.Count, string.Format("Should be {0} commands", EXPECTED_COUNT_OF_COMMANDS));
-            Assert.AreElementsEqual<string>(ExpectedDeleteCommands, commandList);
+            Assert.That(ExpectedDeleteCommands, Is.EquivalentTo(commandList));
         }
 
         [Test]
-        [MultipleAsserts]
         public void GetInsertCommand_Creates_Correct_SQL_Commands()
         {
             DataSet ds = _commandBuilder.GetSchema();
@@ -114,11 +109,10 @@ namespace NDbUnit.Test.Common
             }
 
             Assert.AreEqual(EXPECTED_COUNT_OF_COMMANDS, commandList.Count, string.Format("Should be {0} commands", EXPECTED_COUNT_OF_COMMANDS));
-            Assert.AreElementsEqual<string>(ExpectedInsertCommands, commandList);
+            Assert.That(ExpectedInsertCommands, Is.EquivalentTo(commandList));
         }
 
         [Test]
-        [MultipleAsserts]
         public void GetInsertIdentityCommand_Creates_Correct_SQL_Commands()
         {
             IList<string> commandList = new List<string>();
@@ -134,11 +128,10 @@ namespace NDbUnit.Test.Common
             }
 
             Assert.AreEqual(EXPECTED_COUNT_OF_COMMANDS, commandList.Count, string.Format("Should be {0} commands", EXPECTED_COUNT_OF_COMMANDS));
-            Assert.AreElementsEqual<string>(ExpectedInsertIdentityCommands, commandList);
+            Assert.That(ExpectedInsertIdentityCommands, Is.EquivalentTo(commandList));
         }
 
         [Test]
-        [MultipleAsserts]
         public void GetSchema_Contains_Proper_Tables()
         {
             IDbCommandBuilder builder = GetDbCommandBuilder();
@@ -155,7 +148,7 @@ namespace NDbUnit.Test.Common
             }
 
             Assert.AreEqual(EXPECTED_COUNT_OF_COMMANDS, schema.Tables.Count, string.Format("Should be {0} Tables in dataset", EXPECTED_COUNT_OF_COMMANDS));
-            Assert.AreElementsEqual<string>(ExpectedDataSetTableNames, schemaTables);
+            Assert.That(ExpectedDataSetTableNames, Is.EquivalentTo(schemaTables));
         }
 
         [Test]
@@ -174,7 +167,6 @@ namespace NDbUnit.Test.Common
         }
 
         [Test]
-        [MultipleAsserts]
         public void GetSelectCommand_Creates_Correct_SQL_Commands()
         {
             IList<string> commandList = new List<string>();
@@ -189,11 +181,10 @@ namespace NDbUnit.Test.Common
             }
 
             Assert.AreEqual(EXPECTED_COUNT_OF_COMMANDS, commandList.Count, string.Format("Should be {0} commands", EXPECTED_COUNT_OF_COMMANDS));
-            Assert.AreElementsEqual<string>(ExpectedSelectCommands, commandList);
+            Assert.That(ExpectedSelectCommands, Is.EquivalentTo(commandList));
         }
 
         [Test]
-        [MultipleAsserts]
         public void GetUpdateCommand_Creates_Correct_SQL_Commands()
         {
             IList<string> commandList = new List<string>();
@@ -209,7 +200,7 @@ namespace NDbUnit.Test.Common
             }
 
             Assert.AreEqual(EXPECTED_COUNT_OF_COMMANDS, commandList.Count, string.Format("Should be {0} commands", EXPECTED_COUNT_OF_COMMANDS));
-            Assert.AreElementsEqual<string>(ExpectedUpdateCommands, commandList);
+            Assert.That(ExpectedUpdateCommands, Is.EquivalentTo(commandList));
         }
 
         protected abstract IDbCommandBuilder GetDbCommandBuilder();

@@ -19,10 +19,10 @@
  */
 
 using System;
-using MbUnit.Framework;
 using NDbUnit.Core.SqlServerCe;
 using System.Data;
 using System.Data.SqlServerCe;
+using NUnit.Framework;
 
 namespace NDbUnit.Test.SqlServerCe
 {

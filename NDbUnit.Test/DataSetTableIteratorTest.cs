@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MbUnit.Framework;
+﻿using System.Collections.Generic;
 using NDbUnit.Core;
 using System.Data;
+using NUnit.Framework;
 
 namespace NDbUnit.Test
 {
@@ -16,7 +14,7 @@ namespace NDbUnit.Test
 
         private DataSetTableIterator _reverseIterator;
 
-        [FixtureSetUp]
+        [TestFixtureSetUp]
         public void _TestFixtureSetup()
         {
             DataSet dataSet = new DataSet();
@@ -29,7 +27,6 @@ namespace NDbUnit.Test
         }
 
         [Test]
-        [MultipleAsserts]
         public void Forward_Iterator_Return_Tables_In_Proper_Order()
         {
             List<string> items = new List<string>();
@@ -47,7 +44,7 @@ namespace NDbUnit.Test
         [Test]
         public void Default_Iterator_is_Same_as_Forward_Iterator()
         {
-            Assert.AreElementsEqual(_forwardIterator, _defaultIterator);
+            Assert.That(_forwardIterator, Is.EquivalentTo(_defaultIterator));
         }
 
         [Test]
@@ -62,7 +59,7 @@ namespace NDbUnit.Test
 
             forwardItems.Reverse();
 
-            Assert.AreElementsEqual(forwardItems, _reverseIterator);
+            Assert.That(forwardItems, Is.EquivalentTo(_reverseIterator));
         }
 
     }

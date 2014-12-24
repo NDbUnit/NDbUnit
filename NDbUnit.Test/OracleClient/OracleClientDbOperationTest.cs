@@ -19,12 +19,10 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using NDbUnit.Test.Common;
 using NDbUnit.OracleClient;
 using System.Data;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace NDbUnit.Test.OracleClient
 {

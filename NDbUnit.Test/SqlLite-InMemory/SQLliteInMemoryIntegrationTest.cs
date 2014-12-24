@@ -18,14 +18,13 @@
  *
  */
 
-using System;
-using MbUnit.Framework;
 using NDbUnit.Core.SqlLite;
 using System.Data.SQLite;
 using System.Data;
 using System.IO;
 using NDbUnit.Core;
 using System.Diagnostics;
+using NUnit.Framework;
 
 namespace NDbUnit.Test.SqlLite_InMemory
 {
@@ -34,7 +33,7 @@ namespace NDbUnit.Test.SqlLite_InMemory
     {
         private SQLiteConnection _connection;
 
-        [FixtureSetUp]
+        [TestFixtureSetUp]
         public void _TestFixtureSetUp()
         {
             _connection = new SQLiteConnection(DbConnection.SqlLiteInMemConnectionString);
@@ -42,7 +41,6 @@ namespace NDbUnit.Test.SqlLite_InMemory
         }
 
         [Test]
-        [MultipleAsserts]
         public void Can_Get_Data_From_In_Memory_Instance()
         {
             var database = new SqlLiteDbUnitTest(_connection);

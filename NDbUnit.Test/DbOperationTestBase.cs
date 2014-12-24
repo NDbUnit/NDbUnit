@@ -20,13 +20,9 @@
 
 using System;
 using System.Data;
-using System.Data.SqlServerCe;
-using NDbUnit.Core.SqlServerCe;
-using MbUnit.Framework;
 using NDbUnit.Core;
-using System.Data.SqlClient;
-using NDbUnit.Core.SqlClient;
 using System.IO;
+using NUnit.Framework;
 
 namespace NDbUnit.Test.Common
 {
@@ -40,7 +36,7 @@ namespace NDbUnit.Test.Common
 
         protected string _xmlFile;
 
-        [FixtureSetUp]
+        [TestFixtureSetUp]
         public void _FixtureSetUp()
         {
             _commandBuilder = GetCommandBuilder();
