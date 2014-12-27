@@ -11,9 +11,9 @@ DROP TABLE public."Role";
 DROP SCHEMA public;
 */
 
-CREATE SCHEMA public;
+--CREATE SCHEMA public;
 
-COMMENT ON SCHEMA public IS 'standard public schema';
+--COMMENT ON SCHEMA public IS 'standard public schema';
 
 
 SET search_path = public, pg_catalog;
