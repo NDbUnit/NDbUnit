@@ -1,6 +1,8 @@
 DROP DATABASE IF EXISTS `testdb`;
 CREATE DATABASE `testdb`;
 
+USE `testdb`;
+
 SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TABLE IF EXISTS `testdb`.`Role`;
