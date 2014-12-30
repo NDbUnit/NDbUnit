@@ -20,11 +20,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
-using NDbUnit.Core;
-using System.Data.OracleClient;
 using System.Data;
 using System.Data.Common;
+using NDbUnit.Core;
+using Oracle.DataAccess.Client;
 
 namespace NDbUnit.OracleClient
 {

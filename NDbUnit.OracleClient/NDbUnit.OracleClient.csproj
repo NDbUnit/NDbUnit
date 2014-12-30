@@ -55,8 +55,11 @@
     <DocumentationFile>bin\Release\NDbUnit.OracleClient.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Oracle.DataAccess, Version=2.121.2.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\ORA-ODPNET\Oracle.DataAccess.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Data.OracleClient" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>

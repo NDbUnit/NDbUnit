@@ -10,5 +10,6 @@ psql --user=postgres --no-password --command="CREATE DATABASE testdb;"
 psql --user=postgres --no-password --dbname=testdb --file="%APPVEYOR_BUILD_FOLDER%\NDbUnit.Test\Scripts\postgres-testdb-create.sql"
 
 rem ORACLE XE setup *****
-%ORACLE_HOME%\bin\sqlplus ....
+rem *** DISABLED UNTIL APPVEYOR SUPPORTS ORA XE ON CI SERVERS ***
+rem %ORACLE_HOME%\bin\sqlplus xdba/xdba @"%APPVEYOR_BUILD_FOLDER%\NDbUnit.Test\Scripts\oracle-testdb-create.sql"
 

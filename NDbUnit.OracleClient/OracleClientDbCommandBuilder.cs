@@ -19,17 +19,14 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Data.OracleClient;
 using System.Data;
+using System.Text;
 using NDbUnit.Core;
-using System.Data.Common;
-using System.Collections;
+using Oracle.DataAccess.Client;
 
 namespace NDbUnit.OracleClient
 {
-    public class OracleClientDbCommandBuilder : NDbUnit.Core.DbCommandBuilder
+    public class OracleClientDbCommandBuilder : DbCommandBuilder
     {
         private OracleConnection _oraDbConnection;
 
@@ -103,7 +100,7 @@ namespace NDbUnit.OracleClient
 
         protected override IDataParameter CreateNewSqlParameter(int index, DataRow dataRow)
         {
-            return new OracleParameter("p" + index, (System.Data.OracleClient.OracleType)dataRow["ProviderType"],
+            return new OracleParameter("p" + index, (Oracle.DataAccess.Client.OracleDbType)dataRow["ProviderType"],
                                       (int)dataRow["ColumnSize"], (string)dataRow["ColumnName"]);
         }
 
