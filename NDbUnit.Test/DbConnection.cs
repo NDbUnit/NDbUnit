@@ -19,47 +19,108 @@
  */
 
 using System.Configuration;
+using System.Runtime.InteropServices;
+using Gallio.Runtime.Extensibility.Schema;
+
 namespace NDbUnit.Test
 {
     public class DbConnection
     {
+        private static string _targetConfigFilename = "NDbUnit.Test.dll.config";
+        private static string _activeConfigSourceFilename;
+        private static bool _isInitialized;
+
+        private static void Init()
+        {
+            if (_isInitialized)
+                return;
+
+            _activeConfigSourceFilename = BuildActiveConfigSourceFilename();
+
+            if (System.IO.File.Exists(_activeConfigSourceFilename))
+            {
+                System.IO.File.Copy(_activeConfigSourceFilename, _targetConfigFilename, true);
+            }
+
+            _isInitialized = true;
+        }
+
+        private static string BuildActiveConfigSourceFilename()
+        {
+            var computerName = System.Environment.GetEnvironmentVariable("COMPUTERNAME");
+            return string.Format("app.config.{0}", computerName);
+        }
+
+
         public static string PostgresqlConnectionString
         {
-            get { return ConfigurationManager.ConnectionStrings["PostgresqlConnectionString"].ConnectionString; }
+            get
+            {
+                Init();
+                return ConfigurationManager.ConnectionStrings["PostgresqlConnectionString"].ConnectionString;
+            }
         }
         public static string MySqlConnectionString
         {
-            get { return ConfigurationManager.ConnectionStrings["MysqlConnectionString"].ConnectionString; }
+            get
+            {
+                Init();
+                return ConfigurationManager.ConnectionStrings["MysqlConnectionString"].ConnectionString;
+            }
         }
 
         public static string OleDbConnectionString
         {
-            get { return ConfigurationManager.ConnectionStrings["OleDbConnectionString"].ConnectionString; }
+            get
+            {
+                Init();
+                return ConfigurationManager.ConnectionStrings["OleDbConnectionString"].ConnectionString;
+            }
         }
 
         public static string SqlCeConnectionString
         {
-            get { return ConfigurationManager.ConnectionStrings["SqlCeConnectionString"].ConnectionString; }
+            get
+            {
+                Init();
+                return ConfigurationManager.ConnectionStrings["SqlCeConnectionString"].ConnectionString;
+            }
         }
 
         public static string SqlConnectionString
         {
-            get { return ConfigurationManager.ConnectionStrings["SqlConnectionString"].ConnectionString; }
+            get
+            {
+                Init();
+                return ConfigurationManager.ConnectionStrings["SqlConnectionString"].ConnectionString;
+            }
         }
 
         public static string SqlLiteConnectionString
         {
-            get { return ConfigurationManager.ConnectionStrings["SqlLiteConnectionString"].ConnectionString; }
+            get
+            {
+                Init();
+                return ConfigurationManager.ConnectionStrings["SqlLiteConnectionString"].ConnectionString;
+            }
         }
 
         public static string SqlLiteInMemConnectionString
         {
-            get { return ConfigurationManager.ConnectionStrings["SqlLiteInMemConnectionString"].ConnectionString; }
+            get
+            {
+                Init();
+                return ConfigurationManager.ConnectionStrings["SqlLiteInMemConnectionString"].ConnectionString;
+            }
         }
 
         public static string OracleClientConnectionString
         {
-            get { return ConfigurationManager.ConnectionStrings["OracleClientConnectionString"].ConnectionString; }
+            get
+            {
+                Init();
+                return ConfigurationManager.ConnectionStrings["OracleClientConnectionString"].ConnectionString;
+            }
         }
     }
 }
