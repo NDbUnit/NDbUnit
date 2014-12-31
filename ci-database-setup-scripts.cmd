@@ -7,13 +7,13 @@ rem MySQL setup *****
 "%APPVEYOR_BUILD_FOLDER%\tools\MySql\bin\mysql" --user=root --password=Password12! < "%APPVEYOR_BUILD_FOLDER%\NDbUnit.Test\Scripts\mysql-testdb-create.sql"
 
 rem PostgreSQL setup *****
-rem Since postgres doesn't support passing passwords via the command-line, have to copy the pgpass.conf file into the user's folder so it can be found when invoking psql
+rem Since postgres doesn't support passing passwords via the command-line, have to copy the pgpass.conf file into the _postgres_ user's folder so it can be found when invoking psql as user=postgres
 
-rem first create the folder so the copy will succeeed...
-mkdir %APPDATA%\postgresql
+rem first create the folder so the subsequent copy will be certain to succeeed...
+mkdir c:\users\postgresql\AppData\Roaming\postgresql
 
 rem ...then do the copy...
-copy "%APPVEYOR_BUILD_FOLDER%\tools\Postgres\pgpass.conf" %APPDATA%\postgresql\pgpass.conf
+copy "%APPVEYOR_BUILD_FOLDER%\tools\Postgres\pgpass.conf" c:\users\postgresql\AppData\Romaing\postgresql\pgpass.conf
 
 rem NOTE: postgres won't support a CREATE DATABASE call inside a larger script, so CREATE has to be its own invocation...
 "%APPVEYOR_BUILD_FOLDER%\tools\Postgres\bin\psql" --username=postgres --no-password --command="CREATE DATABASE testdb;"
