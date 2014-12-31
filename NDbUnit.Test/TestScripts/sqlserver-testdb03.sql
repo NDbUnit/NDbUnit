@@ -1,0 +1,1 @@
+CREATE SCHEMA [OtherSchema] AUTHORIZATION [db_owner]
