@@ -154,7 +154,7 @@ namespace NDbUnit.Test
             {
                 //you cannot connect to the DB you're planning to create until AFTER you create it, so you must first connect to
                 //something 'safe' (like 'master') when executing any DB-create or DB drop scripts!
-                var db = new NDbUnit.Core.SqlClient.SqlDbUnitTest("Data Source=.;Database=master;Trusted_Connection=True");
+                var db = new NDbUnit.Core.SqlClient.SqlDbUnitTest(DbConnection.SqlScriptTestsConnectionString);
                 db.Scripts.AddSingle("..\\..\\TestScripts\\sqlserver-drop-create-testdb.sql");
                 db.ExecuteScripts();
 

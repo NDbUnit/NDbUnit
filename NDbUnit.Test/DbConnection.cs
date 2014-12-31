@@ -26,7 +26,7 @@ namespace NDbUnit.Test
 {
     public class DbConnection
     {
-        private static string _targetConfigFilename = "NDbUnit.Test.dll.config";
+        private const string TargetConfigFilename = "NDbUnit.Test.dll.config";
         private static string _activeConfigSourceFilename;
         private static bool _isInitialized;
 
@@ -39,7 +39,7 @@ namespace NDbUnit.Test
 
             if (System.IO.File.Exists(_activeConfigSourceFilename))
             {
-                System.IO.File.Copy(_activeConfigSourceFilename, _targetConfigFilename, true);
+                System.IO.File.Copy(_activeConfigSourceFilename, TargetConfigFilename, true);
             }
 
             _isInitialized = true;
@@ -93,6 +93,15 @@ namespace NDbUnit.Test
             {
                 Init();
                 return ConfigurationManager.ConnectionStrings["SqlConnectionString"].ConnectionString;
+            }
+        }
+
+        public static string SqlScriptTestsConnectionString
+        {
+            get
+            {
+                Init();
+                return ConfigurationManager.ConnectionStrings["SqlScriptTestsConnectionString"].ConnectionString;
             }
         }
 
