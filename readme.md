@@ -4,7 +4,7 @@
 
 NDbUnit may be used to increase repeat-ability in unit tests that interact with a database by ensuring that the database's state is consistent across execution of tests. NDbUnit does this by allowing the unit test to perform an operation on a dataset before or after the execution of a test, thus ensuring a consistent state.
 
-To better understand how NDbUnit works, check out the [Quick Start Guide](https://github.com/NDbUnit/NDbUnit/wiki/QuickStart)
+To better understand how NDbUnit works, check out the [Quick Start Guide](https://github.com/NDbUnit/NDbUnit/wiki/Quick-Start-Guide)
 
 The easiest way to get NDbUnit is via [the NuGet Package Manager](http://nuget.org) from right inside Visual Studio!
 
