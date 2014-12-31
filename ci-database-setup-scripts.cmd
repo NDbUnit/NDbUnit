@@ -6,8 +6,8 @@ rem MySQL setup *****
 
 rem PostgreSQL setup *****
 rem NOTE: postgres won't support a CREATE DATABASE call inside a larger script, so CREATE has to be its own invocation...
-"%APPVEYOR_BUILD_FOLDER%\tools\Postgres\bin\psql" --username=postgres --no-password --command="CREATE DATABASE testdb;"
-"%APPVEYOR_BUILD_FOLDER%\tools\Postgres\bin\psql" --username=postgres --no-password --dbname=testdb --file="%APPVEYOR_BUILD_FOLDER%\NDbUnit.Test\Scripts\postgres-testdb-create.sql"
+rem "%APPVEYOR_BUILD_FOLDER%\tools\Postgres\bin\psql" --username=postgres --no-password --command="CREATE DATABASE testdb;"
+rem "%APPVEYOR_BUILD_FOLDER%\tools\Postgres\bin\psql" --username=postgres --no-password --dbname=testdb --file="%APPVEYOR_BUILD_FOLDER%\NDbUnit.Test\Scripts\postgres-testdb-create.sql"
 
 rem ORACLE XE setup *****
 rem *** DISABLED UNTIL APPVEYOR SUPPORTS ORA XE ON CI SERVERS ***
