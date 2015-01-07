@@ -1,5 +1,7 @@
 #NDbUnit is a .NET library for managing database state during unit testing.#
 
+[![Build status](https://ci.appveyor.com/api/projects/status/a733dsuvlbr6eyd0?svg=true)](https://ci.appveyor.com/project/sbohlen/ndbunit)
+
 [![Project Stats](https://www.openhub.net/p/ndbunit/widgets/project_thin_badge.gif)](https://www.openhub.net/p/ndbunit)
 
 NDbUnit may be used to increase repeat-ability in unit tests that interact with a database by ensuring that the database's state is consistent across execution of tests. NDbUnit does this by allowing the unit test to perform an operation on a dataset before or after the execution of a test, thus ensuring a consistent state.
