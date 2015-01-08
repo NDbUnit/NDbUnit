@@ -463,5 +463,9 @@ namespace NDbUnit.Core
             return _xmlSchemaFile.ToLower() != xmlSchemaFile.ToLower();
         }
 
+        public void Dispose()
+        {
+            ConnectionManager.ReleaseConnection();
+        }
     }
 }

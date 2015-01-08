@@ -28,7 +28,7 @@ namespace NDbUnit.Core
     /// <summary>
     /// Represents a unit test database initialization operation.
     /// </summary>
-    public interface INDbUnitTest
+    public interface INDbUnitTest : IDisposable
     {
         /// <summary>
         /// Occurs after DbOperation has completed.
