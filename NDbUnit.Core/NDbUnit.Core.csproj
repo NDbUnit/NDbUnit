@@ -107,6 +107,7 @@
     <Compile Include="DbCommandBuilder.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DbConnectionManager.cs" />
     <Compile Include="DbOperation.cs">
       <SubType>Code</SubType>
     </Compile>
