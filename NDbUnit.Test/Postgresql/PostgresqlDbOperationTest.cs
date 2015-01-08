@@ -33,7 +33,7 @@ namespace NDbUnit.Test.Postgresql
     {
         protected override IDbCommandBuilder GetCommandBuilder()
         {
-            return new PostgresqlDbCommandBuilder(DbConnection.PostgresqlConnectionString);
+            return new PostgresqlDbCommandBuilder(new DbConnectionManager<NpgsqlConnection>(DbConnection.PostgresqlConnectionString));
         }
 
         protected override IDbOperation GetDbOperation()

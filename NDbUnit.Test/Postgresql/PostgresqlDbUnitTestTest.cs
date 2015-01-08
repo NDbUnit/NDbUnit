@@ -23,6 +23,7 @@ using NDbUnit.Core;
 using System.Data;
 using System.IO;
 using NDbUnit.Postgresql;
+using Npgsql;
 using NUnit.Framework;
 
 namespace NDbUnit.Test.Postgresql
@@ -63,7 +64,7 @@ namespace NDbUnit.Test.Postgresql
             {
             }
 
-            protected override IDbCommandBuilder CreateDbCommandBuilder(string connectionString)
+            protected override IDbCommandBuilder CreateDbCommandBuilder(DbConnectionManager<NpgsqlConnection> connectionManager )
             {
                 return _mockDbCommandBuilder;
             }

@@ -21,6 +21,7 @@
 using System.Collections.Generic;
 using NDbUnit.Core;
 using NDbUnit.Postgresql;
+using Npgsql;
 using NUnit.Framework;
 
 namespace NDbUnit.Test.Postgresql
@@ -120,7 +121,7 @@ namespace NDbUnit.Test.Postgresql
 
         protected override IDbCommandBuilder GetDbCommandBuilder()
         {
-            return new PostgresqlDbCommandBuilder(DbConnection.PostgresqlConnectionString);
+            return new PostgresqlDbCommandBuilder(new DbConnectionManager<NpgsqlConnection>(DbConnection.PostgresqlConnectionString));
         }
 
         protected override string GetXmlSchemaFilename()

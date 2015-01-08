@@ -26,9 +26,9 @@ using System.Data;
 
 namespace NDbUnit.Postgresql
 {
-    public class PostgresqlDbUnitTest : NDbUnitTest
+    public class PostgresqlDbUnitTest : NDbUnitTest<NpgsqlConnection>
     {
-        public PostgresqlDbUnitTest(IDbConnection connection)
+        public PostgresqlDbUnitTest(NpgsqlConnection connection)
             : base(connection)
         {
         }
@@ -45,16 +45,9 @@ namespace NDbUnit.Postgresql
             return oda;
         }
 
-        protected override IDbCommandBuilder CreateDbCommandBuilder(string connectionString)
+        protected override IDbCommandBuilder CreateDbCommandBuilder(DbConnectionManager<NpgsqlConnection> connectionManager )
         {
-            var commandBuilder = new PostgresqlDbCommandBuilder(connectionString);
-            commandBuilder.CommandTimeOutSeconds = this.CommandTimeOut;
-            return commandBuilder;
-        }
-
-        protected override IDbCommandBuilder CreateDbCommandBuilder(IDbConnection connection)
-        {
-            var commandBuilder = new PostgresqlDbCommandBuilder(connection);
+            var commandBuilder = new PostgresqlDbCommandBuilder(connectionManager);
             commandBuilder.CommandTimeOutSeconds = this.CommandTimeOut;
             return commandBuilder;
         }

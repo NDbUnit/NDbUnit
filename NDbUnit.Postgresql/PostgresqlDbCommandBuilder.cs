@@ -29,25 +29,11 @@ using NpgsqlTypes;
 
 namespace NDbUnit.Postgresql
 {
-    public class PostgresqlDbCommandBuilder : NDbUnit.Core.DbCommandBuilder
+    public class PostgresqlDbCommandBuilder : NDbUnit.Core.DbCommandBuilder<NpgsqlConnection>
     {
-        private NpgsqlConnection _postgreeDbConnection;
-
-        public PostgresqlDbCommandBuilder(string connectionString)
-            : base(connectionString)
+        public PostgresqlDbCommandBuilder(DbConnectionManager<NpgsqlConnection> connectionManager)
+            : base(connectionManager)
         {
-            _postgreeDbConnection = new NpgsqlConnection(connectionString);
-        }
-
-        public PostgresqlDbCommandBuilder(IDbConnection connection)
-            : base(connection)
-        {
-            _postgreeDbConnection = (NpgsqlConnection)connection;
-        }
-
-        public new NpgsqlConnection Connection
-        {
-            get { return _postgreeDbConnection; }
         }
 
         public override string QuotePrefix
