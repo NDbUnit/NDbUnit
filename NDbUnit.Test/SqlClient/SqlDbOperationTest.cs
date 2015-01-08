@@ -22,6 +22,7 @@ using System;
 using NDbUnit.Core.SqlClient;
 using System.Data;
 using System.Data.SqlClient;
+using NDbUnit.Core;
 using NUnit.Framework;
 
 namespace NDbUnit.Test.SqlClient
@@ -31,7 +32,7 @@ namespace NDbUnit.Test.SqlClient
     {
         protected override NDbUnit.Core.IDbCommandBuilder GetCommandBuilder()
         {
-            return new SqlDbCommandBuilder(DbConnection.SqlConnectionString);
+            return new SqlDbCommandBuilder(new DbConnectionManager<SqlConnection>(DbConnection.SqlConnectionString));
         }
 
         protected override NDbUnit.Core.IDbOperation GetDbOperation()

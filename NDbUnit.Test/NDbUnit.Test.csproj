@@ -163,6 +163,13 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="DbUnitTestTestBase.cs" />
+    <Compile Include="ScriptManagerTest.cs" />
+    <Compile Include="SqlClient\DataSetAppendXmlTest.cs" />
+    <Compile Include="SqlClient\SchemaPrefixTest.cs" />
+    <Compile Include="SqlClient\SqlDbCommandBuilderTest.cs" />
+    <Compile Include="SqlClient\SqlDbOperationTest.cs" />
+    <Compile Include="SqlClient\SqlDbUnitIntegrationTest.cs" />
+    <Compile Include="SqlClient\SqlDbUnitTestTest.cs" />
     <Compile Include="SqlLite-InMemory\SQLliteInMemoryIntegrationTest.cs" />
     <Compile Include="SqlLite\SqlLiteDbUnitIntegrationTest.cs" />
     <Compile Include="SqlLite\SqlLiteUnitTestTest.cs" />

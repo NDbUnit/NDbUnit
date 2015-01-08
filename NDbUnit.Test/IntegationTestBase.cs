@@ -30,6 +30,7 @@ namespace NDbUnit.Test
     [NUnit.Framework.TestFixture]
     public abstract class IntegationTestBase
     {
+        //[NUnit.Framework.Ignore]
         [NUnit.Framework.Test]
         public void Delete_Operation_Matches_Expected_Data()
         {
@@ -48,8 +49,11 @@ namespace NDbUnit.Test
             DataSet postOperation = database.GetDataSetFromDb();
 
             Assert.That(preOperation, Is.EqualTo(postOperation).Using(new StructuralEqualityComparer<DataSet>()));
+
+            database.Dispose();
         }
 
+        //[NUnit.Framework.Ignore]
         [NUnit.Framework.Test]
         public void InsertIdentity_Operation_Matches_Expected_Data()
         {
@@ -68,9 +72,11 @@ namespace NDbUnit.Test
             DataSet postOperation = database.GetDataSetFromDb();
 
             Assert.That(preOperation, Is.EqualTo(postOperation).Using(new StructuralEqualityComparer<DataSet>()));
+            database.Dispose();
 
         }
 
+        //[NUnit.Framework.Ignore]
         [NUnit.Framework.Test]
         public void Refresh_Operation_Matches_Expected_Data()
         {
@@ -92,9 +98,11 @@ namespace NDbUnit.Test
             DataSet postOperation = database.GetDataSetFromDb();
 
             Assert.That(preOperation, Is.EqualTo(postOperation).Using(new StructuralEqualityComparer<DataSet>()));
+            database.Dispose();
 
         }
 
+        //[NUnit.Framework.Ignore]
         [NUnit.Framework.Test]
         public void Update_Operation_Matches_Expected_Data()
         {
@@ -116,6 +124,7 @@ namespace NDbUnit.Test
             DataSet postOperation = database.GetDataSetFromDb();
 
             Assert.That(preOperation, Is.EqualTo(postOperation).Using(new StructuralEqualityComparer<DataSet>()));
+            database.Dispose();
 
         }
 

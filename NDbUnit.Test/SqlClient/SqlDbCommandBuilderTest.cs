@@ -19,6 +19,7 @@
  */
 
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using NDbUnit.Core.SqlClient;
 using NDbUnit.Core;
 using NUnit.Framework;
@@ -120,7 +121,7 @@ namespace NDbUnit.Test.SqlClient
 
         protected override IDbCommandBuilder GetDbCommandBuilder()
         {
-            return new SqlDbCommandBuilder(DbConnection.SqlConnectionString);
+            return new SqlDbCommandBuilder(new DbConnectionManager<SqlConnection>(DbConnection.SqlConnectionString));
         }
 
         protected override string GetXmlSchemaFilename()

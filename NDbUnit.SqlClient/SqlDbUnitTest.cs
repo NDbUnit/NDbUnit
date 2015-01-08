@@ -39,9 +39,9 @@ namespace NDbUnit.Core.SqlClient
     /// </code>
     /// <seealso cref="INDbUnitTest"/>
     /// </example>
-    public class SqlDbUnitTest : NDbUnitTest
+    public class SqlDbUnitTest : NDbUnitTest<SqlConnection>
     {
-        public SqlDbUnitTest(IDbConnection connection)
+        public SqlDbUnitTest(SqlConnection connection)
             : base(connection)
         {
         }
@@ -56,19 +56,19 @@ namespace NDbUnit.Core.SqlClient
             return new SqlDataAdapter((SqlCommand)command);
         }
 
-        protected override IDbCommandBuilder CreateDbCommandBuilder(string connectionString)
+        protected override IDbCommandBuilder CreateDbCommandBuilder(DbConnectionManager<SqlConnection> connectionManager )
         {
-            SqlDbCommandBuilder commandBuilder = new SqlDbCommandBuilder(connectionString);
+            SqlDbCommandBuilder commandBuilder = new SqlDbCommandBuilder(connectionManager);
             commandBuilder.CommandTimeOutSeconds = this.CommandTimeOut;
             return commandBuilder;
         }
 
-        protected override IDbCommandBuilder CreateDbCommandBuilder(IDbConnection connection)
-        {
-            SqlDbCommandBuilder commandBuilder = new SqlDbCommandBuilder(connection);
-            commandBuilder.CommandTimeOutSeconds = this.CommandTimeOut;
-            return commandBuilder;
-        }
+        //protected override IDbCommandBuilder CreateDbCommandBuilder(IDbConnection connection)
+        //{
+        //    SqlDbCommandBuilder commandBuilder = new SqlDbCommandBuilder(connection);
+        //    commandBuilder.CommandTimeOutSeconds = this.CommandTimeOut;
+        //    return commandBuilder;
+        //}
 
         protected override IDbOperation CreateDbOperation()
         {

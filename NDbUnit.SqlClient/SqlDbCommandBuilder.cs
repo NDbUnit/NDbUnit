@@ -25,17 +25,17 @@ using System;
 
 namespace NDbUnit.Core.SqlClient
 {
-    public class SqlDbCommandBuilder : DbCommandBuilder
+    public class SqlDbCommandBuilder : DbCommandBuilder<SqlConnection>
     {
-        public SqlDbCommandBuilder(IDbConnection connection)
-            : base(connection)
+        public SqlDbCommandBuilder(DbConnectionManager<SqlConnection> connectionManager)
+            : base(connectionManager)
         {
         }
 
-        public SqlDbCommandBuilder(string connectionString)
-            : base(connectionString)
-        {
-        }
+        //public SqlDbCommandBuilder(string connectionString)
+        //    : base(connectionString)
+        //{
+        //}
 
         public override string QuotePrefix
         {
