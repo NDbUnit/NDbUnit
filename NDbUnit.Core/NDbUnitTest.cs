@@ -38,11 +38,11 @@ namespace NDbUnit.Core
     /// <summary>
     /// The base class implementation of all NDbUnit unit test data adapters.
     /// </summary>
-    public abstract class NDbUnitTest : INDbUnitTest
+    public abstract class NDbUnitTest<TDbConnection> : INDbUnitTest where TDbConnection : class, IDbConnection, new()
     {
-        protected IDbConnection Connection;
+        //protected IDbConnection Connection;
 
-        private readonly string _connectionString;
+        //private readonly string _connectionString;
 
         private DataSet _dataSet;
 
@@ -52,7 +52,9 @@ namespace NDbUnit.Core
 
         private bool _initialized;
 
-        private readonly bool _passedconnection;
+        //private readonly bool _passedconnection;
+
+        protected DbConnectionManager<TDbConnection> ConnectionManager;
 
         protected ScriptManager ScriptManager;
 
@@ -68,16 +70,14 @@ namespace NDbUnit.Core
 
         protected NDbUnitTest(string connectionString)
         {
-            _connectionString = connectionString;
+            ConnectionManager = new DbConnectionManager<TDbConnection>(connectionString);
             _dbOperation = CreateDbOperation();
 
         }
 
-        protected NDbUnitTest(IDbConnection connection)
+        protected NDbUnitTest(TDbConnection connection)
         {
-            _passedconnection = true;
-            Connection = connection;
-            _connectionString = connection.ConnectionString;
+            ConnectionManager = new DbConnectionManager<TDbConnection>(connection);
             _dbOperation = CreateDbOperation();
 
         }
@@ -126,21 +126,20 @@ namespace NDbUnit.Core
 
         public virtual void ExecuteScripts()
         {
-            if (Connection == null)
-                Connection = GetDbCommandBuilder().Connection;
+            var connection = ConnectionManager.GetConnection();
 
-            if (Connection.State != ConnectionState.Open)
-                Connection.Open();
+            if (connection.State != ConnectionState.Open)
+                connection.Open();
 
             foreach (string ddlText in ScriptManager.ScriptContents)
             {
-                IDbCommand command = Connection.CreateCommand();
+                IDbCommand command = connection.CreateCommand();
                 command.CommandText = ddlText;
                 command.ExecuteNonQuery();
             }
 
-            if (Connection.State != ConnectionState.Closed)
-                Connection.Close();
+            if (connection.State != ConnectionState.Closed)
+                connection.Close();
         }
 
         public DataSet GetDataSetFromDb(StringCollection tableNames)
@@ -284,13 +283,20 @@ namespace NDbUnit.Core
             }
             finally
             {
-                if (!_passedconnection)
+                if (dbTransaction != null)
+                {
+                    dbTransaction.Dispose();
+                }
+
+                if (!ConnectionManager.HasExternallyManagedConnection)
                 {
                     if (ConnectionState.Open == dbConnection.State)
                     {
                         dbConnection.Close();
                     }
                 }
+
+                ConnectionManager.ReleaseConnection();
             }
         }
 
@@ -321,7 +327,7 @@ namespace NDbUnit.Core
         private void ValidateNamespace(DataSet dsSchema)
         {
             string expectedNamespace = string.Format("{0}.xsd", Path.Combine(SCHEMA_NAMESPACE_PREFIX, dsSchema.DataSetName));
-            
+
             if (expectedNamespace != dsSchema.Namespace)
             {
                 throw new ArgumentException(string.Format("The namespace in the file '{0}' is invalid.  Expected '{1}' but was '{2}'", _xmlSchemaFile, expectedNamespace, dsSchema.Namespace));
@@ -358,24 +364,20 @@ namespace NDbUnit.Core
 
         protected abstract IDbDataAdapter CreateDataAdapter(IDbCommand command);
 
-        protected abstract IDbCommandBuilder CreateDbCommandBuilder(string connectionString);
+        //protected abstract IDbCommandBuilder CreateDbCommandBuilder(string connectionString);
 
-        protected abstract IDbCommandBuilder CreateDbCommandBuilder(IDbConnection connection);
+        //protected abstract IDbCommandBuilder CreateDbCommandBuilder(IDbConnection connection);
+        
+        protected abstract IDbCommandBuilder CreateDbCommandBuilder(DbConnectionManager<TDbConnection> connectionManager);
 
         protected abstract IDbOperation CreateDbOperation();
 
         protected IDbCommandBuilder GetDbCommandBuilder()
         {
             if (_dbCommandBuilder == null)
-
-                if (Connection == null)
-                {
-                    _dbCommandBuilder = CreateDbCommandBuilder(_connectionString);
-                }
-                else
-                {
-                    _dbCommandBuilder = CreateDbCommandBuilder(Connection);
-                }
+            {
+                _dbCommandBuilder = CreateDbCommandBuilder(ConnectionManager);
+            }
 
             return _dbCommandBuilder;
         }

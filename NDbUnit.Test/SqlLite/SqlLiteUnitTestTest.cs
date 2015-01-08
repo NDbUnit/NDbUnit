@@ -21,6 +21,7 @@
 using System.Collections.Generic;
 using NDbUnit.Core;
 using System.Data;
+using System.Data.SQLite;
 using System.IO;
 using NDbUnit.Core.SqlLite;
 using NUnit.Framework;
@@ -63,7 +64,7 @@ namespace NDbUnit.Test.SqlLite
             {
             }
 
-            protected override IDbCommandBuilder CreateDbCommandBuilder(string connectionString)
+            protected override IDbCommandBuilder CreateDbCommandBuilder(DbConnectionManager<SQLiteConnection> connectionManager )
             {
                 return _mockDbCommandBuilder;
             }

@@ -26,19 +26,19 @@ using System.Text;
 
 namespace NDbUnit.Core.SqlLite
 {
-    public class SqlLiteDbCommandBuilder : DbCommandBuilder
+    public class SqlLiteDbCommandBuilder : DbCommandBuilder<SQLiteConnection>
     {
         private new DataTable _dataTableSchema;
 
-        public SqlLiteDbCommandBuilder(string connectionString)
-            : base(connectionString)
+        public SqlLiteDbCommandBuilder(DbConnectionManager<SQLiteConnection> connectionManager )
+            : base(connectionManager)
         {
         }
 
-        public SqlLiteDbCommandBuilder(IDbConnection connection)
-            : base(connection)
-        {
-        }
+        //public SqlLiteDbCommandBuilder(IDbConnection connection)
+        //    : base(connection)
+        //{
+        //}
 
         public override string QuotePrefix
         {
@@ -214,7 +214,7 @@ namespace NDbUnit.Core.SqlLite
             sb.Append(TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix));
 
             sqlSelectCommand.CommandText = sb.ToString();
-            sqlSelectCommand.Connection = (SQLiteConnection)_sqlConnection;
+            sqlSelectCommand.Connection = (SQLiteConnection)ConnectionManager.GetConnection();
 
             try
             {

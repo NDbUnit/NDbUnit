@@ -26,7 +26,7 @@ using System.Collections;
 
 namespace NDbUnit.Core
 {
-    public abstract class DbCommandBuilder : IDbCommandBuilder
+    public abstract class DbCommandBuilder<TDbConnection> : IDbCommandBuilder where TDbConnection: class, IDbConnection, new()
     {
         private DataSet _dataSet = new DataSet();
 
@@ -36,28 +36,35 @@ namespace NDbUnit.Core
 
         private bool _initialized;
 
-        private bool _passedconnection;
+        //private bool _passedconnection;
 
-        protected IDbConnection _sqlConnection;
+        //protected IDbConnection _sqlConnection;
+
+        protected DbConnectionManager<TDbConnection> ConnectionManager; 
 
         private string _xmlSchemaFile = "";
 
-        protected DbCommandBuilder(IDbConnection connection)
+        protected DbCommandBuilder(DbConnectionManager<TDbConnection> connectionManager )
         {
-            _passedconnection = true;
-            _sqlConnection = connection;
+            ConnectionManager = connectionManager;
         }
 
-        protected DbCommandBuilder(string connectionString)
-        {
-            _sqlConnection = GetConnection(connectionString);
-        }
+        //protected DbCommandBuilder(IDbConnection connection)
+        //{
+        //    _passedconnection = true;
+        //    _sqlConnection = connection;
+        //}
+
+        //protected DbCommandBuilder(string connectionString)
+        //{
+        //    _sqlConnection = GetConnection(connectionString);
+        //}
 
         public int CommandTimeOutSeconds { get; set; }
 
         public IDbConnection Connection
         {
-            get { return _sqlConnection; }
+            get { return ConnectionManager.GetConnection(); }
         }
 
         public virtual string QuotePrefix
@@ -337,7 +344,7 @@ namespace NDbUnit.Core
             sb.Append(TableNameHelper.FormatTableName(tableName, QuotePrefix, QuoteSuffix));
 
             sqlSelectCommand.CommandText = sb.ToString();
-            sqlSelectCommand.Connection = _sqlConnection;
+            sqlSelectCommand.Connection = ConnectionManager.GetConnection();
 
             try
             {
@@ -445,13 +452,14 @@ namespace NDbUnit.Core
         protected virtual DataTable GetSchemaTable(IDbCommand sqlSelectCommand)
         {
             DataTable dataTableSchema = new DataTable();
-            bool isClosed = ConnectionState.Closed == _sqlConnection.State;
+
+            var connection = ConnectionManager.GetConnection();
 
             try
             {
-                if (isClosed)
+                if (ConnectionState.Closed == connection.State)
                 {
-                    _sqlConnection.Open();
+                    connection.Open();
                 }
 
                 IDataReader sqlDataReader = sqlSelectCommand.ExecuteReader(CommandBehavior.KeyInfo);
@@ -466,11 +474,11 @@ namespace NDbUnit.Core
             finally
             {
                 //Only close connection if connection was not passed to constructor
-                if (!_passedconnection)
+                if (!ConnectionManager.HasExternallyManagedConnection)
                 {
-                    if (_sqlConnection.State != ConnectionState.Closed)
+                    if (connection.State != ConnectionState.Closed)
                     {
-                        _sqlConnection.Close();
+                        connection.Close();
                     }
                 }
             }

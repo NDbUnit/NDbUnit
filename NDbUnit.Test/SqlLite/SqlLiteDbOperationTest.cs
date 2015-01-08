@@ -22,6 +22,7 @@ using System;
 using NDbUnit.Core.SqlLite;
 using System.Data;
 using System.Data.SQLite;
+using NDbUnit.Core;
 using NUnit.Framework;
 
 namespace NDbUnit.Test.SqlLite
@@ -31,7 +32,7 @@ namespace NDbUnit.Test.SqlLite
     {
         protected override NDbUnit.Core.IDbCommandBuilder GetCommandBuilder()
         {
-            return new SqlLiteDbCommandBuilder(DbConnection.SqlLiteConnectionString);
+            return new SqlLiteDbCommandBuilder(new DbConnectionManager<SQLiteConnection>(DbConnection.SqlLiteConnectionString));
         }
 
         protected override NDbUnit.Core.IDbOperation GetDbOperation()

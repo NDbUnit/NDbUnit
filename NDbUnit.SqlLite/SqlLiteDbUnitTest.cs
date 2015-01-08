@@ -25,14 +25,14 @@ using System.Data;
 
 namespace NDbUnit.Core.SqlLite
 {
-    public class SqlLiteDbUnitTest : NDbUnitTest
+    public class SqlLiteDbUnitTest : NDbUnitTest<SQLiteConnection>
     {
         public SqlLiteDbUnitTest(string connectionString)
             : base(connectionString)
         {
         }
 
-        public SqlLiteDbUnitTest(IDbConnection connection)
+        public SqlLiteDbUnitTest(SQLiteConnection connection)
             : base(connection)
         {
         }
@@ -42,15 +42,20 @@ namespace NDbUnit.Core.SqlLite
             return new SQLiteDataAdapter((SQLiteCommand)command);
         }
 
-        protected override IDbCommandBuilder CreateDbCommandBuilder(IDbConnection connection)
+        protected override IDbCommandBuilder CreateDbCommandBuilder(DbConnectionManager<SQLiteConnection> connectionManager)
         {
-            return new SqlLiteDbCommandBuilder(connection);
+            return new SqlLiteDbCommandBuilder(connectionManager);
         }
+        
+        //protected override IDbCommandBuilder CreateDbCommandBuilder(IDbConnection connection)
+        //{
+        //    return new SqlLiteDbCommandBuilder(connection);
+        //}
 
-        protected override IDbCommandBuilder CreateDbCommandBuilder(string connectionString)
-        {
-            return new SqlLiteDbCommandBuilder(connectionString);
-        }
+        //protected override IDbCommandBuilder CreateDbCommandBuilder(string connectionString)
+        //{
+        //    return new SqlLiteDbCommandBuilder(connectionString);
+        //}
 
         protected override IDbOperation CreateDbOperation()
         {
@@ -66,7 +71,7 @@ namespace NDbUnit.Core.SqlLite
         {
         }
 
-        public SqlLiteUnitTest(IDbConnection connection) : base(connection)
+        public SqlLiteUnitTest(SQLiteConnection connection) : base(connection)
         {
         }
     }

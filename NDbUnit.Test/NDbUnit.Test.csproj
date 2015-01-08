@@ -157,44 +157,18 @@
     </Compile>
     <Compile Include="DbOperationTestBase.cs" />
     <Compile Include="IntegationTestBase.cs" />
-    <Compile Include="Mysql\MySqlDbCommandBuilderTest.cs" />
-    <Compile Include="Mysql\MySqlDbUnitTestTest.cs" />
-    <Compile Include="Mysql\MySqlDbUnitIntegrationTest.cs" />
-    <Compile Include="OleDb\OleDbOperationTest.cs" />
-    <Compile Include="OleDb\OleDbCommandBuilderTest.cs" />
-    <Compile Include="OleDb\OleDbUnitTestTest.cs" />
-    <Compile Include="OleDb\OleDbUnitIntegrationTest.cs" />
-    <Compile Include="OracleClient\OracleClientDbCommandBuilderTest.cs" />
-    <Compile Include="OracleClient\OracleClientDbOperationTest.cs" />
-    <Compile Include="OracleClient\OracleClientDbUnitTestTest.cs" />
-    <Compile Include="Postgresql\PostgresqlDbCommandBuilderTest.cs" />
-    <Compile Include="Postgresql\PostgresqlDbOperationTest.cs" />
-    <Compile Include="Postgresql\PostgresqlDbUnitIntegrationTest.cs" />
-    <Compile Include="Postgresql\PostgresqlDbUnitTestTest.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="DbUnitTestTestBase.cs" />
-    <Compile Include="ScriptManagerTest.cs" />
-    <Compile Include="SqlClient\DataSetAppendXmlTest.cs" />
-    <Compile Include="SqlClient\SchemaPrefixTest.cs" />
-    <Compile Include="SqlClient\SqlDbUnitIntegrationTest.cs" />
     <Compile Include="SqlLite-InMemory\SQLliteInMemoryIntegrationTest.cs" />
     <Compile Include="SqlLite\SqlLiteDbUnitIntegrationTest.cs" />
     <Compile Include="SqlLite\SqlLiteUnitTestTest.cs" />
     <Compile Include="SqlLite\SqlLiteCommandBuilderTest.cs" />
-    <Compile Include="SqlServerCe\SqlCeDbCommandBuilderTest.cs" />
-    <Compile Include="SqlClient\SqlDbUnitTestTest.cs" />
-    <Compile Include="SqlClient\SqlDbCommandBuilderTest.cs" />
     <Compile Include="SqlLite\SqlLiteDbOperationTest.cs" />
-    <Compile Include="SqlClient\SqlDbOperationTest.cs" />
-    <Compile Include="SqlServerCe\SqlCeDbOperationTest.cs" />
-    <Compile Include="SqlServerCe\SqlCeDbUnitIntegrationTest.cs" />
     <Compile Include="TableNameHelperTest.cs" />
-    <Compile Include="Mysql\MySqlDbOperationTest.cs" />
-    <Compile Include="SqlServerCe\SqlCeDbUnitTestTest.cs" />
     <Compile Include="XmlTestFiles.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -344,9 +318,6 @@
     <Content Include="Scripts\mysql-testdb-create.sql" />
     <Content Include="Scripts\sqlite-testdb-create.sql" />
     <Content Include="Scripts\sqlserver-testdb-create.sql" />
-    <Content Include="SqlServerCe\testdb.sdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Xml\MySql\User.xml" />
     <Content Include="Xml\MySql\UserMod.xml" />
     <Content Include="Xml\MySql\UserRefresh.xml" />

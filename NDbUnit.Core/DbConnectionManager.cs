@@ -4,29 +4,30 @@ using System.Data.Odbc;
 
 namespace NDbUnit.Core
 {
-    public class DbConnectionManager<TDbConnection> where TDbConnection : IDbConnection, new()
+    public class DbConnectionManager<TDbConnection> where TDbConnection : class, IDbConnection, new()
     {
-        private IDbConnection _connection;
+        private TDbConnection _connection;
         private readonly string _connectionString;
-        private readonly bool _externallyManagedConnection;
+        
+        public bool HasExternallyManagedConnection { get; private set; }
 
         public DbConnectionManager(string connectionString)
         {
             _connectionString = connectionString;
         }
 
-        public DbConnectionManager(IDbConnection connection)
+        public DbConnectionManager(TDbConnection connection)
         {
-            _externallyManagedConnection = true;
+            HasExternallyManagedConnection = true;
             _connectionString = connection.ConnectionString;
             _connection = connection;
         }
 
-        public IDbConnection GetConnection(bool forceNewConnection = false)
+        public TDbConnection GetConnection(bool forceNewConnection = false)
         {
             if (forceNewConnection)
             {
-                if (_externallyManagedConnection)
+                if (HasExternallyManagedConnection)
                 {
                     throw new InvalidOperationException("Cannot force new connection when DbConnectionManager has been initialized with an external connection.");
                 }
@@ -34,7 +35,7 @@ namespace NDbUnit.Core
                 ReleaseConnection();
             }
 
-            if (null == _connection && !_externallyManagedConnection)
+            if (null == _connection && !HasExternallyManagedConnection)
             {
                 _connection = CreateConnection(_connectionString);
             }
@@ -44,14 +45,14 @@ namespace NDbUnit.Core
 
         public void ReleaseConnection()
         {
-            if (_connection != null && !_externallyManagedConnection)
+            if (_connection != null && !HasExternallyManagedConnection)
             {
                 _connection.Dispose();
                 _connection = null;
             }
         }
 
-        public IDbConnection CreateConnection(string connectionString)
+        private TDbConnection CreateConnection(string connectionString)
         {
             return new TDbConnection { ConnectionString = _connectionString };
         }
