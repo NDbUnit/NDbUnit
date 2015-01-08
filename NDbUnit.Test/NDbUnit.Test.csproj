@@ -157,6 +157,10 @@
     </Compile>
     <Compile Include="DbOperationTestBase.cs" />
     <Compile Include="IntegationTestBase.cs" />
+    <Compile Include="Mysql\MySqlDbCommandBuilderTest.cs" />
+    <Compile Include="Mysql\MysqlDbOperationTest.cs" />
+    <Compile Include="Mysql\MySqlDbUnitIntegrationTest.cs" />
+    <Compile Include="Mysql\MySqlDbUnitTestTest.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>

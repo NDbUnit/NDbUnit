@@ -22,6 +22,7 @@ using System;
 using NDbUnit.Core.MySqlClient;
 using System.Data;
 using MySql.Data.MySqlClient;
+using NDbUnit.Core;
 using NUnit.Framework;
 
 namespace NDbUnit.Test.Mysql
@@ -31,7 +32,7 @@ namespace NDbUnit.Test.Mysql
     {
         protected override NDbUnit.Core.IDbCommandBuilder GetCommandBuilder()
         {
-            return new MySqlDbCommandBuilder(DbConnection.MySqlConnectionString);
+            return new MySqlDbCommandBuilder(new DbConnectionManager<MySqlConnection>(DbConnection.MySqlConnectionString));
         }
 
         protected override NDbUnit.Core.IDbOperation GetDbOperation()

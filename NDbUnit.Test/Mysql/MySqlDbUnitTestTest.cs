@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using NDbUnit.Core;
 using System.Data;
 using System.IO;
+using MySql.Data.MySqlClient;
 using NDbUnit.Core.MySqlClient;
 using NUnit.Framework;
 
@@ -63,7 +64,7 @@ namespace NDbUnit.Test.MySqlDb
             {
             }
 
-            protected override IDbCommandBuilder CreateDbCommandBuilder(string connectionString)
+            protected override IDbCommandBuilder CreateDbCommandBuilder(DbConnectionManager<MySqlConnection> connectionManager )
             {
                 return _mockDbCommandBuilder;
             }

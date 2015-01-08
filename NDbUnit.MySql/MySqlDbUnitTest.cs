@@ -40,14 +40,14 @@ namespace NDbUnit.Core.MySqlClient
     /// </code>
     /// <seealso cref="INDbUnitTest"/>
     /// </example>
-    public class MySqlDbUnitTest : NDbUnitTest
+    public class MySqlDbUnitTest : NDbUnitTest<MySqlConnection>
     {
         public MySqlDbUnitTest(string connectionString)
             : base(connectionString)
         {
         }
 
-        public MySqlDbUnitTest(IDbConnection connection)
+        public MySqlDbUnitTest(MySqlConnection connection)
             : base(connection)
         {
         }
@@ -58,14 +58,9 @@ namespace NDbUnit.Core.MySqlClient
             //return new MySqlDataAdapter((MySqlCommand) command);
         }
 
-        protected override IDbCommandBuilder CreateDbCommandBuilder(IDbConnection connection)
+        protected override IDbCommandBuilder CreateDbCommandBuilder(DbConnectionManager<MySqlConnection> connectionManager)
         {
-            return new MySqlDbCommandBuilder(connection);
-        }
-
-        protected override IDbCommandBuilder CreateDbCommandBuilder(string connectionString)
-        {
-            return new MySqlDbCommandBuilder(connectionString);
+            return new MySqlDbCommandBuilder(connectionManager);
         }
 
         protected override IDbOperation CreateDbOperation()
@@ -83,21 +78,20 @@ namespace NDbUnit.Core.MySqlClient
 
         public override void ExecuteScripts()
         {
-            if (Connection == null)
-                Connection = GetDbCommandBuilder().Connection;
+            var connection = ConnectionManager.GetConnection();
 
-            if (Connection.State != ConnectionState.Open)
-                Connection.Open();
+            if (connection.State != ConnectionState.Open)
+                connection.Open();
 
             foreach (string ddlText in ScriptManager.ScriptContents)
             {
-                var script = new MySqlScript((MySqlConnection)Connection, ddlText);
+                var script = new MySqlScript(connection, ddlText);
                 script.Execute();
             }
 
 
-            if (Connection.State != ConnectionState.Closed)
-                Connection.Close();
+            if (connection.State != ConnectionState.Closed)
+                connection.Close();
 
         }
     }

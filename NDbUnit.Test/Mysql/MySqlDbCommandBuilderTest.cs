@@ -19,6 +19,7 @@
  */
 
 using System.Collections.Generic;
+using MySql.Data.MySqlClient;
 using NDbUnit.Core;
 using NDbUnit.Core.MySqlClient;
 using NUnit.Framework;
@@ -120,7 +121,7 @@ namespace NDbUnit.Test.SqlClient
 
         protected override IDbCommandBuilder GetDbCommandBuilder()
         {
-            return new MySqlDbCommandBuilder(DbConnection.MySqlConnectionString);
+            return new MySqlDbCommandBuilder(new DbConnectionManager<MySqlConnection>(DbConnection.MySqlConnectionString));
         }
 
         protected override string GetXmlSchemaFilename()
