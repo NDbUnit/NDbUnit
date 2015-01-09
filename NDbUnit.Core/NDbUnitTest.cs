@@ -288,15 +288,15 @@ namespace NDbUnit.Core
                     dbTransaction.Dispose();
                 }
 
-                if (!ConnectionManager.HasExternallyManagedConnection)
+                if (ConnectionState.Open == dbConnection.State)
                 {
-                    if (ConnectionState.Open == dbConnection.State)
-                    {
-                        dbConnection.Close();
-                    }
+                    dbConnection.Close();
                 }
 
-                ConnectionManager.ReleaseConnection();
+                if (!ConnectionManager.HasExternallyManagedConnection)
+                {
+                    ConnectionManager.ReleaseConnection();
+                }
             }
         }
 
