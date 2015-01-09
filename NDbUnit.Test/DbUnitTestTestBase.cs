@@ -113,8 +113,8 @@ namespace NDbUnit.Test.Common
             LastCall.IgnoreArguments().Constraints(Is.TypeOf<DataSet>(), Is.Equal(_mockDbCommandBuilder), Is.Equal(_mockTransaction));
             _mockTransaction.Commit();
             SetupResult.For(_mockConnection.State).Return(ConnectionState.Open);
+            _mockTransaction.Dispose();
             _mockConnection.Close();
-
             //end expectations
 
             _mocker.ReplayAll();
