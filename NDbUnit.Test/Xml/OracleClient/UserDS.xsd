@@ -9,52 +9,52 @@
       </DataSource>
     </xs:appinfo>
   </xs:annotation>
-  <xs:element name="UserDS" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_UserDSName="UserDS" msprop:Generator_DataSetName="UserDS">
+  <xs:element name="UserDS" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_DataSetName="UserDS" msprop:Generator_UserDSName="UserDS">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="USER" msprop:Generator_UserTableName="USER" msprop:Generator_RowDeletedName="USERRowDeleted" msprop:Generator_RowChangedName="USERRowChanged" msprop:Generator_RowClassName="USERRow" msprop:Generator_RowChangingName="USERRowChanging" msprop:Generator_RowEvArgName="USERRowChangeEvent" msprop:Generator_RowEvHandlerName="USERRowChangeEventHandler" msprop:Generator_TableClassName="USERDataTable" msprop:Generator_TableVarName="tableUSER" msprop:Generator_RowDeletingName="USERRowDeleting" msprop:Generator_TablePropName="USER">
+        <xs:element name="USER" msprop:Generator_UserTableName="USER" msprop:Generator_RowEvArgName="USERRowChangeEvent" msprop:Generator_TableVarName="tableUSER" msprop:Generator_TablePropName="USER" msprop:Generator_RowDeletingName="USERRowDeleting" msprop:Generator_RowChangingName="USERRowChanging" msprop:Generator_RowDeletedName="USERRowDeleted" msprop:Generator_RowEvHandlerName="USERRowChangeEventHandler" msprop:Generator_TableClassName="USERDataTable" msprop:Generator_RowChangedName="USERRowChanged" msprop:Generator_RowClassName="USERRow">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="ID" msprop:Generator_UserColumnName="ID" msprop:Generator_ColumnPropNameInRow="ID" msprop:Generator_ColumnVarNameInTable="columnID" msprop:Generator_ColumnPropNameInTable="IDColumn" type="xs:decimal" />
-              <xs:element name="FIRSTNAME" msprop:Generator_UserColumnName="FIRSTNAME" msprop:Generator_ColumnPropNameInRow="FIRSTNAME" msprop:Generator_ColumnVarNameInTable="columnFIRSTNAME" msprop:Generator_ColumnPropNameInTable="FIRSTNAMEColumn">
+              <xs:element name="ID" msprop:Generator_ColumnVarNameInTable="columnID" msprop:Generator_ColumnPropNameInRow="ID" msprop:Generator_ColumnPropNameInTable="IDColumn" msprop:Generator_UserColumnName="ID" type="xs:int" />
+              <xs:element name="FIRSTNAME" msprop:Generator_ColumnVarNameInTable="columnFIRSTNAME" msprop:Generator_ColumnPropNameInRow="FIRSTNAME" msprop:Generator_ColumnPropNameInTable="FIRSTNAMEColumn" msprop:Generator_UserColumnName="FIRSTNAME">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="200" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="LASTNAME" msprop:Generator_UserColumnName="LASTNAME" msprop:Generator_ColumnPropNameInRow="LASTNAME" msprop:Generator_ColumnVarNameInTable="columnLASTNAME" msprop:Generator_ColumnPropNameInTable="LASTNAMEColumn">
+              <xs:element name="LASTNAME" msprop:Generator_ColumnVarNameInTable="columnLASTNAME" msprop:Generator_ColumnPropNameInRow="LASTNAME" msprop:Generator_ColumnPropNameInTable="LASTNAMEColumn" msprop:Generator_UserColumnName="LASTNAME">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="200" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="AGE" msprop:Generator_UserColumnName="AGE" msprop:Generator_ColumnPropNameInRow="AGE" msprop:Generator_ColumnVarNameInTable="columnAGE" msprop:Generator_ColumnPropNameInTable="AGEColumn" type="xs:decimal" minOccurs="0" />
-              <xs:element name="SUPERVISORID" msprop:Generator_UserColumnName="SUPERVISORID" msprop:Generator_ColumnPropNameInRow="SUPERVISORID" msprop:Generator_ColumnVarNameInTable="columnSUPERVISORID" msprop:Generator_ColumnPropNameInTable="SUPERVISORIDColumn" type="xs:decimal" minOccurs="0" />
+              <xs:element name="AGE" msprop:Generator_ColumnVarNameInTable="columnAGE" msprop:Generator_ColumnPropNameInRow="AGE" msprop:Generator_ColumnPropNameInTable="AGEColumn" msprop:Generator_UserColumnName="AGE" type="xs:int" minOccurs="0" />
+              <xs:element name="SUPERVISORID" msprop:Generator_ColumnVarNameInTable="columnSUPERVISORID" msprop:Generator_ColumnPropNameInRow="SUPERVISORID" msprop:Generator_ColumnPropNameInTable="SUPERVISORIDColumn" msprop:Generator_UserColumnName="SUPERVISORID" type="xs:int" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="USERROLE" msprop:Generator_UserTableName="USERROLE" msprop:Generator_RowDeletedName="USERROLERowDeleted" msprop:Generator_RowChangedName="USERROLERowChanged" msprop:Generator_RowClassName="USERROLERow" msprop:Generator_RowChangingName="USERROLERowChanging" msprop:Generator_RowEvArgName="USERROLERowChangeEvent" msprop:Generator_RowEvHandlerName="USERROLERowChangeEventHandler" msprop:Generator_TableClassName="USERROLEDataTable" msprop:Generator_TableVarName="tableUSERROLE" msprop:Generator_RowDeletingName="USERROLERowDeleting" msprop:Generator_TablePropName="USERROLE">
+        <xs:element name="USERROLE" msprop:Generator_UserTableName="USERROLE" msprop:Generator_RowEvArgName="USERROLERowChangeEvent" msprop:Generator_TableVarName="tableUSERROLE" msprop:Generator_TablePropName="USERROLE" msprop:Generator_RowDeletingName="USERROLERowDeleting" msprop:Generator_RowChangingName="USERROLERowChanging" msprop:Generator_RowDeletedName="USERROLERowDeleted" msprop:Generator_RowEvHandlerName="USERROLERowChangeEventHandler" msprop:Generator_TableClassName="USERROLEDataTable" msprop:Generator_RowChangedName="USERROLERowChanged" msprop:Generator_RowClassName="USERROLERow">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="USERID" msprop:Generator_UserColumnName="USERID" msprop:Generator_ColumnPropNameInRow="USERID" msprop:Generator_ColumnVarNameInTable="columnUSERID" msprop:Generator_ColumnPropNameInTable="USERIDColumn" type="xs:decimal" />
-              <xs:element name="ROLEID" msprop:Generator_UserColumnName="ROLEID" msprop:Generator_ColumnPropNameInRow="ROLEID" msprop:Generator_ColumnVarNameInTable="columnROLEID" msprop:Generator_ColumnPropNameInTable="ROLEIDColumn" type="xs:decimal" />
+              <xs:element name="USERID" msprop:Generator_ColumnVarNameInTable="columnUSERID" msprop:Generator_ColumnPropNameInRow="USERID" msprop:Generator_ColumnPropNameInTable="USERIDColumn" msprop:Generator_UserColumnName="USERID" type="xs:int" />
+              <xs:element name="ROLEID" msprop:Generator_ColumnVarNameInTable="columnROLEID" msprop:Generator_ColumnPropNameInRow="ROLEID" msprop:Generator_ColumnPropNameInTable="ROLEIDColumn" msprop:Generator_UserColumnName="ROLEID" type="xs:int" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="ROLE" msprop:Generator_UserTableName="ROLE" msprop:Generator_RowDeletedName="ROLERowDeleted" msprop:Generator_RowChangedName="ROLERowChanged" msprop:Generator_RowClassName="ROLERow" msprop:Generator_RowChangingName="ROLERowChanging" msprop:Generator_RowEvArgName="ROLERowChangeEvent" msprop:Generator_RowEvHandlerName="ROLERowChangeEventHandler" msprop:Generator_TableClassName="ROLEDataTable" msprop:Generator_TableVarName="tableROLE" msprop:Generator_RowDeletingName="ROLERowDeleting" msprop:Generator_TablePropName="ROLE">
+        <xs:element name="ROLE" msprop:Generator_UserTableName="ROLE" msprop:Generator_RowEvArgName="ROLERowChangeEvent" msprop:Generator_TableVarName="tableROLE" msprop:Generator_TablePropName="ROLE" msprop:Generator_RowDeletingName="ROLERowDeleting" msprop:Generator_RowChangingName="ROLERowChanging" msprop:Generator_RowDeletedName="ROLERowDeleted" msprop:Generator_RowEvHandlerName="ROLERowChangeEventHandler" msprop:Generator_TableClassName="ROLEDataTable" msprop:Generator_RowChangedName="ROLERowChanged" msprop:Generator_RowClassName="ROLERow">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="ID" msprop:Generator_UserColumnName="ID" msprop:Generator_ColumnPropNameInRow="ID" msprop:Generator_ColumnVarNameInTable="columnID" msprop:Generator_ColumnPropNameInTable="IDColumn" type="xs:decimal" />
-              <xs:element name="NAME" msprop:Generator_UserColumnName="NAME" msprop:Generator_ColumnPropNameInRow="NAME" msprop:Generator_ColumnVarNameInTable="columnNAME" msprop:Generator_ColumnPropNameInTable="NAMEColumn">
+              <xs:element name="ID" msprop:Generator_ColumnVarNameInTable="columnID" msprop:Generator_ColumnPropNameInRow="ID" msprop:Generator_ColumnPropNameInTable="IDColumn" msprop:Generator_UserColumnName="ID" type="xs:int" />
+              <xs:element name="NAME" msprop:Generator_ColumnVarNameInTable="columnNAME" msprop:Generator_ColumnPropNameInRow="NAME" msprop:Generator_ColumnPropNameInTable="NAMEColumn" msprop:Generator_UserColumnName="NAME">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="200" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="DESCRIPTION" msprop:Generator_UserColumnName="DESCRIPTION" msprop:Generator_ColumnPropNameInRow="DESCRIPTION" msprop:Generator_ColumnVarNameInTable="columnDESCRIPTION" msprop:Generator_ColumnPropNameInTable="DESCRIPTIONColumn" minOccurs="0">
+              <xs:element name="DESCRIPTION" msprop:Generator_ColumnVarNameInTable="columnDESCRIPTION" msprop:Generator_ColumnPropNameInRow="DESCRIPTION" msprop:Generator_ColumnPropNameInTable="DESCRIPTIONColumn" msprop:Generator_UserColumnName="DESCRIPTION" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="200" />
