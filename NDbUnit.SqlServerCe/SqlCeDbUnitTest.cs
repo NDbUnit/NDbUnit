@@ -25,9 +25,9 @@ using System.Data;
 
 namespace NDbUnit.Core.SqlServerCe
 {
-    public class SqlCeDbUnitTest : NDbUnitTest
+    public class SqlCeDbUnitTest : NDbUnitTest<SqlCeConnection>
     {
-        public SqlCeDbUnitTest(IDbConnection connection)
+        public SqlCeDbUnitTest(SqlCeConnection connection)
             : base(connection)
         {
         }
@@ -42,14 +42,9 @@ namespace NDbUnit.Core.SqlServerCe
             return new SqlCeDataAdapter((SqlCeCommand)command);
         }
 
-        protected override IDbCommandBuilder CreateDbCommandBuilder(string connectionString)
+        protected override IDbCommandBuilder CreateDbCommandBuilder(DbConnectionManager<SqlCeConnection> connectionManager)
         {
-            return new SqlCeDbCommandBuilder(connectionString);
-        }
-
-        protected override IDbCommandBuilder CreateDbCommandBuilder(IDbConnection connection)
-        {
-            return new SqlCeDbCommandBuilder(connection);
+            return new SqlCeDbCommandBuilder(connectionManager);
         }
 
         protected override IDbOperation CreateDbOperation()
@@ -62,7 +57,7 @@ namespace NDbUnit.Core.SqlServerCe
     [Obsolete("Use SqlCeDbUnitTest class in place of this.")]
     public class SqlCeUnitTest : SqlCeDbUnitTest
     {
-        public SqlCeUnitTest(IDbConnection connection) : base(connection)
+        public SqlCeUnitTest(SqlCeConnection connection) : base(connection)
         {
         }
 

@@ -190,6 +190,10 @@
     <Compile Include="SqlLite\SqlLiteUnitTestTest.cs" />
     <Compile Include="SqlLite\SqlLiteCommandBuilderTest.cs" />
     <Compile Include="SqlLite\SqlLiteDbOperationTest.cs" />
+    <Compile Include="SqlServerCe\SqlCeDbCommandBuilderTest.cs" />
+    <Compile Include="SqlServerCe\SqlCeDbOperationTest.cs" />
+    <Compile Include="SqlServerCe\SqlCeDbUnitIntegrationTest.cs" />
+    <Compile Include="SqlServerCe\SqlCeDbUnitTestTest.cs" />
     <Compile Include="TableNameHelperTest.cs" />
     <Compile Include="XmlTestFiles.cs">
       <SubType>Code</SubType>
@@ -285,6 +289,9 @@
     <None Include="Xml\MySql\UserDS.xsd">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="SqlServerCe\testdb.sdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestScripts\sqlserver-drop-create-testdb.sql" />
     <Content Include="TestScripts\sqlserver-testdb03.sql" />
     <Content Include="TestScripts\sqlserver-testdb04.sql" />

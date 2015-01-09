@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using NDbUnit.Core.SqlServerCe;
 using NDbUnit.Core;
 using System.Data;
+using System.Data.SqlServerCe;
 using System.IO;
 using NUnit.Framework;
 
@@ -63,7 +64,7 @@ namespace NDbUnit.Test.SqlServerCe
             {
             }
 
-            protected override IDbCommandBuilder CreateDbCommandBuilder(string connectionString)
+            protected override IDbCommandBuilder CreateDbCommandBuilder(DbConnectionManager<SqlCeConnection> connectionManager )
             {
                 return _mockDbCommandBuilder;
             }

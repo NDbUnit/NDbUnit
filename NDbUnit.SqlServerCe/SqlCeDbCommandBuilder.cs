@@ -24,15 +24,10 @@ using System.Data.SqlServerCe;
 
 namespace NDbUnit.Core.SqlServerCe
 {
-    public class SqlCeDbCommandBuilder : DbCommandBuilder
+    public class SqlCeDbCommandBuilder : DbCommandBuilder<SqlCeConnection>
     {
-        public SqlCeDbCommandBuilder(string connectionString)
-            : base(connectionString)
-        {
-        }
-
-        public SqlCeDbCommandBuilder(IDbConnection connection)
-            : base(connection)
+        public SqlCeDbCommandBuilder(DbConnectionManager<SqlCeConnection> connectionManager)
+            : base(connectionManager)
         {
         }
 

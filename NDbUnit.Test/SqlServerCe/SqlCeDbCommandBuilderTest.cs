@@ -19,6 +19,7 @@
  */
 
 using System.Collections.Generic;
+using System.Data.SqlServerCe;
 using NDbUnit.Core.SqlServerCe;
 using NDbUnit.Core;
 using NUnit.Framework;
@@ -120,7 +121,7 @@ namespace NDbUnit.Test.SqlServerCe
 
         protected override IDbCommandBuilder GetDbCommandBuilder()
         {
-            return new SqlCeDbCommandBuilder(DbConnection.SqlCeConnectionString);
+            return new SqlCeDbCommandBuilder(new DbConnectionManager<SqlCeConnection>(DbConnection.SqlCeConnectionString));
         }
 
         protected override string GetXmlSchemaFilename()

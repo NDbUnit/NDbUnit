@@ -22,6 +22,7 @@ using System;
 using NDbUnit.Core.SqlServerCe;
 using System.Data;
 using System.Data.SqlServerCe;
+using NDbUnit.Core;
 using NUnit.Framework;
 
 namespace NDbUnit.Test.SqlServerCe
@@ -31,7 +32,7 @@ namespace NDbUnit.Test.SqlServerCe
     {
         protected override NDbUnit.Core.IDbCommandBuilder GetCommandBuilder()
         {
-            return new SqlCeDbCommandBuilder(DbConnection.SqlCeConnectionString);
+            return new SqlCeDbCommandBuilder(new DbConnectionManager<SqlCeConnection>(DbConnection.SqlCeConnectionString));
         }
 
         protected override NDbUnit.Core.IDbOperation GetDbOperation()
