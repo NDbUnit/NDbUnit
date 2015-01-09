@@ -85,21 +85,22 @@ namespace NDbUnit.Test.Common
         [Test]
         public void Delete_Executes_Without_Exception()
         {
-            IDbTransaction sqlTransaction = null;
-            try
+            using (var sqlTransaction = _commandBuilder.Connection.BeginTransaction())
             {
-                sqlTransaction = _commandBuilder.Connection.BeginTransaction();
-                _dbOperation.Delete(_dsData, _commandBuilder, sqlTransaction);
-                sqlTransaction.Commit();
-            }
-            catch (Exception)
-            {
-                if (sqlTransaction != null)
+                try
                 {
-                    sqlTransaction.Rollback();
+                    _dbOperation.Delete(_dsData, _commandBuilder, sqlTransaction);
+                    sqlTransaction.Commit();
                 }
+                catch (Exception)
+                {
+                    if (sqlTransaction != null)
+                    {
+                        sqlTransaction.Rollback();
+                    }
 
-                throw;
+                    throw;
+                }
             }
             Assert.IsTrue(true);
         }
@@ -107,21 +108,23 @@ namespace NDbUnit.Test.Common
         [Test]
         public void DeleteAll_Executes_Without_Exception()
         {
-            IDbTransaction sqlTransaction = null;
-            try
+            using (var sqlTransaction = _commandBuilder.Connection.BeginTransaction())
             {
-                sqlTransaction = _commandBuilder.Connection.BeginTransaction();
-                _dbOperation.DeleteAll(_dsData, _commandBuilder, sqlTransaction);
-                sqlTransaction.Commit();
-            }
-            catch (Exception)
-            {
-                if (sqlTransaction != null)
+                try
                 {
-                    sqlTransaction.Rollback();
-                }
 
-                throw;
+                    _dbOperation.DeleteAll(_dsData, _commandBuilder, sqlTransaction);
+                    sqlTransaction.Commit();
+                }
+                catch (Exception)
+                {
+                    if (sqlTransaction != null)
+                    {
+                        sqlTransaction.Rollback();
+                    }
+
+                    throw;
+                }
             }
             Assert.IsTrue(true);
         }
@@ -133,21 +136,22 @@ namespace NDbUnit.Test.Common
 
             DeleteAll_Executes_Without_Exception();
 
-            IDbTransaction sqlTransaction = null;
-            try
+            using (var sqlTransaction = _commandBuilder.Connection.BeginTransaction())
             {
-                sqlTransaction = _commandBuilder.Connection.BeginTransaction();
-                _dbOperation.Insert(_dsData, _commandBuilder, sqlTransaction);
-                sqlTransaction.Commit();
-            }
-            catch (Exception)
-            {
-                if (sqlTransaction != null)
+                try
                 {
-                    sqlTransaction.Rollback();
+                    _dbOperation.Insert(_dsData, _commandBuilder, sqlTransaction);
+                    sqlTransaction.Commit();
                 }
+                catch (Exception)
+                {
+                    if (sqlTransaction != null)
+                    {
+                        sqlTransaction.Rollback();
+                    }
 
-                throw;
+                    throw;
+                }
             }
             Assert.IsTrue(true);
         }
@@ -157,21 +161,22 @@ namespace NDbUnit.Test.Common
         {
             DeleteAll_Executes_Without_Exception();
 
-            IDbTransaction sqlTransaction = null;
-            try
+            using (var sqlTransaction = _commandBuilder.Connection.BeginTransaction())
             {
-                sqlTransaction = _commandBuilder.Connection.BeginTransaction();
-                _dbOperation.InsertIdentity(_dsData, _commandBuilder, sqlTransaction);
-                sqlTransaction.Commit();
-            }
-            catch (Exception)
-            {
-                if (sqlTransaction != null)
+                try
                 {
-                    sqlTransaction.Rollback();
+                    _dbOperation.InsertIdentity(_dsData, _commandBuilder, sqlTransaction);
+                    sqlTransaction.Commit();
                 }
+                catch (Exception)
+                {
+                    if (sqlTransaction != null)
+                    {
+                        sqlTransaction.Rollback();
+                    }
 
-                throw;
+                    throw;
+                }
             }
             Assert.IsTrue(true);
         }
@@ -182,25 +187,26 @@ namespace NDbUnit.Test.Common
             DeleteAll_Executes_Without_Exception();
             Insert_Executes_Without_Exception();
 
-            IDbTransaction sqlTransaction = null;
-            try
-            {
-                DataSet dsSchema = _commandBuilder.GetSchema();
-                DataSet ds = dsSchema.Clone();
-                ds.ReadXml(ReadOnlyStreamFromFilename(GetXmlRefeshFilename()));
+            DataSet dsSchema = _commandBuilder.GetSchema();
+            DataSet ds = dsSchema.Clone();
+            ds.ReadXml(ReadOnlyStreamFromFilename(GetXmlRefeshFilename()));
 
-                sqlTransaction = _commandBuilder.Connection.BeginTransaction();
-                _dbOperation.Refresh(ds, _commandBuilder, sqlTransaction);
-                sqlTransaction.Commit();
-            }
-            catch (Exception)
+            using (var sqlTransaction = _commandBuilder.Connection.BeginTransaction())
             {
-                if (sqlTransaction != null)
+                try
                 {
-                    sqlTransaction.Rollback();
+                    _dbOperation.Refresh(ds, _commandBuilder, sqlTransaction);
+                    sqlTransaction.Commit();
                 }
+                catch (Exception)
+                {
+                    if (sqlTransaction != null)
+                    {
+                        sqlTransaction.Rollback();
+                    }
 
-                throw;
+                    throw;
+                }
             }
             Assert.IsTrue(true);
         }
@@ -211,25 +217,26 @@ namespace NDbUnit.Test.Common
             DeleteAll_Executes_Without_Exception();
             Insert_Executes_Without_Exception();
 
-            IDbTransaction sqlTransaction = null;
-            try
-            {
-                DataSet dsSchema = _commandBuilder.GetSchema();
-                DataSet ds = dsSchema.Clone();
-                ds.ReadXml(ReadOnlyStreamFromFilename(GetXmlFilename()));
+            DataSet dsSchema = _commandBuilder.GetSchema();
+            DataSet ds = dsSchema.Clone();
+            ds.ReadXml(ReadOnlyStreamFromFilename(GetXmlFilename()));
 
-                sqlTransaction = _commandBuilder.Connection.BeginTransaction();
-                _dbOperation.Update(ds, _commandBuilder, sqlTransaction);
-                sqlTransaction.Commit();
-            }
-            catch (Exception)
+            using (var sqlTransaction = _commandBuilder.Connection.BeginTransaction())
             {
-                if (sqlTransaction != null)
+                try
                 {
-                    sqlTransaction.Rollback();
+                    _dbOperation.Update(ds, _commandBuilder, sqlTransaction);
+                    sqlTransaction.Commit();
                 }
+                catch (Exception)
+                {
+                    if (sqlTransaction != null)
+                    {
+                        sqlTransaction.Rollback();
+                    }
 
-                throw;
+                    throw;
+                }
             }
             Assert.IsTrue(true);
         }
