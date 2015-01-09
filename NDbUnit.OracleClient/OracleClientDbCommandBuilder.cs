@@ -80,8 +80,37 @@ namespace NDbUnit.OracleClient
             sb.Append(String.Format(") VALUES({0})", sbParam));
 
             sqlInsertCommand.CommandText = sb.ToString();
+            ((OracleCommand)sqlInsertCommand).BindByName = true;
 
             return sqlInsertCommand;
+        }
+
+        protected override IDbCommand CreateUpdateCommand(IDbCommand selectCommand, string tableName)
+        {
+            var command = base.CreateUpdateCommand(selectCommand, tableName);
+            ((OracleCommand) command).BindByName = true;
+            return command;
+        }
+
+        protected override IDbCommand CreateInsertIdentityCommand(IDbCommand selectCommand, string tableName)
+        {
+            var command = base.CreateInsertIdentityCommand(selectCommand, tableName);
+            ((OracleCommand)command).BindByName = true;
+            return command;
+        }
+
+        protected override IDbCommand CreateDeleteCommand(IDbCommand selectCommand, string tableName)
+        {
+            var command = base.CreateDeleteCommand(selectCommand, tableName);
+            ((OracleCommand)command).BindByName = true;
+            return command;
+        }
+
+        protected override IDbCommand CreateSelectCommand(DataSet ds, string tableName)
+        {
+            var command = base.CreateSelectCommand(ds, tableName);
+            ((OracleCommand)command).BindByName = true;
+            return command;
         }
 
         protected override IDataParameter CreateNewSqlParameter(int index, DataRow dataRow)
