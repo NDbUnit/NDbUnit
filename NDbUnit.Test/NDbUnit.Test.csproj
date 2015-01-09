@@ -161,6 +161,10 @@
     <Compile Include="Mysql\MysqlDbOperationTest.cs" />
     <Compile Include="Mysql\MySqlDbUnitIntegrationTest.cs" />
     <Compile Include="Mysql\MySqlDbUnitTestTest.cs" />
+    <Compile Include="OleDb\OleDbCommandBuilderTest.cs" />
+    <Compile Include="OleDb\OleDbOperationTest.cs" />
+    <Compile Include="OleDb\OleDbUnitIntegrationTest.cs" />
+    <Compile Include="OleDb\OleDbUnitTestTest.cs" />
     <Compile Include="OracleClient\OracleClientDbCommandBuilderTest.cs" />
     <Compile Include="OracleClient\OracleClientDbOperationTest.cs" />
     <Compile Include="OracleClient\OracleClientDbUnitTestTest.cs" />

@@ -19,9 +19,10 @@
  */
 
 using System.Collections.Generic;
+using System.Data.OleDb;
 using NDbUnit.Core;
-using NDbUnit.Core.OleDb;
 using NUnit.Framework;
+using OleDbCommandBuilder = NDbUnit.Core.OleDb.OleDbCommandBuilder;
 
 namespace NDbUnit.Test.SqlClient
 {
@@ -120,7 +121,7 @@ namespace NDbUnit.Test.SqlClient
 
         protected override IDbCommandBuilder GetDbCommandBuilder()
         {
-            return new OleDbCommandBuilder(DbConnection.OleDbConnectionString);
+            return new OleDbCommandBuilder(new DbConnectionManager<OleDbConnection>(DbConnection.OleDbConnectionString));
         }
 
         protected override string GetXmlSchemaFilename()

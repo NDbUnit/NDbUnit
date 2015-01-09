@@ -21,6 +21,7 @@
 using System.Collections.Generic;
 using NDbUnit.Core;
 using System.Data;
+using System.Data.OleDb;
 using System.IO;
 using NDbUnit.Core.OleDb;
 using NUnit.Framework;
@@ -63,7 +64,7 @@ namespace NDbUnit.Test.OleDb
             {
             }
 
-            protected override IDbCommandBuilder CreateDbCommandBuilder(string connectionString)
+            protected override IDbCommandBuilder CreateDbCommandBuilder(DbConnectionManager<OleDbConnection> connectionManager)
             {
                 return _mockDbCommandBuilder;
             }

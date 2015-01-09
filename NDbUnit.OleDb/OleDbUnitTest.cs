@@ -39,7 +39,7 @@ namespace NDbUnit.Core.OleDb
     /// </code>
     /// <seealso cref="INDbUnitTest"/>
     /// </example>
-    public class OleDbUnitTest : NDbUnitTest
+    public class OleDbUnitTest : NDbUnitTest<OleDbConnection>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="OleDbUnitTest"/> class.
@@ -48,7 +48,7 @@ namespace NDbUnit.Core.OleDb
         /// used to open the database.
         /// <seealso cref="System.Data.IDbConnection"/></param>
 
-        public OleDbUnitTest(IDbConnection connection)
+        public OleDbUnitTest(OleDbConnection connection)
             : base(connection)
         {
         }
@@ -80,14 +80,9 @@ namespace NDbUnit.Core.OleDb
             return new OleDbDataAdapter((OleDbCommand)command);
         }
 
-        protected override IDbCommandBuilder CreateDbCommandBuilder(IDbConnection connection)
+        protected override IDbCommandBuilder CreateDbCommandBuilder(DbConnectionManager<OleDbConnection> connectionManager)
         {
-            return new OleDbCommandBuilder(connection);
-        }
-
-        protected override IDbCommandBuilder CreateDbCommandBuilder(string connectionString)
-        {
-            return new OleDbCommandBuilder(connectionString);
+            return new OleDbCommandBuilder(connectionManager);
         }
 
         protected override IDbOperation CreateDbOperation()

@@ -26,26 +26,11 @@ using System.Collections;
 
 namespace NDbUnit.Core.OleDb
 {
-    public class OleDbCommandBuilder : DbCommandBuilder
+    public class OleDbCommandBuilder : DbCommandBuilder<OleDbConnection>
     {
-        private OleDbConnection _oleDbConnection;
-
-        public OleDbCommandBuilder(IDbConnection connection)
-            : base(connection)
-        {
-            _oleDbConnection = (OleDbConnection)connection;
-        }
-
-        public OleDbCommandBuilder(string connectionString)
-            : base(connectionString)
-        {
-            _oleDbConnection = new OleDbConnection(connectionString);
-        }
-
-        public new OleDbConnection Connection
-        {
-            get { return _oleDbConnection; }
-        }
+        public OleDbCommandBuilder(DbConnectionManager<OleDbConnection> connectionManager)
+            : base(connectionManager)
+        { }
 
         public override string QuotePrefix
         {
