@@ -203,11 +203,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>UserDS.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Xml\OracleClient\UserDS1.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>UserDS.xsd</DependentUpon>
-    </Compile>
     <Compile Include="Xml\SQLite\UserDS.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -222,11 +217,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>SchemaWithSchemaPrefixes.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Xml\SqlServer\UserDS.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>UserDS.xsd</DependentUpon>
     </Compile>
     <None Include="app.config">
       <SubType>Designer</SubType>
