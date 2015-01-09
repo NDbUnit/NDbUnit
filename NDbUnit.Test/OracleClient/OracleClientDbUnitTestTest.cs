@@ -26,6 +26,7 @@ using NDbUnit.OracleClient;
 using NDbUnit.Core;
 using System.Data;
 using System.IO;
+using Oracle.DataAccess.Client;
 
 namespace NDbUnit.Test.OracleClient
 {
@@ -64,7 +65,7 @@ namespace NDbUnit.Test.OracleClient
             {
             }
 
-            protected override IDbCommandBuilder CreateDbCommandBuilder(string connectionString)
+            protected override IDbCommandBuilder CreateDbCommandBuilder(DbConnectionManager<OracleConnection> connectionManager)
             {
                 return _mockDbCommandBuilder;
             }

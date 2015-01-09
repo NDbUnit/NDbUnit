@@ -24,9 +24,9 @@ using Oracle.DataAccess.Client;
 
 namespace NDbUnit.OracleClient
 {
-    public class OracleClientDbUnitTest : NDbUnitTest
+    public class OracleClientDbUnitTest : NDbUnitTest<OracleConnection>
     {
-        public OracleClientDbUnitTest(IDbConnection connection)
+        public OracleClientDbUnitTest(OracleConnection connection)
             : base(connection)
         {
         }
@@ -43,16 +43,9 @@ namespace NDbUnit.OracleClient
             return oda;
         }
 
-        protected override IDbCommandBuilder CreateDbCommandBuilder(string connectionString)
+        protected override IDbCommandBuilder CreateDbCommandBuilder(DbConnectionManager<OracleConnection> connectionManager)
         {
-            OracleClientDbCommandBuilder commandBuilder = new OracleClientDbCommandBuilder(connectionString);
-            commandBuilder.CommandTimeOutSeconds = this.CommandTimeOut;
-            return commandBuilder;
-        }
-
-        protected override IDbCommandBuilder CreateDbCommandBuilder(IDbConnection connection)
-        {
-            OracleClientDbCommandBuilder commandBuilder = new OracleClientDbCommandBuilder(connection);
+            OracleClientDbCommandBuilder commandBuilder = new OracleClientDbCommandBuilder(connectionManager);
             commandBuilder.CommandTimeOutSeconds = this.CommandTimeOut;
             return commandBuilder;
         }

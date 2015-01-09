@@ -161,6 +161,9 @@
     <Compile Include="Mysql\MysqlDbOperationTest.cs" />
     <Compile Include="Mysql\MySqlDbUnitIntegrationTest.cs" />
     <Compile Include="Mysql\MySqlDbUnitTestTest.cs" />
+    <Compile Include="OracleClient\OracleClientDbCommandBuilderTest.cs" />
+    <Compile Include="OracleClient\OracleClientDbOperationTest.cs" />
+    <Compile Include="OracleClient\OracleClientDbUnitTestTest.cs" />
     <Compile Include="Postgresql\PostgresqlDbCommandBuilderTest.cs" />
     <Compile Include="Postgresql\PostgresqlDbOperationTest.cs" />
     <Compile Include="Postgresql\PostgresqlDbUnitIntegrationTest.cs" />

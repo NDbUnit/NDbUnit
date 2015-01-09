@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using NDbUnit.Test.Common;
 using NDbUnit.OracleClient;
 using NDbUnit.Core;
+using Oracle.DataAccess.Client;
 
 namespace NDbUnit.Test.OracleClient
 {
@@ -119,7 +120,7 @@ namespace NDbUnit.Test.OracleClient
 
         protected override IDbCommandBuilder GetDbCommandBuilder()
         {
-            return new OracleClientDbCommandBuilder(DbConnection.OracleClientConnectionString);
+            return new OracleClientDbCommandBuilder(new DbConnectionManager<OracleConnection>(DbConnection.OracleClientConnectionString));
         }
 
         protected override string GetXmlSchemaFilename()

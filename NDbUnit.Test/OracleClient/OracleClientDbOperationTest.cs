@@ -22,7 +22,9 @@ using System;
 using NDbUnit.Test.Common;
 using NDbUnit.OracleClient;
 using System.Data;
+using NDbUnit.Core;
 using NUnit.Framework;
+using Oracle.DataAccess.Client;
 
 namespace NDbUnit.Test.OracleClient
 {
@@ -35,7 +37,7 @@ namespace NDbUnit.Test.OracleClient
 
         protected override NDbUnit.Core.IDbCommandBuilder GetCommandBuilder()
         {
-            return new OracleClientDbCommandBuilder(DbConnection.OracleClientConnectionString);
+            return new OracleClientDbCommandBuilder(new DbConnectionManager<OracleConnection>(DbConnection.OracleClientConnectionString));
         }
 
         protected override NDbUnit.Core.IDbOperation GetDbOperation()

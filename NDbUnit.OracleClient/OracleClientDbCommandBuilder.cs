@@ -26,25 +26,11 @@ using Oracle.DataAccess.Client;
 
 namespace NDbUnit.OracleClient
 {
-    public class OracleClientDbCommandBuilder : DbCommandBuilder
+    public class OracleClientDbCommandBuilder : DbCommandBuilder<OracleConnection>
     {
-        private OracleConnection _oraDbConnection;
-
-        public OracleClientDbCommandBuilder(string connectionString)
-            : base(connectionString)
+        public OracleClientDbCommandBuilder(DbConnectionManager<OracleConnection> connectionManager)
+            : base(connectionManager)
         {
-            _oraDbConnection = new OracleConnection(connectionString);
-        }
-
-        public OracleClientDbCommandBuilder(IDbConnection connection)
-            : base(connection)
-        {
-            _oraDbConnection = (OracleConnection)connection;
-        }
-
-        public new OracleConnection Connection
-        {
-            get { return _oraDbConnection; }
         }
 
         public override string QuotePrefix
