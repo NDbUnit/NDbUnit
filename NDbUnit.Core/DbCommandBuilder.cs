@@ -187,7 +187,14 @@ namespace NDbUnit.Core
                         break;
                 }
 
-                return found && !(bool)dataRow["IsHidden"] && dataRow["DataTypeName"].ToString() != "timestamp";
+                var isTimeStamp = false;
+
+                if (dataRow.Table.Columns.Contains("DataTypeName"))
+                {
+                    isTimeStamp = dataRow["DataTypeName"].ToString() == "timestamp";
+                }
+
+                return found && !(bool)dataRow["IsHidden"] && !isTimeStamp;
             }
             catch (Exception)
             {
