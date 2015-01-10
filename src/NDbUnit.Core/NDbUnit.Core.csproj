@@ -125,7 +125,6 @@
     </Compile>
     <Compile Include="ScriptManager.cs" />
     <Compile Include="TableNameHelper.cs" />
-    <None Include="NDbUnit.Core.build" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
