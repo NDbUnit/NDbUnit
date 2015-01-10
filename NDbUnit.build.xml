@@ -1,0 +1,38 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  
+  <!-- Application Configurations -->
+  <PropertyGroup>
+    <SolutionFileName>Proteus.Utility.sln</SolutionFileName>
+    <NUnit-ToolPath>packages\NUnit.Runners.2.6.4\tools</NUnit-ToolPath> 
+	<Test-Assemblies-List>build\Debug\NDbUnit.Test.dll</Test-Assemblies-List>	
+  </PropertyGroup>
+   
+  <ItemGroup>
+    <AllProjects Include="**\*.csproj" />
+  </ItemGroup>
+   
+  <Target Name="Clean">
+    <MSBuild Projects="@(AllProjects)" Targets="Clean" />
+  </Target>  
+ 
+  <Target Name="Compile">
+    <MSBuild Projects="@(AllProjects)" Targets="Build" Properties="WarningLevel=1" />
+  </Target>
+  
+  <!-- have to force x86 verssion of the test-runner b/c the ORA instant-client assemblies in the repo are the x86 (rather than x64) binaries -->
+  <Target Name="Test" DependsOnTargets="BuildSolution">
+        <Exec ContinueOnError="true" Command="&quot;$(NUnit-ToolPath)\nunit-console-x86.exe&quot; &quot;$(Test-Assemblies-List)&quot; /noshadow /work=build\Debug" />
+  </Target>
+  
+  <!-- Have to set ContinueOnError="true" b/c Doxygen will return an error is the LaTex infrastructure isn't present -->
+  <Target Name="ApiReferenceDocs">
+        <Exec ContinueOnError="true" Command="tools\doxygen\doxygen.exe src\NDbUnit.doxygen " />
+  </Target>
+  
+  <Target Name="Build" DependsOnTargets="BuildSolution;Test;ApiReferenceDocs" />
+ 
+  <Target Name="BuildSolution">
+    <MSBuild Projects="$(SolutionFileName)" />
+  </Target>
+ 
+</Project>
