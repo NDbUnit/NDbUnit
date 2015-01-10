@@ -363,6 +363,9 @@
     <Content Include="Xml\SqlServer\User.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Xml\SqlServer\UserAppend.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Xml\SqlServer\UserDS.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>UserDS.Designer.cs</LastGenOutput>
