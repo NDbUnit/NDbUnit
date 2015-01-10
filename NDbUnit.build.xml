@@ -21,7 +21,7 @@
   
   <!-- have to force x86 verssion of the test-runner b/c the ORA instant-client assemblies in the repo are the x86 (rather than x64) binaries -->
   <Target Name="Test" DependsOnTargets="BuildSolution">
-        <Exec ContinueOnError="true" Command="&quot;$(NUnit-ToolPath)\nunit-console-x86.exe&quot; &quot;$(Test-Assemblies-List)&quot; /noshadow /work=build\Debug" />
+        <Exec Command="&quot;$(NUnit-ToolPath)\nunit-console-x86.exe&quot; &quot;$(Test-Assemblies-List)&quot; /noshadow /work=build\Debug" />
   </Target>
   
   <!-- Have to set ContinueOnError="true" b/c Doxygen will return an error is the LaTex infrastructure isn't present -->
@@ -29,7 +29,7 @@
         <Exec ContinueOnError="true" Command="tools\doxygen\doxygen.exe src\NDbUnit.doxygen " />
   </Target>
   
-  <Target Name="Build" DependsOnTargets="BuildSolution;Test;ApiReferenceDocs" />
+  <Target Name="Build" DependsOnTargets="Test;ApiReferenceDocs" />
  
   <Target Name="BuildSolution">
     <MSBuild Projects="$(SolutionFileName)" />
