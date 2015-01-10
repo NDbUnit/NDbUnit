@@ -26,37 +26,10 @@ namespace NDbUnit.Test
 {
     public class DbConnection
     {
-        private const string TargetConfigFilename = "NDbUnit.Test.dll.config";
-        private static string _activeConfigSourceFilename;
-        private static bool _isInitialized;
-
-        private static void Init()
-        {
-            if (_isInitialized)
-                return;
-
-            _activeConfigSourceFilename = BuildActiveConfigSourceFilename();
-
-            if (System.IO.File.Exists(_activeConfigSourceFilename))
-            {
-                System.IO.File.Copy(_activeConfigSourceFilename, TargetConfigFilename, true);
-            }
-
-            _isInitialized = true;
-        }
-
-        private static string BuildActiveConfigSourceFilename()
-        {
-            var computerName = System.Environment.GetEnvironmentVariable("COMPUTERNAME");
-            return string.Format("app.config.{0}", computerName);
-        }
-
-
         public static string PostgresqlConnectionString
         {
             get
             {
-                Init();
                 return ConfigurationManager.ConnectionStrings["PostgresqlConnectionString"].ConnectionString;
             }
         }
@@ -64,7 +37,6 @@ namespace NDbUnit.Test
         {
             get
             {
-                Init();
                 return ConfigurationManager.ConnectionStrings["MysqlConnectionString"].ConnectionString;
             }
         }
@@ -73,7 +45,6 @@ namespace NDbUnit.Test
         {
             get
             {
-                Init();
                 return ConfigurationManager.ConnectionStrings["OleDbConnectionString"].ConnectionString;
             }
         }
@@ -82,7 +53,6 @@ namespace NDbUnit.Test
         {
             get
             {
-                Init();
                 return ConfigurationManager.ConnectionStrings["SqlCeConnectionString"].ConnectionString;
             }
         }
@@ -91,7 +61,6 @@ namespace NDbUnit.Test
         {
             get
             {
-                Init();
                 return ConfigurationManager.ConnectionStrings["SqlConnectionString"].ConnectionString;
             }
         }
@@ -100,7 +69,6 @@ namespace NDbUnit.Test
         {
             get
             {
-                Init();
                 return ConfigurationManager.ConnectionStrings["SqlScriptTestsConnectionString"].ConnectionString;
             }
         }
@@ -109,7 +77,6 @@ namespace NDbUnit.Test
         {
             get
             {
-                Init();
                 return ConfigurationManager.ConnectionStrings["SqlLiteConnectionString"].ConnectionString;
             }
         }
@@ -118,7 +85,6 @@ namespace NDbUnit.Test
         {
             get
             {
-                Init();
                 return ConfigurationManager.ConnectionStrings["SqlLiteInMemConnectionString"].ConnectionString;
             }
         }
@@ -127,7 +93,6 @@ namespace NDbUnit.Test
         {
             get
             {
-                Init();
                 return ConfigurationManager.ConnectionStrings["OracleClientConnectionString"].ConnectionString;
             }
         }
