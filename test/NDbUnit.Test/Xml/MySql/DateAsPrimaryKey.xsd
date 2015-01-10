@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DateAsPrimaryKey" targetNamespace="http://tempuri.org/DateAsPrimaryKey.xsd" xmlns:mstns="http://tempuri.org/DateAsPrimaryKey.xsd" xmlns="http://tempuri.org/DateAsPrimaryKey.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="DateAsPrimaryKey" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="DateAsPrimaryKey" msprop:Generator_UserDSName="DateAsPrimaryKey">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="TableWithDateAsPrimaryKey" msprop:Generator_TableClassName="TableWithDateAsPrimaryKeyDataTable" msprop:Generator_TableVarName="tableTableWithDateAsPrimaryKey" msprop:Generator_TablePropName="TableWithDateAsPrimaryKey" msprop:Generator_RowDeletingName="TableWithDateAsPrimaryKeyRowDeleting" msprop:Generator_UserTableName="TableWithDateAsPrimaryKey" msprop:Generator_RowChangingName="TableWithDateAsPrimaryKeyRowChanging" msprop:Generator_RowEvHandlerName="TableWithDateAsPrimaryKeyRowChangeEventHandler" msprop:Generator_RowDeletedName="TableWithDateAsPrimaryKeyRowDeleted" msprop:Generator_RowEvArgName="TableWithDateAsPrimaryKeyRowChangeEvent" msprop:Generator_RowChangedName="TableWithDateAsPrimaryKeyRowChanged" msprop:Generator_RowClassName="TableWithDateAsPrimaryKeyRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="PrimaryKey" msprop:Generator_ColumnVarNameInTable="columnPrimaryKey" msprop:Generator_ColumnPropNameInRow="PrimaryKey" msprop:Generator_ColumnPropNameInTable="PrimaryKeyColumn" msprop:Generator_UserColumnName="PrimaryKey" type="xs:dateTime" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="TableWithStringAsPrimaryKey" msprop:Generator_TableClassName="TableWithStringAsPrimaryKeyDataTable" msprop:Generator_TableVarName="tableTableWithStringAsPrimaryKey" msprop:Generator_TablePropName="TableWithStringAsPrimaryKey" msprop:Generator_RowDeletingName="TableWithStringAsPrimaryKeyRowDeleting" msprop:Generator_UserTableName="TableWithStringAsPrimaryKey" msprop:Generator_RowChangingName="TableWithStringAsPrimaryKeyRowChanging" msprop:Generator_RowEvHandlerName="TableWithStringAsPrimaryKeyRowChangeEventHandler" msprop:Generator_RowDeletedName="TableWithStringAsPrimaryKeyRowDeleted" msprop:Generator_RowEvArgName="TableWithStringAsPrimaryKeyRowChangeEvent" msprop:Generator_RowChangedName="TableWithStringAsPrimaryKeyRowChanged" msprop:Generator_RowClassName="TableWithStringAsPrimaryKeyRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="PrimaryKey" msprop:Generator_ColumnVarNameInTable="columnPrimaryKey" msprop:Generator_ColumnPropNameInRow="PrimaryKey" msprop:Generator_ColumnPropNameInTable="PrimaryKeyColumn" msprop:Generator_UserColumnName="PrimaryKey" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:TableWithDateAsPrimaryKey" />
+      <xs:field xpath="mstns:PrimaryKey" />
+    </xs:unique>
+    <xs:unique name="TableWithStringAsPrimaryKey_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:TableWithStringAsPrimaryKey" />
+      <xs:field xpath="mstns:PrimaryKey" />
+    </xs:unique>
+  </xs:element>
+</xs:schema>
