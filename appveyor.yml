@@ -1,0 +1,19 @@
+version: 1.0.{build}
+services:
+- mssql2008r2sp2
+- mysql56
+- postgresql93
+install:
+- SET PATH=C:\Program Files\MySql\MySQL Server 5.6\bin;C:\Program Files\PostgreSQL\9.3\bin;%PATH%
+before_build:
+- '"%APPVEYOR_BUILD_FOLDER%\ci-database-setup-scripts.cmd"'
+build:
+  project: NDbUnit.build.xml
+  verbosity: minimal
+after_build:
+- ps: >-
+    # upload results to AppVeyor
+
+    $wc = New-Object 'System.Net.WebClient'
+
+    $wc.UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path (Join-Path $($env:APPVEYOR_BUILD_FOLDER) \build\Debug\TestResult.xml)))
