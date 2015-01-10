@@ -2,7 +2,7 @@
   
   <!-- Application Configurations -->
   <PropertyGroup>
-    <SolutionFileName>Proteus.Utility.sln</SolutionFileName>
+    <SolutionFileName>NDbUnit.sln</SolutionFileName>
     <NUnit-ToolPath>packages\NUnit.Runners.2.6.4\tools</NUnit-ToolPath> 
 	<Test-Assemblies-List>build\Debug\NDbUnit.Test.dll</Test-Assemblies-List>	
   </PropertyGroup>
