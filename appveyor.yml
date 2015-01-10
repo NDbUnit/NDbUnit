@@ -10,7 +10,7 @@ before_build:
 build:
   project: NDbUnit.build.xml
   verbosity: minimal
-after_build:
+on_finish:
 - ps: >-
     # upload results to AppVeyor
 
