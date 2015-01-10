@@ -177,7 +177,13 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="DbUnitTestTestBase.cs" />
-    <Compile Include="ScriptManagerTest.cs" />
+    <Compile Include="ScriptManager\WhenClearingTheScripts.cs" />
+    <Compile Include="ScriptManager\WhenAccessingScriptContents.cs" />
+    <Compile Include="ScriptManager\WhenAddingASpecificFileSpec.cs" />
+    <Compile Include="ScriptManager\WhenAddingMultipleFilesAtOnce.cs" />
+    <Compile Include="ScriptManager\WhenAddingScriptsFromAnInvalidPath.cs" />
+    <Compile Include="ScriptManager\WhenInvokingScripts.cs" />
+    <Compile Include="ScriptManager\WhenScriptsContainsFiles.cs" />
     <Compile Include="SqlClient\DataSetAppendXmlTest.cs" />
     <Compile Include="SqlClient\SchemaPrefixTest.cs" />
     <Compile Include="SqlClient\SqlDbCommandBuilderTest.cs" />
@@ -201,21 +207,19 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>UserDS.xsd</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Xml\SQLite\UserDS.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>UserDS.xsd</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Xml\SqlServerCe\UserDS.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>UserDS.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Xml\SqlServer\SchemaWithSchemaPrefixes.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SchemaWithSchemaPrefixes.xsd</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <None Include="app.config">
       <SubType>Designer</SubType>
@@ -273,79 +277,146 @@
     <None Include="Xml\MySql\DateAsPrimaryKey.xsd">
       <LastGenOutput>DateAsPrimaryKey.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Xml\MySql\UserDS.xsd">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Content Include="SqlServerCe\testdb.sdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestScripts\sqlserver-drop-create-testdb.sql" />
-    <Content Include="TestScripts\sqlserver-testdb03.sql" />
-    <Content Include="TestScripts\sqlserver-testdb04.sql" />
-    <Content Include="TestScripts\testscript03.sql" />
-    <Content Include="TestScripts\testscript02.sql" />
-    <Content Include="TestScripts\testscript01.sql" />
-    <Content Include="Xml\MySql\DateAsPrimaryKey.xml" />
+    <Content Include="TestScripts\sqlserver-drop-create-testdb.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestScripts\sqlserver-testdb03.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestScripts\sqlserver-testdb04.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestScripts\testscript03.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestScripts\testscript02.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestScripts\testscript01.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Xml\MySql\DateAsPrimaryKey.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Xml\OleDb\UserDS.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>UserDS.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Xml\OracleClient\UserDS.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>UserDS1.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Xml\Postgresql\UserDS.xsd">
       <SubType>Designer</SubType>
       <LastGenOutput>UserDS.Designer.cs</LastGenOutput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Xml\SqlServerCe\UserDS.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>UserDS.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Content Include="Xml\OleDb\User.xml" />
-    <Content Include="Xml\OleDb\UserMod.xml" />
-    <Content Include="Xml\OleDb\UserRefresh.xml" />
-    <Content Include="Xml\OracleClient\User.xml" />
-    <Content Include="Xml\OracleClient\UserMod.xml" />
-    <Content Include="Xml\OracleClient\UserRefresh.xml" />
-    <Content Include="Xml\Postgresql\User.xml" />
-    <Content Include="Xml\Postgresql\UserMod.xml" />
-    <Content Include="Xml\Postgresql\UserRefresh.xml" />
-    <Content Include="Xml\SqlServer\DataFileWithSchemaPrefixes.xml" />
-    <Content Include="Xml\SqlServer\User.xml" />
+    <Content Include="Xml\OleDb\User.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Xml\OleDb\UserMod.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Xml\OleDb\UserRefresh.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Xml\OracleClient\User.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Xml\OracleClient\UserMod.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Xml\OracleClient\UserRefresh.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Xml\Postgresql\User.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Xml\Postgresql\UserMod.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Xml\Postgresql\UserRefresh.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Xml\SqlServer\DataFileWithSchemaPrefixes.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Xml\SqlServer\User.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Xml\SqlServer\UserDS.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>UserDS.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Xml\SQLite\UserDS.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>UserDS.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Xml\SqlServer\SchemaWithSchemaPrefixes.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>SchemaWithSchemaPrefixes.Designer.cs</LastGenOutput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Content Include="Scripts\mysql-testdb-create.sql" />
     <Content Include="Scripts\sqlite-testdb-create.sql" />
     <Content Include="Scripts\sqlserver-testdb-create.sql" />
-    <Content Include="Xml\MySql\User.xml" />
-    <Content Include="Xml\MySql\UserMod.xml" />
-    <Content Include="Xml\MySql\UserRefresh.xml" />
-    <Content Include="Xml\SQLite\User.xml" />
-    <Content Include="Xml\SQLite\UserMod.xml" />
-    <Content Include="Xml\SQLite\UserRefresh.xml" />
-    <Content Include="Xml\SqlServer\UserMod.xml" />
-    <Content Include="Xml\SqlServer\UserRefresh.xml" />
-    <Content Include="Xml\SqlServerCe\User.xml" />
-    <Content Include="Xml\SqlServerCe\UserMod.xml" />
-    <Content Include="Xml\SqlServerCe\UserRefresh.xml" />
+    <Content Include="Xml\MySql\User.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Xml\MySql\UserMod.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Xml\MySql\UserRefresh.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Xml\SQLite\User.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Xml\SQLite\UserMod.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Xml\SQLite\UserRefresh.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Xml\SqlServer\UserMod.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Xml\SqlServer\UserRefresh.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Xml\SqlServerCe\User.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Xml\SqlServerCe\UserMod.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Xml\SqlServerCe\UserRefresh.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -408,6 +479,7 @@
       <Name>NDbUnit.SqlServerCe</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

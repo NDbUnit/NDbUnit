@@ -40,7 +40,7 @@ namespace NDbUnit.Test
 
         public class Postgresql : XmlTestFilesBase
         {
-            private static string _xmlPath = @"..\..\Xml\Postgresql\";
+            private static string _xmlPath = @"Xml\Postgresql\";
 
             public static string XmlFile
             {
@@ -67,7 +67,7 @@ namespace NDbUnit.Test
 
         public class MySql : XmlTestFilesBase
         {
-            private static string _xmlPath = @"..\..\Xml\MySql\";
+            private static string _xmlPath = @"Xml\MySql\";
 
             public static string XmlFile
             {
@@ -95,7 +95,7 @@ namespace NDbUnit.Test
         {
             private static string xmlAppendFilename = "UserAppend.xml";
 
-            private static string _xmlPath = @"..\..\Xml\SqlServer\";
+            private static string _xmlPath = @"Xml\SqlServer\";
 
             public static string XmlApppendFile
             {
@@ -136,7 +136,7 @@ namespace NDbUnit.Test
 
         public class SqlServerCe : XmlTestFilesBase
         {
-            private static string _xmlPath = @"..\..\Xml\SqlServerCe\";
+            private static string _xmlPath = @"Xml\SqlServerCe\";
 
             public static string XmlFile
             {
@@ -162,7 +162,7 @@ namespace NDbUnit.Test
 
         public class OleDb : XmlTestFilesBase
         {
-            private static string _xmlPath = @"..\..\Xml\OleDb\";
+            private static string _xmlPath = @"Xml\OleDb\";
 
             public static string XmlFile
             {
@@ -188,7 +188,7 @@ namespace NDbUnit.Test
 
         public class Sqlite : XmlTestFilesBase
         {
-            private static string _xmlPath = @"..\..\Xml\Sqlite\";
+            private static string _xmlPath = @"Xml\Sqlite\";
 
             public static string XmlFile
             {
@@ -214,7 +214,7 @@ namespace NDbUnit.Test
 
         public class OracleClient : XmlTestFilesBase
         {
-            private static string _xmlPath = @"..\..\Xml\OracleClient\";
+            private static string _xmlPath = @"Xml\OracleClient\";
 
             public static string XmlFile
             {

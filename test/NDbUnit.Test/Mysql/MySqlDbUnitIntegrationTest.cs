@@ -55,8 +55,8 @@ namespace NDbUnit.Test.Mysql
         public void Issue38_Test()
         {
             INDbUnitTest db = GetNDbUnitTest();
-            db.ReadXmlSchema( @"..\..\Xml\MySql\DateAsPrimaryKey.xsd");
-            db.ReadXml(@"..\..\Xml\MySql\DateAsPrimaryKey.xml");
+            db.ReadXmlSchema( @"Xml\MySql\DateAsPrimaryKey.xsd");
+            db.ReadXml(@"Xml\MySql\DateAsPrimaryKey.xml");
 
             db.PerformDbOperation(DbOperationFlag.CleanInsertIdentity);
 
