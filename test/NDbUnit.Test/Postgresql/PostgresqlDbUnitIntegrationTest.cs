@@ -21,9 +21,11 @@
 using NDbUnit.Core;
 using NDbUnit.Core.MySqlClient;
 using NDbUnit.Postgresql;
+using NUnit.Framework;
 
 namespace NDbUnit.Test.Postgresql
 {
+    [Category(TestCategories.PostgresTests)]
     public class PostgresqlDbUnitIntegrationTest : IntegationTestBase
     {
         protected override INDbUnitTest GetNDbUnitTest()

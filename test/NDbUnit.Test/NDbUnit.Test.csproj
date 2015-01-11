@@ -201,6 +201,7 @@
     <Compile Include="SqlServerCe\SqlCeDbUnitIntegrationTest.cs" />
     <Compile Include="SqlServerCe\SqlCeDbUnitTestTest.cs" />
     <Compile Include="TableNameHelperTest.cs" />
+    <Compile Include="TestCategories.cs" />
     <Compile Include="XmlTestFiles.cs">
       <SubType>Code</SubType>
     </Compile>

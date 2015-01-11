@@ -26,6 +26,7 @@ using NUnit.Framework;
 
 namespace NDbUnit.Test.SqlClient
 {
+    [Category(TestCategories.SqliteTests)]
     [TestFixture]
     class SqlLiteCommandBuilderTest : NDbUnit.Test.Common.DbCommandBuilderTestBase
     {

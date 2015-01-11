@@ -24,6 +24,7 @@ using NUnit.Framework;
 
 namespace NDbUnit.Test.Mysql
 {
+    [Category(TestCategories.MySqlTests)]
     public class MySqlDbUnitIntegrationTest : IntegationTestBase
     {
         protected override INDbUnitTest GetNDbUnitTest()

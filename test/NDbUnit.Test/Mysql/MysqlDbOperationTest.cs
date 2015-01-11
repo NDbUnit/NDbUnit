@@ -27,6 +27,7 @@ using NUnit.Framework;
 
 namespace NDbUnit.Test.Mysql
 {
+    [Category(TestCategories.MySqlTests)]
     [TestFixture]
     class MySqlDbOperationTest : NDbUnit.Test.Common.DbOperationTestBase
     {

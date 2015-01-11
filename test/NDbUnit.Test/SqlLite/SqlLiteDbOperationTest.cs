@@ -27,6 +27,7 @@ using NUnit.Framework;
 
 namespace NDbUnit.Test.SqlLite
 {
+    [Category(TestCategories.SqliteTests)]
     [TestFixture]
     public class SqlLiteDbOperationTest : NDbUnit.Test.Common.DbOperationTestBase
     {

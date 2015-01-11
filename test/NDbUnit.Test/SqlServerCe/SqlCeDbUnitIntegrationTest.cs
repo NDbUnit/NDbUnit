@@ -19,9 +19,11 @@
  */
 
 using NDbUnit.Core.SqlServerCe;
+using NUnit.Framework;
 
 namespace NDbUnit.Test.SqlServerCe
 {
+    [Category(TestCategories.SqlServerCeTests)]
     public class SqlCeDbUnitIntegrationTest : IntegationTestBase
     {
         protected override NDbUnit.Core.INDbUnitTest GetNDbUnitTest()

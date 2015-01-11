@@ -23,9 +23,11 @@ using System.Collections.Generic;
 using System.Text;
 using NDbUnit.Core.SqlClient;
 using NDbUnit.Core.OleDb;
+using NUnit.Framework;
 
 namespace NDbUnit.Test.SqlClient
 {
+    [Category(TestCategories.OleDbTests)]
     public class OleDbUnitIntegrationTest : IntegationTestBase
     {
         protected override NDbUnit.Core.INDbUnitTest GetNDbUnitTest()

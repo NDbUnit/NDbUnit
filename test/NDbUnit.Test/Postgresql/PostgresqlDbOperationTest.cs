@@ -28,6 +28,7 @@ using NUnit.Framework;
 
 namespace NDbUnit.Test.Postgresql
 {
+    [Category(TestCategories.PostgresTests)]
     [TestFixture]
     internal class PostgresqlDbOperationTest : DbOperationTestBase
     {

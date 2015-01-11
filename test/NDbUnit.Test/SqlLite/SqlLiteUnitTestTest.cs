@@ -28,6 +28,7 @@ using NUnit.Framework;
 
 namespace NDbUnit.Test.SqlLite
 {
+    [Category(TestCategories.SqliteTests)]
     [TestFixture]
     public class SqlLiteUnitTestTest : NDbUnit.Test.Common.DbUnitTestTestBase
     {

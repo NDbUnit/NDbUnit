@@ -28,6 +28,7 @@ using NUnit.Framework;
 
 namespace NDbUnit.Test.SqlLite_InMemory
 {
+    [Category(TestCategories.SqliteTests)]
     [TestFixture]
     public class SQLliteInMemoryIntegrationTest
     {

@@ -2,6 +2,7 @@
 
 namespace NDbUnit.Test.SqlClient
 {
+    [Category(TestCategories.SqlServerTests)]
     [TestFixture]
     public class DataSetAppendXmlTest
     {

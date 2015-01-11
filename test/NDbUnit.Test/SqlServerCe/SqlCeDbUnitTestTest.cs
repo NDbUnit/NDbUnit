@@ -28,6 +28,7 @@ using NUnit.Framework;
 
 namespace NDbUnit.Test.SqlServerCe
 {
+    [Category(TestCategories.SqlServerCeTests)]
     [TestFixture]
     public class SqlCeDbUnitTestTest : NDbUnit.Test.Common.DbUnitTestTestBase
     {

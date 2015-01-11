@@ -28,6 +28,7 @@ using NUnit.Framework;
 
 namespace NDbUnit.Test.OleDb
 {
+    [Category(TestCategories.OleDbTests)]
     [TestFixture]
     public class OleDbUnitTestTest : NDbUnit.Test.Common.DbUnitTestTestBase
     {

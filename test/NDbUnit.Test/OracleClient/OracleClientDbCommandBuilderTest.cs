@@ -22,10 +22,12 @@ using System.Collections.Generic;
 using NDbUnit.Test.Common;
 using NDbUnit.OracleClient;
 using NDbUnit.Core;
+using NUnit.Framework;
 using Oracle.DataAccess.Client;
 
 namespace NDbUnit.Test.OracleClient
 {
+    [Category(TestCategories.OracleTests)]
     public class OracleClientDbCommandBuilderTest : DbCommandBuilderTestBase
     {
         public override IList<string> ExpectedDataSetTableNames

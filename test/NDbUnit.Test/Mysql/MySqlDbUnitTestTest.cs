@@ -28,6 +28,7 @@ using NUnit.Framework;
 
 namespace NDbUnit.Test.MySqlDb
 {
+    [Category(TestCategories.MySqlTests)]
     [TestFixture]
     public class MySqlDbUnitTestTest : NDbUnit.Test.Common.DbUnitTestTestBase
     {

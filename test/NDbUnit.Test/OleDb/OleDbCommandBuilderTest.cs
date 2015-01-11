@@ -26,6 +26,7 @@ using OleDbCommandBuilder = NDbUnit.Core.OleDb.OleDbCommandBuilder;
 
 namespace NDbUnit.Test.SqlClient
 {
+    [Category(TestCategories.OleDbTests)]
     [TestFixture]
     class OleDbCommandBuilderTest : NDbUnit.Test.Common.DbCommandBuilderTestBase
     {

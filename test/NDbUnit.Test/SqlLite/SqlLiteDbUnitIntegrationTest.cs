@@ -19,9 +19,11 @@
  */
 
 using NDbUnit.Core.SqlLite;
+using NUnit.Framework;
 
 namespace NDbUnit.Test.SqlLite
 {
+    [Category(TestCategories.SqliteTests)]
     public class SqlLiteDbUnitIntegrationTest : IntegationTestBase
     {
         protected override NDbUnit.Core.INDbUnitTest GetNDbUnitTest()

@@ -26,10 +26,12 @@ using NDbUnit.OracleClient;
 using NDbUnit.Core;
 using System.Data;
 using System.IO;
+using NUnit.Framework;
 using Oracle.DataAccess.Client;
 
 namespace NDbUnit.Test.OracleClient
 {
+    [Category(TestCategories.OracleTests)]
     public class OracleClientDbUnitTestTest : DbUnitTestTestBase
     {
         public override IList<string> ExpectedDataSetTableNames

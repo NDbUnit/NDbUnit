@@ -26,6 +26,7 @@ using NUnit.Framework;
 
 namespace NDbUnit.Test.SqlClient
 {
+    [Category(TestCategories.MySqlTests)]
     [TestFixture]
     class MySqlDbCommandBuilderTest : NDbUnit.Test.Common.DbCommandBuilderTestBase
     {

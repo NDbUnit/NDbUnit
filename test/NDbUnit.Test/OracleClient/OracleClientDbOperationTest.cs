@@ -28,6 +28,7 @@ using Oracle.DataAccess.Client;
 
 namespace NDbUnit.Test.OracleClient
 {
+    [Category(TestCategories.OracleTests)]
     public class OracleClientDbOperationTest : DbOperationTestBase
     {
         public override void InsertIdentity_Executes_Without_Exception()

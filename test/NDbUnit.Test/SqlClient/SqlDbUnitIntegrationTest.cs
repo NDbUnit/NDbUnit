@@ -22,9 +22,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NDbUnit.Core.SqlClient;
+using NUnit.Framework;
 
 namespace NDbUnit.Test.SqlClient
 {
+    [Category(TestCategories.SqlServerTests)]
     public class SqlDbUnitIntegrationTest : IntegationTestBase
     {
         protected override NDbUnit.Core.INDbUnitTest GetNDbUnitTest()

@@ -3,6 +3,7 @@ using NUnit.Framework;
 
 namespace NDbUnit.Test.SqlClient
 {
+    [Category(TestCategories.SqlServerTests)]
     [TestFixture]
     public class SchemaPrefixTest
     {
