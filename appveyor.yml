@@ -10,6 +10,10 @@ before_build:
 build:
   project: NDbUnit.build.xml
   verbosity: minimal
+test:
+  categories:
+    except:
+    - OracleTests
 on_finish:
 - ps: >-
     # upload results to AppVeyor
