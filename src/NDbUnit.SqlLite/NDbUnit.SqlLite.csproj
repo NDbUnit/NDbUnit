@@ -34,7 +34,7 @@
     <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <NuGetPackageImportStamp>f1cfed84</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>032ad04a</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -64,7 +64,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\System.Data.SQLite.Core.1.0.94.0\lib\net20\System.Data.SQLite.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data.SQLite.Linq">
+    <Reference Include="System.Data.SQLite.Linq, Version=1.0.94.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\System.Data.SQLite.Linq.1.0.94.1\lib\net20\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
