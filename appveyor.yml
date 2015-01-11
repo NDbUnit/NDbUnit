@@ -7,13 +7,10 @@ install:
 - SET PATH=C:\Program Files\MySql\MySQL Server 5.6\bin;C:\Program Files\PostgreSQL\9.3\bin;%PATH%
 before_build:
 - '"%APPVEYOR_BUILD_FOLDER%\ci-database-setup-scripts.cmd"'
+- SET NUNIT_RUNNER_OPTIONS=/exclude=OracleTests
 build:
   project: NDbUnit.build.xml
   verbosity: minimal
-test:
-  categories:
-    except:
-    - OracleTests
 on_finish:
 - ps: >-
     # upload results to AppVeyor
