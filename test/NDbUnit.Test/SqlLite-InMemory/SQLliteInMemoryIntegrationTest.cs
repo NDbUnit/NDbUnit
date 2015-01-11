@@ -72,7 +72,7 @@ namespace NDbUnit.Test.SqlLite_InMemory
         private void ExecuteSchemaCreationScript()
         {
             IDbCommand command = _connection.CreateCommand();
-            command.CommandText = ReadTextFromFile(@"..\..\scripts\sqlite-testdb-create.sql");
+            command.CommandText = ReadTextFromFile(@"scripts\sqlite-testdb-create.sql");
 
             if (_connection.State != ConnectionState.Open)
                 _connection.Open();

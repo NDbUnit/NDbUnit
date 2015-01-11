@@ -288,13 +288,14 @@ namespace NDbUnit.Core
                     dbTransaction.Dispose();
                 }
 
-                if (ConnectionState.Open == dbConnection.State)
-                {
-                    dbConnection.Close();
-                }
-
+                //only close and release the connection if not externally-managed
                 if (!ConnectionManager.HasExternallyManagedConnection)
                 {
+                    if (ConnectionState.Open == dbConnection.State)
+                    {
+                        dbConnection.Close();
+                    }
+
                     ConnectionManager.ReleaseConnection();
                 }
             }
@@ -367,7 +368,7 @@ namespace NDbUnit.Core
         //protected abstract IDbCommandBuilder CreateDbCommandBuilder(string connectionString);
 
         //protected abstract IDbCommandBuilder CreateDbCommandBuilder(IDbConnection connection);
-        
+
         protected abstract IDbCommandBuilder CreateDbCommandBuilder(DbConnectionManager<TDbConnection> connectionManager);
 
         protected abstract IDbOperation CreateDbOperation();
