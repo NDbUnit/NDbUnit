@@ -32,6 +32,7 @@ using Oracle.DataAccess.Client;
 namespace NDbUnit.Test.OracleClient
 {
     [Category(TestCategories.OracleTests)]
+    [TestFixture]
     public class OracleClientDbUnitTestTest : DbUnitTestTestBase
     {
         public override IList<string> ExpectedDataSetTableNames
