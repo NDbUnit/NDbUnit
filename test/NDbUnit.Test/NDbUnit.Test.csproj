@@ -148,7 +148,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DataSetComparer\StreamHelper.cs" />
+    <Compile Include="DataSetComparer\DataSetComparerTestBase.cs" />
     <Compile Include="DataSetComparer\When_Comparing_DataSets_With_Different_Schemas.cs" />
     <Compile Include="DataSetComparer\When_Comparing_DataSets_With_Matching_Schema_But_Different_Data.cs" />
     <Compile Include="DataSetComparer\When_Comparing_Matching_DataSets.cs" />
@@ -204,6 +204,7 @@
     <Compile Include="SqlServerCe\SqlCeDbOperationTest.cs" />
     <Compile Include="SqlServerCe\SqlCeDbUnitIntegrationTest.cs" />
     <Compile Include="SqlServerCe\SqlCeDbUnitTestTest.cs" />
+    <Compile Include="StreamHelper.cs" />
     <Compile Include="TableNameHelperTest.cs" />
     <Compile Include="TestCategories.cs" />
     <Compile Include="XmlTestFiles.cs">

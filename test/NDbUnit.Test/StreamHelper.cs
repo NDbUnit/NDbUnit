@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace NDbUnit.Test.DataSetComparer
+namespace NDbUnit.Test
 {
     public static class StreamHelper
     {
