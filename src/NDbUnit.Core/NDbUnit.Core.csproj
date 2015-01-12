@@ -103,6 +103,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DataSetComparer.cs" />
     <Compile Include="DataSetTableIterator.cs" />
     <Compile Include="DbCommandBuilder.cs">
       <SubType>Code</SubType>
