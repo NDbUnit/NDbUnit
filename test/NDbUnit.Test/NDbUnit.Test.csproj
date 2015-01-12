@@ -208,11 +208,6 @@
     <Compile Include="XmlTestFiles.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Xml\DataSetComparer\FirstDataSetToCompare.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>FirstDataSetToCompare.xsd</DependentUpon>
-    </Compile>
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
@@ -270,16 +265,10 @@
     <None Include="SqlLite\test.sqlite.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Xml\DataSetComparer\FirstDataSetToCompare.xsc">
-      <DependentUpon>FirstDataSetToCompare.xsd</DependentUpon>
-    </None>
     <None Include="Xml\DataSetComparer\FirstDataSetToCompare.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>FirstDataSetToCompare.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="Xml\DataSetComparer\FirstDataSetToCompare.xss">
-      <DependentUpon>FirstDataSetToCompare.xsd</DependentUpon>
     </None>
     <None Include="Xml\MySql\DateAsPrimaryKey.xsd">
       <LastGenOutput>DateAsPrimaryKey.Designer.cs</LastGenOutput>
