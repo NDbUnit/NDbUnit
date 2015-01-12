@@ -90,13 +90,5 @@ namespace NDbUnit.Core.OleDb
             return new OleDbOperation();
         }
 
-        protected override void OnGetDataSetFromDb(string tableName, ref DataSet dsToFill, IDbConnection dbConnection)
-        {
-            OleDbCommand selectCommand = (OleDbCommand)GetDbCommandBuilder().GetSelectCommand(tableName);
-            selectCommand.Connection = dbConnection as OleDbConnection;
-            OleDbDataAdapter adapter = new OleDbDataAdapter(selectCommand);
-            adapter.Fill(dsToFill, tableName);
-        }
-
     }
 }
