@@ -269,6 +269,7 @@
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>FirstDataSetToCompare.Designer.cs</LastGenOutput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Xml\MySql\DateAsPrimaryKey.xsd">
       <LastGenOutput>DateAsPrimaryKey.Designer.cs</LastGenOutput>
@@ -298,6 +299,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="TestScripts\testscript01.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Xml\DataSetComparer\FirstDataToCompare.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Xml\MySql\DateAsPrimaryKey.xml">

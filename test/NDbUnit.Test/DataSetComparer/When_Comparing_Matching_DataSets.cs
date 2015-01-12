@@ -12,8 +12,8 @@ namespace NDbUnit.Test.DataSetComparer
         public void MyMethod()
         {
             DataSet preOperation = new DataSet();
-            preOperation.ReadXmlSchema(ReadOnlyStreamFromFilename(@"Xml\DataSetComparer\"));
-            preOperation.ReadXml(ReadOnlyStreamFromFilename(@""));
+            preOperation.ReadXmlSchema(ReadOnlyStreamFromFilename(@"Xml\DataSetComparer\FirstDataSetToCompare.xsd"));
+            preOperation.ReadXml(ReadOnlyStreamFromFilename(@"Xml\DataSetComparer\FirstDataToCompare.xml"));
         }
 
 

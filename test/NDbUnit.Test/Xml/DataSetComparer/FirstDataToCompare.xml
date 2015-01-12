@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<FirstDataSetToCompare xmlns="http://tempuri.org/FirstDataSetToCompare.xsd">
+  <DataTable1>
+    <PrimaryKeyColumn>1</PrimaryKeyColumn>
+    <StringColumn>String1</StringColumn>
+    <Int32Column>1</Int32Column>
+    <DateTimeColumn>2001-01-01T00:00:00</DateTimeColumn>
+    <ForeignKeyToDataTable2Column>2</ForeignKeyToDataTable2Column>
+  </DataTable1>
+  <DataTable1>
+    <PrimaryKeyColumn>2</PrimaryKeyColumn>
+    <StringColumn>String2</StringColumn>
+    <Int32Column>2</Int32Column>
+    <DateTimeColumn>2001-02-02T00:00:00</DateTimeColumn>
+  </DataTable1>
+  <DataTable2>
+    <PrimaryKeyColumn>1</PrimaryKeyColumn>
+    <StringColumn>String1</StringColumn>
+    <StringColumnNotNull>String1NotNull</StringColumnNotNull>
+  </DataTable2>
+  <DataTable2>
+    <PrimaryKeyColumn>2</PrimaryKeyColumn>
+    <StringColumn>String2</StringColumn>
+    <StringColumnNotNull>String2NotNull</StringColumnNotNull>
+  </DataTable2>
+</FirstDataSetToCompare>

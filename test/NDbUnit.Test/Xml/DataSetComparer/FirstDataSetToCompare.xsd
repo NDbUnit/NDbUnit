@@ -12,18 +12,18 @@
   <xs:element name="FirstDataSetToCompare" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="FirstDataSetToCompare" msprop:Generator_UserDSName="FirstDataSetToCompare">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="DataTable1" msprop:Generator_TableClassName="DataTable1DataTable" msprop:Generator_TableVarName="tableDataTable1" msprop:Generator_RowChangedName="DataTable1RowChanged" msprop:Generator_TablePropName="DataTable1" msprop:Generator_RowDeletingName="DataTable1RowDeleting" msprop:Generator_RowChangingName="DataTable1RowChanging" msprop:Generator_RowEvHandlerName="DataTable1RowChangeEventHandler" msprop:Generator_RowDeletedName="DataTable1RowDeleted" msprop:Generator_RowClassName="DataTable1Row" msprop:Generator_UserTableName="DataTable1" msprop:Generator_RowEvArgName="DataTable1RowChangeEvent">
+        <xs:element name="DataTable1" msprop:Generator_TableClassName="DataTable1DataTable" msprop:Generator_TableVarName="tableDataTable1" msprop:Generator_TablePropName="DataTable1" msprop:Generator_RowDeletingName="DataTable1RowDeleting" msprop:Generator_RowChangingName="DataTable1RowChanging" msprop:Generator_RowEvHandlerName="DataTable1RowChangeEventHandler" msprop:Generator_RowDeletedName="DataTable1RowDeleted" msprop:Generator_UserTableName="DataTable1" msprop:Generator_RowChangedName="DataTable1RowChanged" msprop:Generator_RowEvArgName="DataTable1RowChangeEvent" msprop:Generator_RowClassName="DataTable1Row">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="PrimaryKeyColumn" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnPrimaryKeyColumn" msprop:Generator_ColumnPropNameInRow="PrimaryKeyColumn" msprop:Generator_ColumnPropNameInTable="PrimaryKeyColumnColumn" msprop:Generator_UserColumnName="PrimaryKeyColumn" type="xs:int" />
               <xs:element name="StringColumn" msprop:Generator_ColumnVarNameInTable="columnStringColumn" msprop:Generator_ColumnPropNameInRow="StringColumn" msprop:Generator_ColumnPropNameInTable="StringColumnColumn" msprop:Generator_UserColumnName="StringColumn" type="xs:string" minOccurs="0" />
               <xs:element name="Int32Column" msprop:Generator_ColumnVarNameInTable="columnInt32Column" msprop:Generator_ColumnPropNameInRow="Int32Column" msprop:Generator_ColumnPropNameInTable="Int32ColumnColumn" msprop:Generator_UserColumnName="Int32Column" type="xs:int" minOccurs="0" />
               <xs:element name="DateTimeColumn" msprop:Generator_ColumnVarNameInTable="columnDateTimeColumn" msprop:Generator_ColumnPropNameInRow="DateTimeColumn" msprop:Generator_ColumnPropNameInTable="DateTimeColumnColumn" msprop:Generator_UserColumnName="DateTimeColumn" type="xs:dateTime" minOccurs="0" />
-              <xs:element name="ForeginKeyToDataTable2Column" msprop:Generator_ColumnVarNameInTable="columnForeginKeyToDataTable2Column" msprop:Generator_ColumnPropNameInRow="ForeginKeyToDataTable2Column" msprop:Generator_ColumnPropNameInTable="ForeginKeyToDataTable2ColumnColumn" msprop:Generator_UserColumnName="ForeginKeyToDataTable2Column" type="xs:int" minOccurs="0" />
+              <xs:element name="ForeignKeyToDataTable2Column" msprop:Generator_ColumnVarNameInTable="columnForeignKeyToDataTable2Column" msprop:Generator_ColumnPropNameInRow="ForeignKeyToDataTable2Column" msprop:Generator_ColumnPropNameInTable="ForeignKeyToDataTable2ColumnColumn" msprop:Generator_UserColumnName="ForeignKeyToDataTable2Column" type="xs:int" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="DataTable2" msprop:Generator_TableClassName="DataTable2DataTable" msprop:Generator_TableVarName="tableDataTable2" msprop:Generator_RowChangedName="DataTable2RowChanged" msprop:Generator_TablePropName="DataTable2" msprop:Generator_RowDeletingName="DataTable2RowDeleting" msprop:Generator_RowChangingName="DataTable2RowChanging" msprop:Generator_RowEvHandlerName="DataTable2RowChangeEventHandler" msprop:Generator_RowDeletedName="DataTable2RowDeleted" msprop:Generator_RowClassName="DataTable2Row" msprop:Generator_UserTableName="DataTable2" msprop:Generator_RowEvArgName="DataTable2RowChangeEvent">
+        <xs:element name="DataTable2" msprop:Generator_TableClassName="DataTable2DataTable" msprop:Generator_TableVarName="tableDataTable2" msprop:Generator_TablePropName="DataTable2" msprop:Generator_RowDeletingName="DataTable2RowDeleting" msprop:Generator_RowChangingName="DataTable2RowChanging" msprop:Generator_RowEvHandlerName="DataTable2RowChangeEventHandler" msprop:Generator_RowDeletedName="DataTable2RowDeleted" msprop:Generator_UserTableName="DataTable2" msprop:Generator_RowChangedName="DataTable2RowChanged" msprop:Generator_RowEvArgName="DataTable2RowChangeEvent" msprop:Generator_RowClassName="DataTable2Row">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="PrimaryKeyColumn" msprop:Generator_ColumnVarNameInTable="columnPrimaryKeyColumn" msprop:Generator_ColumnPropNameInRow="PrimaryKeyColumn" msprop:Generator_ColumnPropNameInTable="PrimaryKeyColumnColumn" msprop:Generator_UserColumnName="PrimaryKeyColumn" type="xs:int" />
@@ -44,7 +44,7 @@
     </xs:unique>
     <xs:keyref name="FK_DataTable2_DataTable1" refer="DataTable2PrimaryKey" msdata:ConstraintOnly="true">
       <xs:selector xpath=".//mstns:DataTable1" />
-      <xs:field xpath="mstns:ForeginKeyToDataTable2Column" />
+      <xs:field xpath="mstns:ForeignKeyToDataTable2Column" />
     </xs:keyref>
   </xs:element>
 </xs:schema>
