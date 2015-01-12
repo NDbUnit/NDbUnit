@@ -266,9 +266,27 @@
     <None Include="SqlLite\test.sqlite.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Xml\DataSetComparer\DifferingDataSetWithDiffColumnNameAndDataTypeToCompare.xsd">
+    <None Include="Xml\DataSetComparer\DifferingDataSetWithDiffTablesToCompare.xsd">
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>DifferingDataSetWithDiffColumnNameAndDataTypeToCompare.Designer.cs</LastGenOutput>
+      <LastGenOutput>DifferingDataSetWithDiffTablesToCompare.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Xml\DataSetComparer\DifferingDataSetWithMissingFKToCompare.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DifferingDataSetWithMissingFKToCompare.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Xml\DataSetComparer\DifferingDataSetWithDiffColumnNameToCompare.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DifferingDataSetWithDiffColumnNameToCompare.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Xml\DataSetComparer\DifferingDataSetWithDiffColumnTypeToCompare.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DifferingDataSetWithDiffColumnTypeToCompare.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

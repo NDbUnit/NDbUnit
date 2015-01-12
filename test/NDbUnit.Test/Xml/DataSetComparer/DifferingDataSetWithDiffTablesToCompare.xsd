@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DifferingDataSetWithDiffTablesToCompare" targetNamespace="http://tempuri.org/DifferingDataSetWithDiffTablesToCompare.xsd" xmlns:mstns="http://tempuri.org/DifferingDataSetWithDiffTablesToCompare.xsd" xmlns="http://tempuri.org/DifferingDataSetWithDiffTablesToCompare.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="DifferingDataSetWithDiffTablesToCompare" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="DifferingDataSetWithDiffTablesToCompare" msprop:Generator_UserDSName="DifferingDataSetWithDiffTablesToCompare">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="DataTable1" msprop:Generator_TableClassName="DataTable1DataTable" msprop:Generator_TableVarName="tableDataTable1" msprop:Generator_RowChangedName="DataTable1RowChanged" msprop:Generator_TablePropName="DataTable1" msprop:Generator_RowDeletingName="DataTable1RowDeleting" msprop:Generator_RowChangingName="DataTable1RowChanging" msprop:Generator_RowEvHandlerName="DataTable1RowChangeEventHandler" msprop:Generator_RowDeletedName="DataTable1RowDeleted" msprop:Generator_RowClassName="DataTable1Row" msprop:Generator_UserTableName="DataTable1" msprop:Generator_RowEvArgName="DataTable1RowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="PrimaryKeyColumn" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnPrimaryKeyColumn" msprop:Generator_ColumnPropNameInRow="PrimaryKeyColumn" msprop:Generator_ColumnPropNameInTable="PrimaryKeyColumnColumn" msprop:Generator_UserColumnName="PrimaryKeyColumn" type="xs:int" />
+              <xs:element name="StringColumn" msprop:Generator_ColumnVarNameInTable="columnStringColumn" msprop:Generator_ColumnPropNameInRow="StringColumn" msprop:Generator_ColumnPropNameInTable="StringColumnColumn" msprop:Generator_UserColumnName="StringColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="Int32Column" msprop:Generator_ColumnVarNameInTable="columnInt32Column" msprop:Generator_ColumnPropNameInRow="Int32Column" msprop:Generator_ColumnPropNameInTable="Int32ColumnColumn" msprop:Generator_UserColumnName="Int32Column" type="xs:int" minOccurs="0" />
+              <xs:element name="DateTimeColumn" msprop:Generator_ColumnVarNameInTable="columnDateTimeColumn" msprop:Generator_ColumnPropNameInRow="DateTimeColumn" msprop:Generator_ColumnPropNameInTable="DateTimeColumnColumn" msprop:Generator_UserColumnName="DateTimeColumn" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="ForeignKeyToDataTable2Column" msprop:Generator_ColumnVarNameInTable="columnForeignKeyToDataTable2Column" msprop:Generator_ColumnPropNameInRow="ForeignKeyToDataTable2Column" msprop:Generator_ColumnPropNameInTable="ForeignKeyToDataTable2ColumnColumn" msprop:Generator_UserColumnName="ForeignKeyToDataTable2Column" type="xs:int" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="DataTable3" msprop:Generator_TableClassName="DataTable3DataTable" msprop:Generator_TableVarName="tableDataTable3" msprop:Generator_TablePropName="DataTable3" msprop:Generator_RowDeletingName="DataTable3RowDeleting" msprop:Generator_RowChangingName="DataTable3RowChanging" msprop:Generator_RowEvHandlerName="DataTable3RowChangeEventHandler" msprop:Generator_RowDeletedName="DataTable3RowDeleted" msprop:Generator_UserTableName="DataTable3" msprop:Generator_RowChangedName="DataTable3RowChanged" msprop:Generator_RowEvArgName="DataTable3RowChangeEvent" msprop:Generator_RowClassName="DataTable3Row">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="StringColumn" msprop:Generator_ColumnVarNameInTable="columnStringColumn" msprop:Generator_ColumnPropNameInRow="StringColumn" msprop:Generator_ColumnPropNameInTable="StringColumnColumn" msprop:Generator_UserColumnName="StringColumn" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="DataTable1PrimaryKey" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:DataTable1" />
+      <xs:field xpath="mstns:PrimaryKeyColumn" />
+    </xs:unique>
+  </xs:element>
+</xs:schema>
