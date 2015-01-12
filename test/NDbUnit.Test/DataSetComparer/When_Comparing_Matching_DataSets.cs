@@ -1,5 +1,5 @@
 ﻿using System.Data;
-using System.IO;
+using NDbUnit.Core;
 using NUnit.Framework;
 
 namespace NDbUnit.Test.DataSetComparer
@@ -7,20 +7,19 @@ namespace NDbUnit.Test.DataSetComparer
     [TestFixture]
     public class When_Comparing_Matching_DataSets
     {
-
         [Test]
-        public void MyMethod()
+        public void CanReportMatch()
         {
-            DataSet preOperation = new DataSet();
-            preOperation.ReadXmlSchema(ReadOnlyStreamFromFilename(@"Xml\DataSetComparer\FirstDataSetToCompare.xsd"));
-            preOperation.ReadXml(ReadOnlyStreamFromFilename(@"Xml\DataSetComparer\FirstDataToCompare.xml"));
+            var firstDataSet = new DataSet();
+            firstDataSet.ReadXmlSchema(StreamHelper.ReadOnlyStreamFromFilename(@"Xml\DataSetComparer\FirstDataSetToCompare.xsd"));
+            firstDataSet.ReadXml(StreamHelper.ReadOnlyStreamFromFilename(@"Xml\DataSetComparer\FirstDataToCompare.xml"));
+
+            var secondDataSet = new DataSet();
+            secondDataSet.ReadXmlSchema(StreamHelper.ReadOnlyStreamFromFilename(@"Xml\DataSetComparer\FirstDataSetToCompare.xsd"));
+            secondDataSet.ReadXml(StreamHelper.ReadOnlyStreamFromFilename(@"Xml\DataSetComparer\FirstDataToCompare.xml"));
+
+            Assert.That(firstDataSet.HasSameSchemaAs(secondDataSet));
+            Assert.That(firstDataSet.HasSameDataAs(secondDataSet));
         }
-
-
-
-        private FileStream ReadOnlyStreamFromFilename(string filename)
-        {
-            return new FileStream(filename, FileMode.Open, FileAccess.Read);
-        }    
     }
 }

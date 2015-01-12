@@ -148,6 +148,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DataSetComparer\StreamHelper.cs" />
     <Compile Include="DataSetComparer\When_Comparing_DataSets_With_Different_Schemas.cs" />
     <Compile Include="DataSetComparer\When_Comparing_DataSets_With_Matching_Schema_But_Different_Data.cs" />
     <Compile Include="DataSetComparer\When_Comparing_Matching_DataSets.cs" />
@@ -265,6 +266,12 @@
     <None Include="SqlLite\test.sqlite.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Xml\DataSetComparer\DifferingDataSetWithDiffColumnNameAndDataTypeToCompare.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DifferingDataSetWithDiffColumnNameAndDataTypeToCompare.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Xml\DataSetComparer\FirstDataSetToCompare.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
@@ -299,6 +306,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="TestScripts\testscript01.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Xml\DataSetComparer\DifferingDataToCompare.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Xml\DataSetComparer\FirstDataToCompare.xml">
