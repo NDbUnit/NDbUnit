@@ -11,8 +11,8 @@ namespace NDbUnit.Test.DataSetComparer
             var firstDataSet = BuildDataSet(@"Xml\DataSetComparer\FirstDataSetToCompare.xsd", @"Xml\DataSetComparer\FirstDataToCompare.xml");
             var secondDataSet = BuildDataSet(@"Xml\DataSetComparer\FirstDataSetToCompare.xsd", @"Xml\DataSetComparer\DifferingDataToCompare.xml");
 
-            Assert.That(firstDataSet.HasSameSchemaAs(secondDataSet));
-            Assert.That(firstDataSet.HasSameDataAs(secondDataSet), Is.False);
+            Assert.That(firstDataSet.HasTheSameSchemaAs(secondDataSet));
+            Assert.That(firstDataSet.HasTheSameDataAs(secondDataSet), Is.False);
         }
     }
 }

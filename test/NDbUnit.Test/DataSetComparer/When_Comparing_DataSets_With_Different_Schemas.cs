@@ -12,7 +12,7 @@ namespace NDbUnit.Test.DataSetComparer
             var firstDataSet = BuildDataSet(@"Xml\DataSetComparer\FirstDataSetToCompare.xsd");
             var secondDataSet = BuildDataSet(@"Xml\DataSetComparer\DifferingDataSetWithMissingFKToCompare.xsd");
 
-            Assert.That(firstDataSet.HasSameSchemaAs(secondDataSet), Is.False);
+            Assert.That(firstDataSet.HasTheSameSchemaAs(secondDataSet), Is.False);
         }
 
         [Test]
@@ -21,7 +21,7 @@ namespace NDbUnit.Test.DataSetComparer
             var firstDataSet = BuildDataSet(@"Xml\DataSetComparer\FirstDataSetToCompare.xsd");
             var secondDataSet = BuildDataSet(@"Xml\DataSetComparer\DifferingDataSetWithDiffColumnTypeToCompare.xsd");
 
-            Assert.That(firstDataSet.HasSameSchemaAs(secondDataSet), Is.False);
+            Assert.That(firstDataSet.HasTheSameSchemaAs(secondDataSet), Is.False);
         }
 
         [Test]
@@ -30,7 +30,7 @@ namespace NDbUnit.Test.DataSetComparer
             var firstDataSet = BuildDataSet(@"Xml\DataSetComparer\FirstDataSetToCompare.xsd");
             var secondDataSet = BuildDataSet(@"Xml\DataSetComparer\DifferingDataSetWithDiffColumnNameToCompare.xsd");
 
-            Assert.That(firstDataSet.HasSameSchemaAs(secondDataSet), Is.False);
+            Assert.That(firstDataSet.HasTheSameSchemaAs(secondDataSet), Is.False);
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace NDbUnit.Test.DataSetComparer
             var firstDataSet = BuildDataSet(@"Xml\DataSetComparer\FirstDataSetToCompare.xsd");
             var secondDataSet = BuildDataSet(@"Xml\DataSetComparer\DifferingDataSetWithDiffTablesToCompare.xsd");
 
-            Assert.That(firstDataSet.HasSameSchemaAs(secondDataSet), Is.False);
+            Assert.That(firstDataSet.HasTheSameSchemaAs(secondDataSet), Is.False);
         }
     }
 }
