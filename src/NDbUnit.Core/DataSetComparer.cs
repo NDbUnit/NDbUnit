@@ -6,9 +6,6 @@ namespace NDbUnit.Core
 {
     public static class DataSetComparer
     {
-
-        private static readonly CompareLogic Comparer = new CompareLogic();
-
         public static bool HasTheSameDataAs(this DataSet left, DataSet right)
         {
             //if schemas don't match, no point in proceeding to test any data/content so just bail out early...
@@ -55,13 +52,23 @@ namespace NDbUnit.Core
 
         private static bool HaveTheSameSchema(DataTable left, DataTable right)
         {
+            //for some reason the CompareNETObjects comparer refuses to respect the config directive to ignore the Rows property
+            // so we have to clone the DataTable(s) and then clear the .Rows collection on both before comparing them
+            var leftClone = left.Clone();
+            var rightClone = right.Clone();
+
+            leftClone.Rows.Clear();
+            rightClone.Rows.Clear();
+
             var config = new ComparisonConfig { IgnoreCollectionOrder = true, CompareChildren = false };
-            config.MembersToIgnore.Add("Columns");
+            
+            //this line *should* make the comparer ignore the Rows collection, but it doesn't appear to work
+            // so we'll leave it in here just in case this functionality should be resolved at some future point
             config.MembersToIgnore.Add("Rows");
+            
+            var comparer = new CompareLogic(config);
 
-            Comparer.Config = config;
-
-            var result = Comparer.Compare(left, right);
+            var result = comparer.Compare(leftClone, rightClone);
 
             if (!result.AreEqual)
                 return false;
@@ -88,31 +95,27 @@ namespace NDbUnit.Core
             if (left.Rows.Count != right.Rows.Count)
                 return false;
 
-            var config = new ComparisonConfig { IgnoreCollectionOrder = true, CompareChildren = false };
-            Comparer.Config = config;
+            var config = new ComparisonConfig { IgnoreCollectionOrder = true };
 
-            return Comparer.Compare(left, right).AreEqual;
-        }
+            var comparer = new CompareLogic(config);
 
-        private static bool HaveTheSamData(DataRow left, DataRow right)
-        {
-            return false;
+            return comparer.Compare(left, right).AreEqual;
         }
 
         private static bool HaveTheSameSchema(DataColumn left, DataColumn right)
         {
-            var config = new ComparisonConfig { IgnoreCollectionOrder = true, CompareChildren = false };
-            Comparer.Config = config;
+            var config = new ComparisonConfig { IgnoreCollectionOrder = true, CompareChildren = false};
+            var comparer = new CompareLogic(config);
 
-            return Comparer.Compare(left, right).AreEqual;
+            return comparer.Compare(left, right).AreEqual;
         }
 
         private static bool HaveTheSameSchema(DataRelation left, DataRelation right)
         {
-            var config = new ComparisonConfig { IgnoreCollectionOrder = true, CompareChildren = false };
-            Comparer.Config = config;
+            var config = new ComparisonConfig { IgnoreCollectionOrder = true,CompareChildren = false};
+            var comparer = new CompareLogic(config);
 
-            return Comparer.Compare(left, right).AreEqual;
+            return comparer.Compare(left, right).AreEqual;
         }
     }
 }

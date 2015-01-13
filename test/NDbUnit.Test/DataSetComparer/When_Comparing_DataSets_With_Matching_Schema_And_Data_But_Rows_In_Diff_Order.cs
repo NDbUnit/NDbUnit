@@ -1,4 +1,10 @@
-﻿using System.Data;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics;
+using Gallio.Runtime.UtilityCommands;
+using KellermanSoftware.CompareNetObjects;
 using NDbUnit.Core;
 using NUnit.Framework;
 
