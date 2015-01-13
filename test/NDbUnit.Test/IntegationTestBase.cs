@@ -36,8 +36,7 @@ namespace NDbUnit.Test
         {
             INDbUnitTest database = GetNDbUnitTest();
 
-            DataSet preOperation = new DataSet();
-            preOperation.ReadXmlSchema(ReadOnlyStreamFromFilename(GetXmlSchemaFilename()));
+            DataSet expectedDataSet = BuildDataSet();
 
             database.ReadXmlSchema(ReadOnlyStreamFromFilename(GetXmlSchemaFilename()));
             database.ReadXml(ReadOnlyStreamFromFilename(GetXmlFilename()));
@@ -46,9 +45,9 @@ namespace NDbUnit.Test
             database.PerformDbOperation(DbOperationFlag.InsertIdentity);
             database.PerformDbOperation(DbOperationFlag.DeleteAll);
 
-            DataSet postOperation = database.GetDataSetFromDb();
+            DataSet actualDataSet = database.GetDataSetFromDb();
 
-            Assert.That(preOperation, Is.EqualTo(postOperation).Using(new StructuralEqualityComparer<DataSet>()));
+            Assert.That(actualDataSet, Is.EqualTo(expectedDataSet).Using(new StructuralEqualityComparer<DataSet>()));
 
             database.Dispose();
         }
@@ -59,9 +58,7 @@ namespace NDbUnit.Test
         {
             INDbUnitTest database = GetNDbUnitTest();
 
-            DataSet preOperation = new DataSet();
-            preOperation.ReadXmlSchema(ReadOnlyStreamFromFilename(GetXmlSchemaFilename()));
-            preOperation.ReadXml(ReadOnlyStreamFromFilename(GetXmlFilename()));
+            DataSet expectedDataSet = BuildDataSet(GetXmlFilename());
 
             database.ReadXmlSchema(ReadOnlyStreamFromFilename(GetXmlSchemaFilename()));
             database.ReadXml(ReadOnlyStreamFromFilename(GetXmlFilename()));
@@ -69,9 +66,9 @@ namespace NDbUnit.Test
             database.PerformDbOperation(DbOperationFlag.DeleteAll);
             database.PerformDbOperation(DbOperationFlag.InsertIdentity);
 
-            DataSet postOperation = database.GetDataSetFromDb();
+            DataSet actualDataSet = database.GetDataSetFromDb();
 
-            Assert.That(preOperation, Is.EqualTo(postOperation).Using(new StructuralEqualityComparer<DataSet>()));
+            Assert.That(actualDataSet, Is.EqualTo(expectedDataSet).Using(new StructuralEqualityComparer<DataSet>()));
             database.Dispose();
 
         }
@@ -82,9 +79,7 @@ namespace NDbUnit.Test
         {
             INDbUnitTest database = GetNDbUnitTest();
 
-            DataSet preOperation = new DataSet();
-            preOperation.ReadXmlSchema(ReadOnlyStreamFromFilename(GetXmlSchemaFilename()));
-            preOperation.ReadXml(ReadOnlyStreamFromFilename(GetXmlFilename()));
+            DataSet expectedDataSet = BuildDataSet(GetXmlFilename());
 
             database.ReadXmlSchema(ReadOnlyStreamFromFilename(GetXmlSchemaFilename()));
             database.ReadXml(ReadOnlyStreamFromFilename(GetXmlFilename()));
@@ -95,9 +90,9 @@ namespace NDbUnit.Test
             database.ReadXml(GetXmlRefreshFilename());
             database.PerformDbOperation(DbOperationFlag.Refresh);
 
-            DataSet postOperation = database.GetDataSetFromDb();
+            DataSet actualDataSet = database.GetDataSetFromDb();
 
-            Assert.That(preOperation, Is.EqualTo(postOperation).Using(new StructuralEqualityComparer<DataSet>()));
+            Assert.That(actualDataSet, Is.EqualTo(expectedDataSet).Using(new StructuralEqualityComparer<DataSet>()));
             database.Dispose();
 
         }
@@ -108,9 +103,7 @@ namespace NDbUnit.Test
         {
             INDbUnitTest database = GetNDbUnitTest();
 
-            DataSet preOperation = new DataSet();
-            preOperation.ReadXmlSchema(ReadOnlyStreamFromFilename(GetXmlSchemaFilename()));
-            preOperation.ReadXml(ReadOnlyStreamFromFilename(GetXmlModFilename()));
+            DataSet expectedDataSet = BuildDataSet(GetXmlModFilename());
 
             database.ReadXmlSchema(ReadOnlyStreamFromFilename(GetXmlSchemaFilename()));
             database.ReadXml(ReadOnlyStreamFromFilename(GetXmlFilename()));
@@ -121,9 +114,9 @@ namespace NDbUnit.Test
             database.ReadXml(GetXmlModFilename());
             database.PerformDbOperation(DbOperationFlag.Update);
 
-            DataSet postOperation = database.GetDataSetFromDb();
+            DataSet actualDataSet = database.GetDataSetFromDb();
 
-            Assert.That(preOperation, Is.EqualTo(postOperation).Using(new StructuralEqualityComparer<DataSet>()));
+            Assert.That(actualDataSet, Is.EqualTo(expectedDataSet).Using(new StructuralEqualityComparer<DataSet>()));
             database.Dispose();
 
         }
@@ -143,5 +136,17 @@ namespace NDbUnit.Test
             return new FileStream(filename, FileMode.Open, FileAccess.Read);
         }
 
+        private DataSet BuildDataSet(string dataFilename = null)
+        {
+            var dataSet = new DataSet();
+            dataSet.ReadXmlSchema(ReadOnlyStreamFromFilename(GetXmlSchemaFilename()));
+
+            if (dataFilename != null)
+            {
+                dataSet.ReadXml(ReadOnlyStreamFromFilename(dataFilename));
+            }
+
+            return dataSet;
+        }
     }
 }
