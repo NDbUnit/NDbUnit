@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using KellermanSoftware.CompareNetObjects;
 
@@ -6,6 +7,9 @@ namespace NDbUnit.Core
 {
     public static class DataSetComparer
     {
+        //useful to increase this during debug/testing, default to 1 so that the first non-matching value will abort comparison and return a FALSE
+        public static int MAX_COMPARE_ERRORS = 1;
+
         public static bool HasTheSameDataAs(this DataSet left, DataSet right)
         {
             //if schemas don't match, no point in proceeding to test any data/content so just bail out early...
@@ -60,18 +64,21 @@ namespace NDbUnit.Core
             leftClone.Rows.Clear();
             rightClone.Rows.Clear();
 
-            var config = new ComparisonConfig { IgnoreCollectionOrder = true, CompareChildren = false };
-            
+            var config = new ComparisonConfig { IgnoreCollectionOrder = true, CompareChildren = false, MaxDifferences = MAX_COMPARE_ERRORS };
+
             //this line *should* make the comparer ignore the Rows collection, but it doesn't appear to work
             // so we'll leave it in here just in case this functionality should be resolved at some future point
             config.MembersToIgnore.Add("Rows");
-            
+
             var comparer = new CompareLogic(config);
 
             var result = comparer.Compare(leftClone, rightClone);
 
             if (!result.AreEqual)
+            {
+                Log(result.DifferencesString);
                 return false;
+            }
 
             //if the count of columns fails to match, no point in proceeding
             if (left.Columns.Count != right.Columns.Count)
@@ -95,27 +102,52 @@ namespace NDbUnit.Core
             if (left.Rows.Count != right.Rows.Count)
                 return false;
 
-            var config = new ComparisonConfig { IgnoreCollectionOrder = true };
+            var config = new ComparisonConfig { IgnoreCollectionOrder = true, MaxDifferences = MAX_COMPARE_ERRORS };
+            config.MembersToIgnore.Add("Rows");
 
             var comparer = new CompareLogic(config);
 
-            return comparer.Compare(left, right).AreEqual;
+            var result = comparer.Compare(left, right);
+
+            if (!result.AreEqual)
+                Log(string.Format("Expected DataTable: {0}, Actual DataTable: {1}\n{2}", left.TableName,
+                    right.TableName, result.DifferencesString));
+
+            return result.AreEqual;
         }
 
         private static bool HaveTheSameSchema(DataColumn left, DataColumn right)
         {
-            var config = new ComparisonConfig { IgnoreCollectionOrder = true, CompareChildren = false};
+            var config = new ComparisonConfig { IgnoreCollectionOrder = true, CompareChildren = false, MaxDifferences = MAX_COMPARE_ERRORS };
             var comparer = new CompareLogic(config);
 
-            return comparer.Compare(left, right).AreEqual;
+            var result = comparer.Compare(left, right);
+
+            if (!result.AreEqual)
+                Log(string.Format("Expected DataColumn: {0}, Actual DataColumn: {1}\n{2}", left.ColumnName,
+                    right.ColumnName, result.DifferencesString));
+
+            return result.AreEqual;
         }
 
         private static bool HaveTheSameSchema(DataRelation left, DataRelation right)
         {
-            var config = new ComparisonConfig { IgnoreCollectionOrder = true,CompareChildren = false};
+            var config = new ComparisonConfig { IgnoreCollectionOrder = true, CompareChildren = false, MaxDifferences = MAX_COMPARE_ERRORS };
             var comparer = new CompareLogic(config);
 
-            return comparer.Compare(left, right).AreEqual;
+            var result = comparer.Compare(left, right);
+
+            if (!result.AreEqual)
+                Log(string.Format("Expected DataRelation: {0}, Actual DataRelation: {1}\n{2}", left.RelationName,
+                    right.RelationName, result.DifferencesString));
+
+            return result.AreEqual;
+        }
+
+        //TODO: wire up Common.Logging here...
+        private static void Log(string message)
+        {
+            Debug.WriteLine(message);
         }
     }
 }

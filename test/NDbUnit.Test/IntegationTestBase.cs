@@ -47,7 +47,7 @@ namespace NDbUnit.Test
 
             DataSet actualDataSet = database.GetDataSetFromDb();
 
-            Assert.That(actualDataSet, Is.EqualTo(expectedDataSet).Using(new StructuralEqualityComparer<DataSet>()));
+            Assert.That(actualDataSet.HasTheSameDataAs(expectedDataSet));
 
             database.Dispose();
         }
@@ -68,7 +68,8 @@ namespace NDbUnit.Test
 
             DataSet actualDataSet = database.GetDataSetFromDb();
 
-            Assert.That(actualDataSet, Is.EqualTo(expectedDataSet).Using(new StructuralEqualityComparer<DataSet>()));
+            Assert.That(actualDataSet.HasTheSameDataAs(expectedDataSet));
+            
             database.Dispose();
 
         }
@@ -92,7 +93,8 @@ namespace NDbUnit.Test
 
             DataSet actualDataSet = database.GetDataSetFromDb();
 
-            Assert.That(actualDataSet, Is.EqualTo(expectedDataSet).Using(new StructuralEqualityComparer<DataSet>()));
+            Assert.That(actualDataSet.HasTheSameDataAs(expectedDataSet));
+            
             database.Dispose();
 
         }
@@ -116,7 +118,8 @@ namespace NDbUnit.Test
 
             DataSet actualDataSet = database.GetDataSetFromDb();
 
-            Assert.That(actualDataSet, Is.EqualTo(expectedDataSet).Using(new StructuralEqualityComparer<DataSet>()));
+            Assert.That(actualDataSet.HasTheSameDataAs(expectedDataSet));
+            
             database.Dispose();
 
         }
