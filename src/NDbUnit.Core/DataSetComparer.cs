@@ -7,18 +7,27 @@ namespace NDbUnit.Core
     public static class DataSetComparer
     {
 
-        private static CompareLogic _comparer = new CompareLogic();
+        private static readonly CompareLogic Comparer = new CompareLogic();
 
-        public static bool HasSameDataAs(this DataSet left, DataSet right)
+        public static bool HasTheSameDataAs(this DataSet left, DataSet right)
         {
             //if schemas don't match, no point in proceeding to test any data/content so just bail out early...
-            if (!left.HasSameSchemaAs(right))
+            if (!left.HasTheSameSchemaAs(right))
                 return false;
 
-            return false;
+            foreach (var table in left.Tables.Cast<DataTable>())
+            {
+                if (!right.Tables.Contains(table.TableName))
+                    return false;
+
+                if (!HaveTheSameData(table, right.Tables[table.TableName]))
+                    return false;
+            }
+
+            return true;
         }
 
-        public static bool HasSameSchemaAs(this DataSet left, DataSet right)
+        public static bool HasTheSameSchemaAs(this DataSet left, DataSet right)
         {
             //if the count of tables fails to match, no point in proceeding
             if (left.Tables.Count != right.Tables.Count)
@@ -44,25 +53,15 @@ namespace NDbUnit.Core
             return true;
         }
 
-        private static bool HaveTheSameSchema(DataRelation left, DataRelation right)
-        {
-            var config = new ComparisonConfig { IgnoreCollectionOrder = true, CompareChildren = false };
-            _comparer.Config = config;
-
-            var result = _comparer.Compare(left, right);
-
-            return result.AreEqual;
-        }
-
         private static bool HaveTheSameSchema(DataTable left, DataTable right)
         {
             var config = new ComparisonConfig { IgnoreCollectionOrder = true, CompareChildren = false };
             config.MembersToIgnore.Add("Columns");
             config.MembersToIgnore.Add("Rows");
 
-            _comparer.Config = config;
+            Comparer.Config = config;
 
-            var result = _comparer.Compare(left, right);
+            var result = Comparer.Compare(left, right);
 
             if (!result.AreEqual)
                 return false;
@@ -83,6 +82,18 @@ namespace NDbUnit.Core
             return true;
         }
 
+        private static bool HaveTheSameData(DataTable left, DataTable right)
+        {
+            //if the count of rows fails to match, no point in proceeding
+            if (left.Rows.Count != right.Rows.Count)
+                return false;
+
+            var config = new ComparisonConfig { IgnoreCollectionOrder = true, CompareChildren = false };
+            Comparer.Config = config;
+
+            return Comparer.Compare(left, right).AreEqual;
+        }
+
         private static bool HaveTheSamData(DataRow left, DataRow right)
         {
             return false;
@@ -91,11 +102,17 @@ namespace NDbUnit.Core
         private static bool HaveTheSameSchema(DataColumn left, DataColumn right)
         {
             var config = new ComparisonConfig { IgnoreCollectionOrder = true, CompareChildren = false };
-            _comparer.Config = config;
+            Comparer.Config = config;
 
-            var result = _comparer.Compare(left, right);
+            return Comparer.Compare(left, right).AreEqual;
+        }
 
-            return result.AreEqual;
+        private static bool HaveTheSameSchema(DataRelation left, DataRelation right)
+        {
+            var config = new ComparisonConfig { IgnoreCollectionOrder = true, CompareChildren = false };
+            Comparer.Config = config;
+
+            return Comparer.Compare(left, right).AreEqual;
         }
     }
 }
