@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using KellermanSoftware.CompareNetObjects;
@@ -98,20 +99,75 @@ namespace NDbUnit.Core
 
         private static bool HaveTheSameData(DataTable left, DataTable right)
         {
+            //clone the tables so we don't inadvertently modify the ACTUAL datatables as part of the compare process...
+            var leftTable = left.Clone();
+            var rightTable = right.Clone();
+
             //if the count of rows fails to match, no point in proceeding
-            if (left.Rows.Count != right.Rows.Count)
+            if (leftTable.Rows.Count != rightTable.Rows.Count)
                 return false;
 
+            //get the rows
+            var leftRows = leftTable.Rows.Cast<DataRow>();
+            var rightRows = rightTable.Rows.Cast<DataRow>();
+
+            //now clear the rows since CompareNETObjects cannot ignore Rows property...
+            leftTable.Rows.Clear();
+            rightTable.Rows.Clear();
+
             var config = new ComparisonConfig { IgnoreCollectionOrder = true, MaxDifferences = MAX_COMPARE_ERRORS };
+
+            //this doens't actually work, but leaving it here for now in case this issue is resolved in CompareNETObjects later...
             config.MembersToIgnore.Add("Rows");
 
+            var comparer = new CompareLogic(config);
+
+            var result = comparer.Compare(leftTable, rightTable);
+
+            if (!result.AreEqual)
+            {
+                Log(string.Format("Expected DataTable: {0}, Actual DataTable: {1}\n{2}", leftTable.TableName,
+                    rightTable.TableName, result.DifferencesString));
+
+                return false;
+            }
+
+            //if the tables match, proceed to compare the rows...
+            return HaveTheSameData(leftRows, rightRows);
+
+        }
+
+        private static bool HaveTheSameData(IEnumerable<DataRow> leftRows, IEnumerable<DataRow> rightRows)
+        {
+            //protect against multiple iterations of IEnumberables...
+            leftRows = leftRows.ToList();
+            rightRows = rightRows.ToList();
+
+            //this test was already performed at the table level, but let's do it again just in case this method gets called from elsewhere at some pt
+            if (leftRows.Count() != rightRows.Count())
+                return false;
+
+            foreach (var leftRow in leftRows)
+            {
+                var matchingRowFound = rightRows.Any(rightRow => HaveTheSameData(leftRow, rightRow));
+
+                if (!matchingRowFound)
+                    return false;
+            }
+
+            return true;
+        }
+
+        public static bool HaveTheSameData(DataRow left, DataRow right)
+        {
+            var config = new ComparisonConfig { IgnoreCollectionOrder = true, CompareChildren = false, MaxDifferences = MAX_COMPARE_ERRORS };
             var comparer = new CompareLogic(config);
 
             var result = comparer.Compare(left, right);
 
             if (!result.AreEqual)
-                Log(string.Format("Expected DataTable: {0}, Actual DataTable: {1}\n{2}", left.TableName,
-                    right.TableName, result.DifferencesString));
+                Log(string.Format("Expected DataRow: {0}, Actual DataRow: {1}\n{2}", left,
+                    right, result.DifferencesString));
 
             return result.AreEqual;
         }
