@@ -4,6 +4,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Xml.XPath;
 using KellermanSoftware.CompareNetObjects;
 using KellermanSoftware.CompareNetObjects.TypeComparers;
 
@@ -16,24 +17,25 @@ namespace NDbUnit.Core
 
         public static bool HasTheSameDataAs(this DataSet left, DataSet right)
         {
-            //if schemas don't match, no point in proceeding to test any data/content so just bail out early...
-            if (!left.HasTheSameSchemaAs(right))
-                return false;
+            var config = new ComparisonConfig();
+            config.CustomComparers.Add(new NDbUnitDataSetComparer(RootComparerFactory.GetRootComparer()));
 
-            foreach (var table in left.Tables.Cast<DataTable>())
+            var comparer = new CompareLogic(config);
+
+            var result = comparer.Compare(left, right);
+
+            if (!result.AreEqual)
             {
-                if (!right.Tables.Contains(table.TableName))
-                    return false;
-
-                if (!HaveTheSameData(table, right.Tables[table.TableName]))
-                    return false;
+                Log(result.DifferencesString);
             }
 
-            return true;
+            return result.AreEqual;
         }
 
         public static bool HasTheSameSchemaAs(this DataSet left, DataSet right)
         {
+
+            return true;
             //if the count of tables fails to match, no point in proceeding
             if (left.Tables.Count != right.Tables.Count)
                 return false;
@@ -213,18 +215,18 @@ namespace NDbUnit.Core
     /// <summary>
     /// Compare all tables and all rows in all tables
     /// </summary>
-    internal class NDbUnitDatasetComparer : BaseTypeComparer
+    internal class NDbUnitDataSetComparer : BaseTypeComparer
     {
-        private readonly DataTableComparer _compareDataTable;
+        private readonly NDbUnitDataTableComparer _compareDataTable;
 
         /// <summary>
         /// Constructor that takes a root comparer
         /// </summary>
         /// <param name="rootComparer"></param>
-        public NDbUnitDatasetComparer(RootComparer rootComparer)
+        public NDbUnitDataSetComparer(RootComparer rootComparer)
             : base(rootComparer)
         {
-            _compareDataTable = new DataTableComparer(rootComparer);
+            _compareDataTable = new NDbUnitDataTableComparer(rootComparer);
         }
 
         /// <summary>
@@ -302,10 +304,10 @@ namespace NDbUnit.Core
             }
         }
     }
-/// <summary>
+    /// <summary>
     /// Compare all rows in a data table
     /// </summary>
-    public class NDbUnitDataTableComparer : BaseTypeComparer
+    internal class NDbUnitDataTableComparer : BaseTypeComparer
     {
         private readonly DataRowComparer _compareDataRow;
 
@@ -420,7 +422,7 @@ namespace NDbUnit.Core
                     ParentObject2 = parms.Object2,
                     Object1 = dataTable1.Rows[i],
                     Object2 = dataTable2.Rows[i],
-                    BreadCrumb = currentBreadCrumb
+                    BreadCrumb = currentBreadCrumb,
                 };
 
                 _compareDataRow.CompareType(childParms);
@@ -429,7 +431,7 @@ namespace NDbUnit.Core
                     return;
             }
         }
-
-
     }
+
+    
 }
