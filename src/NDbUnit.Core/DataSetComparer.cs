@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using KellermanSoftware.CompareNetObjects;
+using KellermanSoftware.CompareNetObjects.TypeComparers;
 
 namespace NDbUnit.Core
 {
@@ -205,5 +208,228 @@ namespace NDbUnit.Core
         {
             Debug.WriteLine(message);
         }
+    }
+
+    /// <summary>
+    /// Compare all tables and all rows in all tables
+    /// </summary>
+    internal class NDbUnitDatasetComparer : BaseTypeComparer
+    {
+        private readonly DataTableComparer _compareDataTable;
+
+        /// <summary>
+        /// Constructor that takes a root comparer
+        /// </summary>
+        /// <param name="rootComparer"></param>
+        public NDbUnitDatasetComparer(RootComparer rootComparer)
+            : base(rootComparer)
+        {
+            _compareDataTable = new DataTableComparer(rootComparer);
+        }
+
+        /// <summary>
+        /// Returns true if both objects are data sets
+        /// </summary>
+        /// <param name="type1">The type of the first object</param>
+        /// <param name="type2">The type of the second object</param>
+        /// <returns></returns>
+        public override bool IsTypeMatch(Type type1, Type type2)
+        {
+            return TypeHelper.IsDataset(type1) && TypeHelper.IsDataset(type2);
+        }
+
+        /// <summary>
+        /// Compare two data sets
+        /// </summary>
+        public override void CompareType(CompareParms parms)
+        {
+            DataSet dataSet1 = parms.Object1 as DataSet;
+            DataSet dataSet2 = parms.Object2 as DataSet;
+
+            //This should never happen, null check happens one level up
+            if (dataSet1 == null || dataSet2 == null)
+                return;
+
+            if (TableCountsDifferent(parms, dataSet2, dataSet1)) return;
+
+            CompareEachTable(parms, dataSet1, dataSet2);
+        }
+
+        private bool TableCountsDifferent(CompareParms parms, DataSet dataSet2, DataSet dataSet1)
+        {
+            if (dataSet1.Tables.Count != dataSet2.Tables.Count)
+            {
+                Difference difference = new Difference
+                                            {
+                                                ParentObject1 = new WeakReference(parms.ParentObject1),
+                                                ParentObject2 = new WeakReference(parms.ParentObject2),
+                                                PropertyName = parms.BreadCrumb,
+                                                Object1Value = dataSet1.Tables.Count.ToString(CultureInfo.InvariantCulture),
+                                                Object2Value = dataSet2.Tables.Count.ToString(CultureInfo.InvariantCulture),
+                                                ChildPropertyName = "Tables.Count",
+                                                Object1 = new WeakReference(parms.Object1),
+                                                Object2 = new WeakReference(parms.Object2)
+                                            };
+
+                AddDifference(parms.Result, difference);
+
+                if (parms.Result.ExceededDifferences)
+                    return true;
+            }
+            return false;
+        }
+
+        private void CompareEachTable(CompareParms parms, DataSet dataSet1, DataSet dataSet2)
+        {
+            for (int i = 0; i < Math.Min(dataSet1.Tables.Count, dataSet2.Tables.Count); i++)
+            {
+                string currentBreadCrumb = AddBreadCrumb(parms.Config, parms.BreadCrumb, "Tables", string.Empty,
+                                                         dataSet1.Tables[i].TableName);
+
+                CompareParms childParms = new CompareParms();
+                childParms.Result = parms.Result;
+                childParms.Config = parms.Config;
+                childParms.BreadCrumb = currentBreadCrumb;
+                childParms.ParentObject1 = dataSet1;
+                childParms.ParentObject2 = dataSet2;
+                childParms.Object1 = dataSet1.Tables[i];
+                childParms.Object2 = dataSet2.Tables[i];
+
+                _compareDataTable.CompareType(childParms);
+
+                if (parms.Result.ExceededDifferences)
+                    return;
+            }
+        }
+    }
+/// <summary>
+    /// Compare all rows in a data table
+    /// </summary>
+    public class NDbUnitDataTableComparer : BaseTypeComparer
+    {
+        private readonly DataRowComparer _compareDataRow;
+
+        /// <summary>
+        /// Constructor that takes a root comparer
+        /// </summary>
+        /// <param name="rootComparer"></param>
+        public NDbUnitDataTableComparer(RootComparer rootComparer)
+            : base(rootComparer)
+        {
+            _compareDataRow = new DataRowComparer(rootComparer);
+        }
+
+        /// <summary>
+        /// Returns true if both objects are of type DataTable
+        /// </summary>
+        /// <param name="type1">The type of the first object</param>
+        /// <param name="type2">The type of the second object</param>
+        /// <returns></returns>
+        public override bool IsTypeMatch(Type type1, Type type2)
+        {
+            return TypeHelper.IsDataTable(type1) && TypeHelper.IsDataTable(type2);
+        }
+
+        /// <summary>
+        /// Compare two datatables
+        /// </summary>
+        public override void CompareType(CompareParms parms)
+        {
+            DataTable dataTable1 = parms.Object1 as DataTable;
+            DataTable dataTable2 = parms.Object2 as DataTable;
+
+            //This should never happen, null check happens one level up
+            if (dataTable1 == null || dataTable2 == null)
+                return;
+
+            //Only compare specific table names
+            if (parms.Config.MembersToInclude.Count > 0 && !parms.Config.MembersToInclude.Contains(dataTable1.TableName))
+                return;
+
+            //If we should ignore it, skip it
+            if (parms.Config.MembersToInclude.Count == 0 && parms.Config.MembersToIgnore.Contains(dataTable1.TableName))
+                return;
+
+            //There must be the same amount of rows in the datatable
+            if (dataTable1.Rows.Count != dataTable2.Rows.Count)
+            {
+                Difference difference = new Difference
+                {
+                    ParentObject1 = new WeakReference(parms.ParentObject1),
+                    ParentObject2 = new WeakReference(parms.ParentObject2),
+                    PropertyName = parms.BreadCrumb,
+                    Object1Value = dataTable1.Rows.Count.ToString(CultureInfo.InvariantCulture),
+                    Object2Value = dataTable2.Rows.Count.ToString(CultureInfo.InvariantCulture),
+                    ChildPropertyName = "Rows.Count",
+                    Object1 = new WeakReference(parms.Object1),
+                    Object2 = new WeakReference(parms.Object2)
+                };
+
+                AddDifference(parms.Result, difference);
+
+                if (parms.Result.ExceededDifferences)
+                    return;
+            }
+
+            if (ColumnCountsDifferent(parms)) return;
+
+            CompareEachRow(parms);
+        }
+
+        private bool ColumnCountsDifferent(CompareParms parms)
+        {
+            DataTable dataTable1 = parms.Object1 as DataTable;
+            DataTable dataTable2 = parms.Object2 as DataTable;
+
+            if (dataTable1.Columns.Count != dataTable2.Columns.Count)
+            {
+                Difference difference = new Difference
+                {
+                    ParentObject1 = new WeakReference(parms.ParentObject1),
+                    ParentObject2 = new WeakReference(parms.ParentObject2),
+                    PropertyName = parms.BreadCrumb,
+                    Object1Value = dataTable1.Columns.Count.ToString(CultureInfo.InvariantCulture),
+                    Object2Value = dataTable2.Columns.Count.ToString(CultureInfo.InvariantCulture),
+                    ChildPropertyName = "Columns.Count",
+                    Object1 = new WeakReference(parms.Object1),
+                    Object2 = new WeakReference(parms.Object2)
+                };
+
+                AddDifference(parms.Result, difference);
+
+                if (parms.Result.ExceededDifferences)
+                    return true;
+            }
+            return false;
+        }
+
+        private void CompareEachRow(CompareParms parms)
+        {
+            DataTable dataTable1 = parms.Object1 as DataTable;
+            DataTable dataTable2 = parms.Object2 as DataTable;
+
+            for (int i = 0; i < Math.Min(dataTable1.Rows.Count, dataTable2.Rows.Count); i++)
+            {
+                string currentBreadCrumb = AddBreadCrumb(parms.Config, parms.BreadCrumb, "Rows", string.Empty, i);
+
+                CompareParms childParms = new CompareParms
+                {
+                    Result = parms.Result,
+                    Config = parms.Config,
+                    ParentObject1 = parms.Object1,
+                    ParentObject2 = parms.Object2,
+                    Object1 = dataTable1.Rows[i],
+                    Object2 = dataTable2.Rows[i],
+                    BreadCrumb = currentBreadCrumb
+                };
+
+                _compareDataRow.CompareType(childParms);
+
+                if (parms.Result.ExceededDifferences)
+                    return;
+            }
+        }
+
+
     }
 }
