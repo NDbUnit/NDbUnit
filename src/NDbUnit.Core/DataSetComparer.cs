@@ -12,10 +12,14 @@ namespace NDbUnit.Core
 {
     public static class DataSetComparer
     {
+        //useful to increase this during debug/testing, default to 1 so that the first non-matching value will abort comparison and return a FALSE
+        public static int MAX_COMPARE_ERRORS = 1;
+
         public static bool HasTheSameDataAs(this DataSet left, DataSet right)
         {
             var config = new ComparisonConfig();
             config.CustomComparers.Add(new NDbUnitDataSetComparer(RootComparerFactory.GetRootComparer()));
+            config.MaxDifferences = MAX_COMPARE_ERRORS;
 
             var comparer = new CompareLogic(config);
 
