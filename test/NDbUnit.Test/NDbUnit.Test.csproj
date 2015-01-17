@@ -153,9 +153,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DataSetComparer\DataSetComparerTestBase.cs" />
-    <Compile Include="DataSetComparer\When_Comparing_DataSets_With_Different_Schemas.cs" />
-    <Compile Include="DataSetComparer\When_Comparing_DataSets_With_Matching_Schema_But_Different_Data.cs" />
-    <Compile Include="DataSetComparer\When_Comparing_DataSets_With_Matching_Schema_And_Data_But_Rows_In_Diff_Order.cs" />
+    <Compile Include="DataSetComparer\When_Comparing_DataSets_With_Different_Data.cs" />
+    <Compile Include="DataSetComparer\When_Comparing_DataSets_With_Matching_Data_But_Rows_In_Diff_Order.cs" />
     <Compile Include="DataSetComparer\When_Comparing_Matching_DataSets.cs" />
     <Compile Include="DataSetTableIteratorTest.cs" />
     <Compile Include="DbCommandBuilderTestBase.cs">

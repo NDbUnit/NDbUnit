@@ -32,76 +32,6 @@ namespace NDbUnit.Core
             return result.AreEqual;
         }
 
-        public static bool HasTheSameSchemaAs(this DataSet left, DataSet right)
-        {
-
-            return true;
-            //if the count of tables fails to match, no point in proceeding
-            if (left.Tables.Count != right.Tables.Count)
-                return false;
-
-            //consider tables
-            foreach (var table in left.Tables.Cast<DataTable>())
-            {
-                if (!right.Tables.Contains(table.TableName))
-                    return false;
-
-                if (!HaveTheSameSchema(table, right.Tables[table.TableName]))
-                    return false;
-            }
-
-            //consider relatioships
-            foreach (var relationship in left.Relations.Cast<DataRelation>())
-            {
-                if (!HaveTheSameSchema(relationship, right.Relations[relationship.RelationName]))
-                    return false;
-            }
-
-            return true;
-        }
-
-        private static bool HaveTheSameSchema(DataTable left, DataTable right)
-        {
-            //for some reason the CompareNETObjects comparer refuses to respect the config directive to ignore the Rows property
-            // so we have to clone the DataTable(s) and then clear the .Rows collection on both before comparing them
-            var leftClone = left.Clone();
-            var rightClone = right.Clone();
-
-            leftClone.Rows.Clear();
-            rightClone.Rows.Clear();
-
-            var config = new ComparisonConfig { IgnoreCollectionOrder = true, CompareChildren = false, MaxDifferences = MAX_COMPARE_ERRORS };
-
-            //this line *should* make the comparer ignore the Rows collection, but it doesn't appear to work
-            // so we'll leave it in here just in case this functionality should be resolved at some future point
-            config.MembersToIgnore.Add("Rows");
-
-            var comparer = new CompareLogic(config);
-
-            var result = comparer.Compare(leftClone, rightClone);
-
-            if (!result.AreEqual)
-            {
-                Log(result.DifferencesString);
-                return false;
-            }
-
-            //if the count of columns fails to match, no point in proceeding
-            if (left.Columns.Count != right.Columns.Count)
-                return false;
-
-            foreach (var column in left.Columns.Cast<DataColumn>())
-            {
-                if (!right.Columns.Contains(column.ColumnName))
-                    return false;
-
-                if (!HaveTheSameSchema(column, right.Columns[column.ColumnName]))
-                    return false;
-            }
-
-            return true;
-        }
-
         private static bool HaveTheSameData(DataTable left, DataTable right)
         {
             //clone the tables so we don't inadvertently modify the ACTUAL datatables as part of the compare process...
@@ -142,7 +72,7 @@ namespace NDbUnit.Core
 
         }
 
-        private static bool HaveTheSameData(IEnumerable<DataRow> leftRows, IEnumerable<DataRow> rightRows)
+        public static bool HaveTheSameData(IEnumerable<DataRow> leftRows, IEnumerable<DataRow> rightRows)
         {
             //protect against multiple iterations of IEnumberables...
             leftRows = leftRows.ToList();
@@ -173,34 +103,6 @@ namespace NDbUnit.Core
             if (!result.AreEqual)
                 Log(string.Format("Expected DataRow: {0}, Actual DataRow: {1}\n{2}", left,
                     right, result.DifferencesString));
-
-            return result.AreEqual;
-        }
-
-        private static bool HaveTheSameSchema(DataColumn left, DataColumn right)
-        {
-            var config = new ComparisonConfig { IgnoreCollectionOrder = true, CompareChildren = false, MaxDifferences = MAX_COMPARE_ERRORS };
-            var comparer = new CompareLogic(config);
-
-            var result = comparer.Compare(left, right);
-
-            if (!result.AreEqual)
-                Log(string.Format("Expected DataColumn: {0}, Actual DataColumn: {1}\n{2}", left.ColumnName,
-                    right.ColumnName, result.DifferencesString));
-
-            return result.AreEqual;
-        }
-
-        private static bool HaveTheSameSchema(DataRelation left, DataRelation right)
-        {
-            var config = new ComparisonConfig { IgnoreCollectionOrder = true, CompareChildren = false, MaxDifferences = MAX_COMPARE_ERRORS };
-            var comparer = new CompareLogic(config);
-
-            var result = comparer.Compare(left, right);
-
-            if (!result.AreEqual)
-                Log(string.Format("Expected DataRelation: {0}, Actual DataRelation: {1}\n{2}", left.RelationName,
-                    right.RelationName, result.DifferencesString));
 
             return result.AreEqual;
         }
@@ -309,7 +211,7 @@ namespace NDbUnit.Core
     /// </summary>
     internal class NDbUnitDataTableComparer : BaseTypeComparer
     {
-        private readonly DataRowComparer _compareDataRow;
+        private readonly NDbUnitDataRowCollectionComparer _compareDataRowCollection;
 
         /// <summary>
         /// Constructor that takes a root comparer
@@ -318,7 +220,7 @@ namespace NDbUnit.Core
         public NDbUnitDataTableComparer(RootComparer rootComparer)
             : base(rootComparer)
         {
-            _compareDataRow = new DataRowComparer(rootComparer);
+            _compareDataRowCollection = new NDbUnitDataRowCollectionComparer(rootComparer);
         }
 
         /// <summary>
@@ -375,7 +277,7 @@ namespace NDbUnit.Core
 
             if (ColumnCountsDifferent(parms)) return;
 
-            CompareEachRow(parms);
+            CompareRowCollections(parms);
         }
 
         private bool ColumnCountsDifferent(CompareParms parms)
@@ -405,33 +307,80 @@ namespace NDbUnit.Core
             return false;
         }
 
-        private void CompareEachRow(CompareParms parms)
+        private void CompareRowCollections(CompareParms parms)
         {
             DataTable dataTable1 = parms.Object1 as DataTable;
             DataTable dataTable2 = parms.Object2 as DataTable;
 
-            for (int i = 0; i < Math.Min(dataTable1.Rows.Count, dataTable2.Rows.Count); i++)
+            if (null == dataTable1 || null == dataTable2)
+                return;
+
+            string currentBreadCrumb = AddBreadCrumb(parms.Config, parms.BreadCrumb, "Rows");
+
+            CompareParms childParms = new CompareParms
             {
-                string currentBreadCrumb = AddBreadCrumb(parms.Config, parms.BreadCrumb, "Rows", string.Empty, i);
+                Result = parms.Result,
+                Config = parms.Config,
+                ParentObject1 = parms.Object1,
+                ParentObject2 = parms.Object2,
+                Object1 = dataTable1.Rows,
+                Object2 = dataTable2.Rows,
+                BreadCrumb = currentBreadCrumb,
+            };
 
-                CompareParms childParms = new CompareParms
-                {
-                    Result = parms.Result,
-                    Config = parms.Config,
-                    ParentObject1 = parms.Object1,
-                    ParentObject2 = parms.Object2,
-                    Object1 = dataTable1.Rows[i],
-                    Object2 = dataTable2.Rows[i],
-                    BreadCrumb = currentBreadCrumb,
-                };
 
-                _compareDataRow.CompareType(childParms);
+            _compareDataRowCollection.CompareType(childParms);
 
-                if (parms.Result.ExceededDifferences)
-                    return;
-            }
+            if (parms.Result.ExceededDifferences)
+                return;
+
+
         }
     }
 
-    
+    internal class NDbUnitDataRowCollectionComparer : BaseTypeComparer
+    {
+        public NDbUnitDataRowCollectionComparer(RootComparer rootComparer)
+            : base(rootComparer)
+        {
+        }
+
+        public override bool IsTypeMatch(Type type1, Type type2)
+        {
+            return type1 != null && type2 != null && type1 == typeof(DataRowCollection) &&
+                   type2 == typeof(DataRowCollection);
+        }
+
+        public override void CompareType(CompareParms parms)
+        {
+            var dataRowCollection1 = parms.Object1 as DataRowCollection;
+            var dataRowCollection2 = parms.Object2 as DataRowCollection;
+
+            if (null == dataRowCollection1 || null == dataRowCollection2)
+                return;
+
+            for (int i = 0; i < Math.Min(dataRowCollection1.Count, dataRowCollection2.Count); i++)
+            {
+                if (!DataSetComparer.HaveTheSameData(dataRowCollection1.Cast<DataRow>(), dataRowCollection2.Cast<DataRow>()))
+                {
+                    Difference difference = new Difference
+                    {
+                        ParentObject1 = new WeakReference(parms.ParentObject1),
+                        ParentObject2 = new WeakReference(parms.ParentObject2),
+                        PropertyName = parms.BreadCrumb,
+                        Object1Value = dataRowCollection1[i].ToString(),
+                        Object2Value = dataRowCollection2[i].ToString(),
+                        ChildPropertyName = "Row Instance",
+                        Object1 = new WeakReference(dataRowCollection1[i]),
+                        Object2 = new WeakReference(dataRowCollection2[i])
+                    };
+
+                    AddDifference(parms.Result, difference);
+
+                    if (parms.Result.ExceededDifferences)
+                        return;
+                }
+            }
+        }
+    }
 }
