@@ -355,7 +355,7 @@ namespace NDbUnit.Core
 
         private bool HaveTheSameData(DataRow left, DataRow right)
         {
-            var config = new ComparisonConfig { IgnoreCollectionOrder = true, CompareChildren = false, /*MaxDifferences = MAX_COMPARE_ERRORS*/ };
+            var config = new ComparisonConfig { IgnoreCollectionOrder = true, CompareChildren = false };
             var comparer = new CompareLogic(config);
 
             var result = comparer.Compare(left, right);
