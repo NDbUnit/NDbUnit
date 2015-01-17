@@ -4,6 +4,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Xml.XPath;
 using KellermanSoftware.CompareNetObjects;
 using KellermanSoftware.CompareNetObjects.TypeComparers;
@@ -21,7 +22,7 @@ namespace NDbUnit.Core
             config.CustomComparers.Add(new NDbUnitDataSetComparer(RootComparerFactory.GetRootComparer()));
             config.CustomComparers.Add(new NDbUnitDataTableComparer(RootComparerFactory.GetRootComparer()));
             config.CustomComparers.Add(new NDbUnitDataRowCollectionComparer(RootComparerFactory.GetRootComparer()));
-            
+
             config.MaxDifferences = MAX_COMPARE_ERRORS;
 
             var comparer = new CompareLogic(config);
@@ -282,16 +283,16 @@ namespace NDbUnit.Core
 
             for (int i = 0; i < Math.Min(dataRowCollection1.Count, dataRowCollection2.Count); i++)
             {
-                if (!HaveTheSameData(dataRowCollection1.Cast<DataRow>(), dataRowCollection2.Cast<DataRow>()))
+                if (!HaveTheSameRowsDisregardingOrdering(dataRowCollection1.Cast<DataRow>(), dataRowCollection2.Cast<DataRow>()))
                 {
                     Difference difference = new Difference
                     {
                         ParentObject1 = new WeakReference(parms.ParentObject1),
                         ParentObject2 = new WeakReference(parms.ParentObject2),
                         PropertyName = parms.BreadCrumb,
-                        Object1Value = dataRowCollection1[i].ToString(),
-                        Object2Value = dataRowCollection2[i].ToString(),
-                        ChildPropertyName = "Row Instance",
+                        Object1Value = string.Format("Row Contents: [{0}]", PrettifyRowValues(dataRowCollection1[i])),
+                        Object2Value = "ERROR: No Matching Row Found in Second DataTable!",
+                        ChildPropertyName = string.Format("[{0}]", i),
                         Object1 = new WeakReference(dataRowCollection1[i]),
                         Object2 = new WeakReference(dataRowCollection2[i])
                     };
@@ -304,7 +305,34 @@ namespace NDbUnit.Core
             }
         }
 
-        private static bool HaveTheSameData(IEnumerable<DataRow> leftRows, IEnumerable<DataRow> rightRows)
+        private string PrettifyRowValues(DataRow row)
+        {
+            var builder = new StringBuilder();
+
+            for (int i = 0; i < row.ItemArray.Length; i++)
+            {
+                builder.Append(PrettifyRowValue(row.ItemArray[i]));
+
+                if (i < row.ItemArray.Length - 1)
+                {
+                    builder.Append(", ");
+                }
+            }
+
+            return builder.ToString();
+        }
+
+        private string PrettifyRowValue(object item)
+        {
+            if (null == item || item is DBNull)
+            {
+                return "<DBNull>";
+            }
+
+            return item.ToString();
+        }
+
+        private bool HaveTheSameRowsDisregardingOrdering(IEnumerable<DataRow> leftRows, IEnumerable<DataRow> rightRows)
         {
             //protect against multiple iterations of IEnumberables...
             leftRows = leftRows.ToList();
@@ -325,7 +353,7 @@ namespace NDbUnit.Core
             return true;
         }
 
-        private static bool HaveTheSameData(DataRow left, DataRow right)
+        private bool HaveTheSameData(DataRow left, DataRow right)
         {
             var config = new ComparisonConfig { IgnoreCollectionOrder = true, CompareChildren = false, /*MaxDifferences = MAX_COMPARE_ERRORS*/ };
             var comparer = new CompareLogic(config);
