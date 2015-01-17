@@ -6,6 +6,7 @@ namespace NDbUnit.Test.DataSetComparer
 {
     public class When_Comparing_DataSets_With_Different_Data : DataSetComparerTestBase
     {
+        [Test]
         public void CanReportNoMatch()
         {
             var firstDataSet = BuildDataSet(@"Xml\DataSetComparer\FirstDataSetToCompare.xsd", @"Xml\DataSetComparer\FirstDataToCompare.xml");
