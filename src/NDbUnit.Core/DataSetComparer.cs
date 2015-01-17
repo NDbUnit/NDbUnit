@@ -283,7 +283,7 @@ namespace NDbUnit.Core
 
             for (int i = 0; i < Math.Min(dataRowCollection1.Count, dataRowCollection2.Count); i++)
             {
-                if (!HaveTheSameRowsDisregardingOrdering(dataRowCollection1.Cast<DataRow>(), dataRowCollection2.Cast<DataRow>()))
+                if (!CollectionContainsMatchingRow(dataRowCollection1[i], dataRowCollection2.Cast<DataRow>()))
                 {
                     Difference difference = new Difference
                     {
@@ -291,7 +291,7 @@ namespace NDbUnit.Core
                         ParentObject2 = new WeakReference(parms.ParentObject2),
                         PropertyName = parms.BreadCrumb,
                         Object1Value = string.Format("Row Contents: [{0}]", PrettifyRowValues(dataRowCollection1[i])),
-                        Object2Value = "ERROR: No Matching Row Found in Second DataTable!",
+                        Object2Value = "[No Matching Row Found in Second DataRowCollection]",
                         ChildPropertyName = string.Format("[{0}]", i),
                         Object1 = new WeakReference(dataRowCollection1[i]),
                         Object2 = new WeakReference(dataRowCollection2[i])
@@ -324,37 +324,19 @@ namespace NDbUnit.Core
 
         private string PrettifyRowValue(object item)
         {
-            if (null == item || item is DBNull)
-            {
-                return "<DBNull>";
-            }
-
-            return item.ToString();
+            return null == item || item is DBNull ? "<DBNull>" : item.ToString();
         }
 
-        private bool HaveTheSameRowsDisregardingOrdering(IEnumerable<DataRow> leftRows, IEnumerable<DataRow> rightRows)
+        private bool CollectionContainsMatchingRow(DataRow rowToMatch, IEnumerable<DataRow> collectionToSearch)
         {
-            //protect against multiple iterations of IEnumberables...
-            leftRows = leftRows.ToList();
-            rightRows = rightRows.ToList();
-
-            //this test was already performed at the table level, but let's do it again just in case this method gets called from elsewhere at some pt
-            if (leftRows.Count() != rightRows.Count())
-                return false;
-
-            foreach (var leftRow in leftRows)
-            {
-                var matchingRowFound = rightRows.Any(rightRow => HaveTheSameData(leftRow, rightRow));
-
-                if (!matchingRowFound)
-                    return false;
-            }
-
-            return true;
+            return collectionToSearch.Any(candidate => RowsHaveSameData(rowToMatch, candidate));
         }
 
-        private bool HaveTheSameData(DataRow left, DataRow right)
+        private bool RowsHaveSameData(DataRow left, DataRow right)
         {
+            //this instance of the comparer is intentionally independent from the main one
+            // (i.e., it does not report its DIFFERENCEs, etc. up the chain) b/c at this level we only
+            // care about a single match in a vacuum so the 'reporting' back up the chain would be meaningless noise
             var config = new ComparisonConfig { IgnoreCollectionOrder = true, CompareChildren = false };
             var comparer = new CompareLogic(config);
 
