@@ -19,6 +19,9 @@ namespace NDbUnit.Core
         {
             var config = new ComparisonConfig();
             config.CustomComparers.Add(new NDbUnitDataSetComparer(RootComparerFactory.GetRootComparer()));
+            config.CustomComparers.Add(new NDbUnitDataTableComparer(RootComparerFactory.GetRootComparer()));
+            config.CustomComparers.Add(new NDbUnitDataRowCollectionComparer(RootComparerFactory.GetRootComparer()));
+            
             config.MaxDifferences = MAX_COMPARE_ERRORS;
 
             var comparer = new CompareLogic(config);
@@ -45,8 +48,6 @@ namespace NDbUnit.Core
     /// </summary>
     internal class NDbUnitDataSetComparer : BaseTypeComparer
     {
-        private readonly NDbUnitDataTableComparer _compareDataTable;
-
         /// <summary>
         /// Constructor that takes a root comparer
         /// </summary>
@@ -54,7 +55,6 @@ namespace NDbUnit.Core
         public NDbUnitDataSetComparer(RootComparer rootComparer)
             : base(rootComparer)
         {
-            _compareDataTable = new NDbUnitDataTableComparer(rootComparer);
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace NDbUnit.Core
                 childParms.Object1 = dataSet1.Tables[i];
                 childParms.Object2 = dataSet2.Tables[i];
 
-                _compareDataTable.CompareType(childParms);
+                RootComparer.Compare(childParms);
 
                 if (parms.Result.ExceededDifferences)
                     return;
@@ -137,8 +137,6 @@ namespace NDbUnit.Core
     /// </summary>
     internal class NDbUnitDataTableComparer : BaseTypeComparer
     {
-        private readonly NDbUnitDataRowCollectionComparer _compareDataRowCollection;
-
         /// <summary>
         /// Constructor that takes a root comparer
         /// </summary>
@@ -146,7 +144,6 @@ namespace NDbUnit.Core
         public NDbUnitDataTableComparer(RootComparer rootComparer)
             : base(rootComparer)
         {
-            _compareDataRowCollection = new NDbUnitDataRowCollectionComparer(rootComparer);
         }
 
         /// <summary>
@@ -255,12 +252,10 @@ namespace NDbUnit.Core
             };
 
 
-            _compareDataRowCollection.CompareType(childParms);
+            RootComparer.Compare(childParms);
 
             if (parms.Result.ExceededDifferences)
                 return;
-
-
         }
     }
 
