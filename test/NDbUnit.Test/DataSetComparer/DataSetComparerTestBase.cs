@@ -6,12 +6,6 @@ namespace NDbUnit.Test.DataSetComparer
     [TestFixture]
     public abstract class DataSetComparerTestBase
     {
-
-        public DataSetComparerTestBase()
-        {
-            Core.DataSetComparer.MAX_COMPARE_ERRORS = 20;
-        }
-
         public DataSet BuildDataSet(string schemaFile, string dataFile = null)
         {
             var dataSet = new DataSet();

@@ -57,7 +57,6 @@ namespace NDbUnit.Test.SqlClient
         [Test]
         public void MyMethod()
         {
-            Core.DataSetComparer.MAX_COMPARE_ERRORS = 20;
             Update_Operation_Matches_Expected_Data();
         }
     }
