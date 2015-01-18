@@ -19,8 +19,6 @@
  */
 
 using System.Configuration;
-using System.Runtime.InteropServices;
-using Gallio.Runtime.Extensibility.Schema;
 
 namespace NDbUnit.Test
 {

@@ -18,20 +18,18 @@
  *
  */
 
-using System.IO;
-using MbUnit.Framework;
-using NDbUnit.Core;
 using System.Data;
+using System.IO;
+using NDbUnit.Core;
 using NUnit.Framework;
-using Assert = NUnit.Framework.Assert;
 
 namespace NDbUnit.Test
 {
-    [NUnit.Framework.TestFixture]
+    [TestFixture]
     public abstract class IntegationTestBase
     {
         //[NUnit.Framework.Ignore]
-        [NUnit.Framework.Test]
+        [Test]
         public void Delete_Operation_Matches_Expected_Data()
         {
             INDbUnitTest database = GetNDbUnitTest();
@@ -53,7 +51,7 @@ namespace NDbUnit.Test
         }
 
         //[NUnit.Framework.Ignore]
-        [NUnit.Framework.Test]
+        [Test]
         public void InsertIdentity_Operation_Matches_Expected_Data()
         {
             INDbUnitTest database = GetNDbUnitTest();
@@ -75,7 +73,7 @@ namespace NDbUnit.Test
         }
 
         //[NUnit.Framework.Ignore]
-        [NUnit.Framework.Test]
+        [Test]
         public void Refresh_Operation_Matches_Expected_Data()
         {
             INDbUnitTest database = GetNDbUnitTest();
@@ -100,7 +98,7 @@ namespace NDbUnit.Test
         }
 
         //[NUnit.Framework.Ignore]
-        [NUnit.Framework.Test]
+        [Test]
         public void Update_Operation_Matches_Expected_Data()
         {
             INDbUnitTest database = GetNDbUnitTest();

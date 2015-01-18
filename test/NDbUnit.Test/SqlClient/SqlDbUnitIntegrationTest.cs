@@ -53,12 +53,5 @@ namespace NDbUnit.Test.SqlClient
         {
             return XmlTestFiles.SqlServer.XmlSchemaFile;
         }
-
-        [Test]
-        public void MyMethod()
-        {
-            Core.DataSetComparer.MAX_COMPARE_ERRORS = 20;
-            Update_Operation_Matches_Expected_Data();
-        }
     }
 }
