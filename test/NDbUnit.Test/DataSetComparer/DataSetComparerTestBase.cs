@@ -9,7 +9,7 @@ namespace NDbUnit.Test.DataSetComparer
 
         public DataSetComparerTestBase()
         {
-            Core.DataSetComparer.MAX_COMPARE_ERRORS = 20;
+            Core.DataSetComparer.MAX_DIFFERENCES_BEFORE_ABORT = 20;
         }
 
         public DataSet BuildDataSet(string schemaFile, string dataFile = null)
